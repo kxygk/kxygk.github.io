@@ -5,4 +5,4 @@
 * geokon
 ** [[file:resume.html][Resume]]
 
-** [[file:stm32f4/index.html][stm32f4]]
+** [[file:stm32f4/][stm32f4]]
