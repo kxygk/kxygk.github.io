@@ -1,0 +1,72 @@
+#+TITLE:
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
+#+options: num:nil
+
+* George Kontsevich
+
+/BA Physics UCSB/ \\
+/BS Computer Science UCSB/
+
+*I'm currently living in Chengdu, China doing freelance C++ work* \\
+/Please feel free to get in touch at - georgek at gmx.us/
+
+I do work almost exclusively in ~C++(11/14/17)~ with an current emphasis on optimizing code bases through tooling and hardware-specific inline assembly. My past experience have touched on radar, simulation, computer vision, statistics and linear algebra and these are topics I love revisiting.
+I'm also available for limited R and MATLAB work.
+
+*** Radar control systems
+#+BEGIN_QUOTE 
+    Worked on a system of decentralized radar coordination for a small employee owned defense contractor - Toyon Research Corporation. The first half year I worked on a contract for a system coordinating shipborn radars for tracking aircraft. The remaining two years was on a system for tracking ballistic missiles through all stages of flight and to assist in anti-ballistic interception. Highlights:
+
+        - Working on and maintaining a large C++(11) codebase
+        - Designing a radar system for both physical accuracy as well as high performance (near real-time)
+        - Designing a (boosted) ballistic missile simulation including multi-stage separation.
+        - A full statistical evaluation of the mathematical correctness of the optimization algorithm.
+#+END_QUOTE
+
+[[www.toyon.com][Toyon Research Corporation]], /Santa Barbara CA/
+2012-2015
+*** Quasioptical research
+#+BEGIN_QUOTE
+*internship* - Researching the transmission of terahertz radiation through ITOcoated touch screens for Synaptics Inc. on behalf of the ITST at the UCSB. 
+#+END_QUOTE
+[[www.synaptics.com][Synaptics]], UCSB
+2011
+*** Nonlinear systems and simulation
+#+BEGIN_QUOTE
+*internship* - Researching the theoretical possibilities presented by stochastic resonance in non-linear systems for filter design for two months at Hitachi Ltd., Japan. Designing and running simulations in MATLAB using SIMULINK. (Note: due to an NDA, I can’t share the details of this work).
+#+END_QUOTE
+[[www.hitachi.com][Hitachi]] /Yokohama, Japan/
+2010
+*** Research assistant
+#+BEGIN_QUOTE
+*internship* - Part of a team at the ITST in the Electron Pulse Resonance (EPR) lab setting up and upgrading Free Electron Laser (FEL)
+#+END_QUOTE
+
+[[www.itst.ucsb.edu][ITST]], UCSB
+2010
+*** Research in photonic crystals
+#+BEGIN_QUOTE
+*internship* - Electromagnetic simulations for quasioptical crystal patterns optimization
+#+END_QUOTE
+
+[[www.itst.ucsb.edu][ITST]], UCSB
+2009
+*** Data Analyst - Neuroscience
+#+BEGIN_QUOTE
+*internship* - Data analysis in R of the retinal neural activity of mice at the Institute of Neuroscience (ION) at the University of Newcastle, UK. Independent
+#+END_QUOTE
+
+[[www.ncl.ac.uk/ion][ION University of Newcastle]] /Newcastle, UK/
+2009
+*** Data Analyst – HTS cancer research
+#+BEGIN_QUOTE
+*internship* - Worked with a cancer research team on a large-scale statistical analysis of data on cancer inhibition using R and Bioconductor at the André Lwoff Institute (CNRS Villejuif, France)
+#+END_QUOTE
+
+[[www.institut-lwoff.fr][CNRS]] /Paris, France/
+2008
+** Languages:
+
+*Fluent* English, French, Russian
+
+*Basic* Spanish, Japanese, Chinese 
