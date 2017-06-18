@@ -1,0 +1,8 @@
+#+TITLE:
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
+#+options: num:nil
+
+* geokon
+** [[/resume.html][Resume]]
+
+** [[/stm32f4/index.html][stm32f4]]
