@@ -3,6 +3,6 @@
 #+options: num:nil
 
 * geokon
-** [[/resume.html][Resume]]
+** [[file:resume.html][Resume]]
 
-** [[/stm32f4/index.html][stm32f4]]
+** [[file:stm32f4/index.html][stm32f4]]
