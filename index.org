@@ -6,3 +6,5 @@
 ** [[file:resume.html][Resume]]
 
 ** [[file:stm32f4/][stm32f4]]
+** [[file:.emacs.d/][.emacs.d]]
+** [[file:cindertemplate/][cinder-template]]
