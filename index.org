@@ -7,4 +7,9 @@
 
 ** [[file:stm32f4/][stm32f4]]
 ** [[file:.emacs.d/][.emacs.d]]
-** [[file:cindertemplate/][cinder-template]]
+** [[file:cindertemplate/][cinder-template]] (broken)
+** [[http://geokon-gh.github.io/linearsystems/][linear-systems]]
+
+* TODO
+- improve the CSS
+- make a landing page
