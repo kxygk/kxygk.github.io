@@ -1,0 +1,100 @@
+#+TITLE: A Quick introduction to Hunter
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
+#+options: num:nil toc:nil
+
+* Motivation
+
+~Hunter~ is a easy-to-use and easy-to-integrate dependency manager for C++ projects that run ~CMake~. It works entirely from within ~CMake~, so you don't need any extra software. Once your project is integrated with ~Hunter~, contributors can clone your repository and immediately start working. During ~CMake~'s configuration step all dependencies will be downloaded and built from source. This makes your project 100% independent of system libraries (other than the system's standard-library/libc)
+
+** Alternate dependency managment strategies
+*** ExternalProject_Add
+[[https://cmake.org/cmake/help/v3.2/module/ExternalProject.html][ExternalProject_Add()]] is a functionality built into ~CMake~ itself and will build 3rd party projects /in parallel/ to your own project. It allows for custom build/install instructions and can support non-CMake based dependencies. It will fetch source code from ~URL~'s / ~git~ and is very flexible but it has some serious drawbacks. Libraries are added by using ~find_package()~ and then juggling the  ~CMake~ variables you get back. 
+
+The reality is that it only works out-of-the-box for header-only libraries. Because everything is built at once, if you need to link to a library depedency, the lib won't actually exit during the configuration step so your configuration will fail. (the file will only be created after the build step) You can hack ~CMake~ so that you configure and build your dependencies first, and then configure and build your parent project - but for some reason ~CMake~ doesn't support this normally. Almost every extra dependency requires a tweaked hack and the solution is messy and hard to maintain.
+*** git-submodule
+A better solution (for dependencies that use ~CMake~) is to put them in a ~git-submodule~. This is described in more detail [[http://foonathan.net/blog/2016/07/07/cmake-dependency-handling.html][in this blog]], but typically your dependencies will live in a folder like ~/contrib/~ or ~/externals/~ and are directly linked to other repositories and don't bloat your own codebase. The submodule can be pinned to a commit or it can track a branch/tag so you get the latest changes. To use the submodule you simply add its top-level ~CMakeLists.txt~ directory with ~add_subdirectory()~ - just like it was another folder in your project - and then the submodule's targets become available directly for you to link with. This is a very clean solution because:
+
+*1*: It allows you to never worry about include directories (when you use ~target_link_libraries()~ to link a target library ~CMake~ will automatically include not only its own public headers but also headers of secondary dependencies when necessary)
+
+*2*: Not have to deal with ~CMake~ variables or directory paths which you would get using ~find_package()~. 
+
+But in a large project you will quickly hit some issues: 
+
+*1*: Many dependencies are not setup to be used as ~CMake~ subdirectories. Variables such as the project-version-number get overwritten by the parent project and more dangerously the submodule can start to change variables in the overall project. Best case your configuration will crash, worst case you will start to get strange behavior that will go unnoticed.
+
+*2*: Dependencies will often reuse target names. For instance, several popular libraries have a target called ~uninstall~. Because redeclaring a target in a different subdirectory is a no-no and ~CMake~ will crash.
+
+*** a bigger pervasive issue.. DRY
+The last issue affect both solutions and has no adequate fix in vanilla ~CMake~. Mutliple libraries will share dependencies, especially with common libraries like ~zlib~. Sometimes you will see a library simply build its own copy of ~zlib~ without asking, sometimes you can override it - but what you end up with is a final binary that has multiple linked ~zlib~'s - typically at different version numbers! This /usually/ works fine, but is undefined behavior. The linker doesn't have mechanisms for managing this. Not only is this sloppy, but the more libraries you have the more this becomes a potential issue.
+
+** The Hunter fixes
+*Dependencies are built at configuration time*:
+Hunter will download the source and build all your dependencies during configuration time.
+
+*Dependencies are built independently*:
+Each dependency is configured/built/installed independently and the only thing they inherit from the parent project is the /toolchain file/ you passed in at the command line. (the /source/, /build/ and /install/ directories are in a hidden folder which you never have to touch and won't affect the rest of your system)
+
+*Dependencies export their targets in namespaces*:
+Even though dependency targets are installed at configuration time, they still get exported to the parent project. So you do not have to revert to the usual post-install ~find_package()~ way of dealing with ~CMake~ variables and include paths. All the dependency targets remain available to the parent project but are namespaced in a PROJECT::TARGET pattern to avoid the target name collisions we had in the ~git-submodule~ case. So for instance Boost's target ~filesystem~ will now be ~Boost::filesystem~.
+
+*Dependencies share their own dependencies*:
+If two dependencies need ~zlib~ then ~Hunter~ will install just one ~zlib~ and link both dependencies to it
+
+#+BEGIN_QUOTE
+*Note*: This is a good time to mention a major draw-back of using ~Hunter~. As you can probably guess at this point, making a dependency work with ~Hunter~ requires making some changes that tell ~Hunter~ what libraries it needs. Fortunately /Hunterized/ versions of most commonly used libraries are available on [[https://docs.hunter.sh/en/latest/packages/all.html][their website]]
+#+END_QUOTE
+
+* Integrating Hunter
+Adding ~Hunter~ to an existing project is actually pretty easy. ~Hunter~ is split into two parts. A small gate file which seems to define all ~Hunter~'s  ~CMake~ functions, and the ~Hunter~ archive which holds all the information about the dependencies (hashes,urls,version-numbers,etc.). Copy the gate file ~/cmake/HunterGate.cmake~ from [[https://github.com/hunter-packages/gate][their repository]] into your own project directory and then you can load ~Hunter~ and its archive in 2 lines at the top of your ~CMakeLists.txt~ (be sure it's before the ~project(ProjectName)~ line):
+
+#+BEGIN_SRC cmake
+cmake_minimum_required(VERSION 3.1)
+
+# HUNTER dependencency manager
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.19.240.tar.gz"
+    SHA1 "aa3cd9c45391d8bd14441971b00a43c05d40347c"
+    LOCAL
+)
+
+
+project(ExampleProject)
+
+#+END_SRC
+The third line here loads a particular version of the archive so you don't have to worry about the archive being change from under you. More recent versions are available at:https://github.com/ruslo/hunter/releases and as you can see they are updated every few day as new versions of different libraries come out. The gate file in contrast is pretty stable.
+
+* Adding dependencies
+Now that we have ~Hunter~ in our project we want to add dependencies. This turns out to be a quick ttwo lines of code. Before ~Hunter~ we'd look for system libraries and then get the resulting variable to link it in to our code
+#+BEGIN_SRC cmake
+# CMAKE STYLE
+find_package(Boost)
+...
+target_link_libraries(OurTarget ${Boost_Lib_Pack})
+#+END_SRC
+Now you just tell ~Hunter~ to get ~Boost~ with the components we want and we link directly to the targets
+#+BEGIN_SRC cmake
+# HUNTER STYLE
+hunter_add_package(Boost COMPONENTS chrono date_time filesystem regex system thread)
+find_package(Boost CONFIG REQUIRED chrono date_time filesystem regex system thread)
+...
+target_link_libraries(OurTarget Boost::chrono Boost::date_time Boost::filesystem Boost::regex Boost::system Boost::thread)
+#+END_SRC
+And that's it! When you run ~cmake~ on your project, ~Boost~ will get downloaded on to your system and built. We get to tell ~CMake~ which parts we want to link to explicitly and we now only deal with targets and no messy ~CMake~ variables.
+
+* Customizing dependencies
+So far everything is working great and it's about on-par with linking to system libraries. The build is repeatable and should work on any system you throw it on. But it would be nice to have a bit more control over the dependencies. We still haven't really addressed what version are the dependencies being built at and what build flags they use. Often libraries, like ~OpenCV~ and ~Boost~ will have dozens of components and features that we can toggled. These are all controlled with CMake variables that get passed in during configuration, either on the command line ~cmake -DOPTION1=ON/OFF~ or in a cmake GUI. When you use a ~git-submodule~ you can declare these variables in the parent project and they would toggle things in the subdirectory, but as I said before, ~Hunter~ builds things separately and doesn't pass anything between parent project and dependency (except for the toolchain file). So ~Hunter~ has a separate dependency configuration file ~/cmake/Hunter/config.cmake~ (it's optional). This file simply has a list of lines reading ~hunter_config({dependency name} {version number} CMAKE_ARGS {...list of cmake args you would pass in at the command line...)~. Some examples:
+
+#+BEGIN_SRC cmake
+hunter_config(OpenCV VERSION 3.3.1-p1 CMAKE_ARGS BUILD_DOCS=OFF BUILD_EXAMPLES=OFF WITH_IPP=OFF WITH_IPP_A=OFF)
+hunter_config(CURL VERSION 7.49.1-DEV-v9 CMAKE_ARGS CMAKE_USE_OPENSSL=ON CMAKE_USE_LIBSSH2=OFF BUILD_CURL_EXE=OFF BUILD_CURL_TESTS=OFF)
+#+END_SRC
+
+The versions can either be found on the /hunterized/ repository or more conveniently in [[https://github.com/ruslo/hunter/tree/master/cmake/projects][the archive itself]]. For instance if we look at the ~OpenCV~ archive definition file: https://github.com/ruslo/hunter/blob/master/cmake/projects/OpenCV/hunter.cmake We can see multiple versions that have the ~p~ suffix (which I think indicates a hunterized branch of the original).
+
+* Toolchain files
+There is one caveat to configuration - often project will provide flags for selecting if you want to make a shared library, or a static one (and other things of that sort). I would strongly urge not playing with these setting. Everything that can be specified in the toolchain file should be in the toolchain file b/c as mentioned a couple of times, the only part that is passed from your parent project to the dependencies is the toolchain file. That means that your project and all it's dependencies will be built with the same exact tools and with the same build flags. If you start forcing contradictory things in your configurations, I'm not really sure what the result will be. Keeping everything in the toolchain file is great for consistency and for trying out different configurations for your whole "stack". If you want to rebuild everything with debug information it's a simple toolchain file swap away. If you want to build for a different platform, compiler, strip all the symbols, etc. all can be quickly done with a change of a toolchain. Because toolchain files are a bit tricky to write, the ~Hunter~ maintainer has a separate project that maintains toolchains called [[https://github.com/ruslo/polly][Polly]]. I recommend cloning the repository and looking at the different toolchains files. They're organized in a very modular way which makes modifying and creating your own toolchains less scary and almost painless.
+* Files living on your system
+The last big question that arises is, for instance, if you build with debug information turned on and then switch to building release, is all your debug build information lost? Will you have to rebuild everything again when you build debug again? The answer is no. All dependency source/build/installs are cached in a special central system directory (on Linux it's in ~/home/username/.hunter/~ and on Windows you need to set it manually). They're saved with a hash based on the /version number/, /configuration flags/ and /toolchain/ used. So as long as you use the same version/configuration/toolchain on a dependency the build will get reused. However if you play around with a lot of flags you may quickly find your disk space disappearing! So it can be good to periodically delete the directory and just start the cache from scratch.
+* Adding unsupported projects
+While the ~Hunter~ has pretty much every commonly used dependency - sometimes you will need to add something else. This part I don't really have a good grasp of and the process of forking the ~Hunter~ archive and adding a dependency is a bit confusing to me. If you have control over the dependency (it's another library you are working on or are comfortable forking and maintaining) then I suggest ensuring the target names don't collide and just using it as subdirectory. As a subdirectory you can still use ~Hunter~ inside of it to manage secondary dependencies so you will still get the benefit of avoid double-linking issues.
