@@ -10,6 +10,3 @@
 [[file:linearsystems/][=linear-systems=]] - Linear albegra in ELisp from the ground up \\
 [[file:hunterintro.html][=hunter-intro=]] - Intro to managing dependencies in C++ using Hunter \\
 [[file:buubletea/][=buubletea=]] - Basic example for working in Clojure with JavaFX, OpenCV and simple plotting \\
-* TODO
-- improve the CSS
-- make a landing page
