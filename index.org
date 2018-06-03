@@ -2,6 +2,7 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
 #+options: num:nil
 #+OPTIONS: html-postamble:nil
+#+OPTIONS: toc:nil 
 
 * geokon
 [[file:resume.html][=Resume=]] \\
