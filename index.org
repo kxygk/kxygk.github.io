@@ -3,12 +3,13 @@
 #+options: num:nil
 
 * geokon
-** [[file:resume.html][Resume]]
-** [[file:stm32f4/][stm32f4]]
-** [[file:.emacs.d/][.emacs.d]]
-** [[file:cindertemplate/][cinder-template]] (broken)
-** [[file:linearsystems/][linear-systems]]
-** [[file:hunterintro.html][hunter-intro]]
+[[file:resume.html][=Resume=]] \\
+[[file:stm32f4/][=stm32f4=]] - A GCC/CMake Build environment for the STM32F4 Discovery \\
+[[file:.emacs.d/][=.emacs.d=]]- My emacs configuration and a short ELisp intro \\
+[[file:cindertemplate/][=cinder-template=]] - A template for Cinder (broken) \\
+[[file:linearsystems/][=linear-systems=]] - Linear albegra in ELisp from the ground up \\
+[[file:hunterintro.html][=hunter-intro=]] - Intro to managing dependencies in C++ using Hunter \\
+[[file:buubletea/][=buubletea=]] - Basic example for working in Clojure with JavaFX, OpenCV and simple plotting \\
 * TODO
 - improve the CSS
 - make a landing page
