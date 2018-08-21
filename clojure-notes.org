@@ -1,0 +1,266 @@
+#+TITLE: Clojure Notes
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
+#+options: num:nil toc:nil
+
+
+* Preface
+
+These are notes on Clojure - as I learn it. (I'm starting with knowing ELisp already).
+Copying most code from Clojure for the Brave and True and adding some extra tidbits I
+find
+
+* Setup
+
+You need to install =leiningen= and =clojure= and =openjdk= to get started. =leiningen=
+generates your project directories (this shouldn't be done manually for some reason)
+
+#+BEGIN_SRC sh
+lein new app you-application-name
+#+END_SRC
+
+The entry point of the new project will be in =/src/your-application-name/core.clj=
+
+* Control Flow
+
+** if
+~(if boolean-form then-form optional-else-form)~
+#+BEGIN_SRC clojure
+  (if true
+    "By Zeus' hammer!"
+    "By Aquaman's trident")
+  ;; -> "By Zeus' hammer
+#+END_SRC
+
+** do
+~(do thing1 thing2 ..)~ \\
+/executes multiple things in a place that expects on. The last thing will be the return value/
+#+BEGIN_SRC clojure
+  (if true
+    (do (println "Success!")
+        "By Zeus' hammer!")
+    (do (println "Failure!")
+        "By Aquaman's trident!")
+    ;; => Success!
+    ;; => "By Zeus' hammer!"
+#+END_SRC
+
+** when
+~(when test thing1 thing2 ..)~ \\
+/evaluates test. If logical true, evaluates body in an implicit do./
+#+BEGIN_SRC clojure
+  (when true
+    (println "Success!")
+    "abra cadabra")
+#+END_SRC
+
+* Data Structures
+
+** numbers
++ integer: =3=
++ floating: =3.0=
++ fraction: =30/10=
+
+** maps - {}
+Not to be confused with the ~map~ higher-order-function. \\
+/a collection of pairs of keys and items. both can be anything/
+#+BEGIN_SRC clojure
+  {:first-name "Charlie"
+   :last-name "McFishwich"}
+
+  {"string-key" +} ;; weird example. the key is a string and the item is the + symbol
+#+END_SRC
+~(get map key) or (get map key fallback)~
+#+BEGIN_SRC clojure
+  (get {:a 0 :b 1} :b)
+  ;; => 1
+  (get {:a 0 :b {:c "ho hum"}} :b)
+  ;; => {:c "ho hum"}
+  (get {:a 0 :b 1} :c)
+  ;; => nil
+
+  ;; using a default/fallback value
+  (get {:a 0 :b 1} :c "fallback unicorns")
+  ;; => "fallback unicorns"
+#+END_SRC
+/a more short-hand way of doing the same.. use the map as a function itself/
+~({map} key)~
+#+BEGIN_SRC clojure
+  ({:name "The Human Coffeepot"} :name)
+  ;; => "The Human Coffeepot"
+#+END_SRC
+
+*** keywords
+   these are like special keys that can also be used as a function to retrieve items in a map. So sorta inverting the last example \\
+   ~(keyword map) or (keyword map fallback)~
+#+BEGIN_SRC clojure
+  (:a {:a 1 :b 2 :c 3})
+  ;; => 1
+
+  (:d {:a 1 :b 2 :c 3} "more fallback unicorns")
+  ;; => "more fallback unicorns"
+#+END_SRC
+
+** vector - []
+#+BEGIN_SRC clojure
+  [3 2 1]
+
+  (get [3 2 1] 0)
+
+  (get ["a" {:name "Pugsley"} "c"] 1)
+  ;; => {:name "Pugsley"}
+
+  (vector "creepy" "full" "moon")
+  ;; => ["creepy" "full" "moon"]
+
+  (conj [1 2 3] 4)
+  ;; => [1 2 3 4]
+#+END_SRC
+
+** lists - '()
+#+BEGIN_SRC clojure
+  '(1 2 3 4)
+  ;; => (1 2 3 4)
+
+  (nth '(:a :b :c) 2)
+  ;; =? :c
+
+  (list 1 "two" {3 4})
+  ;; => (1 "two {3 4})
+
+  (conj '(1 2 3) 4)
+  ;; => (4 1 2 3)
+  ;; NOTICE! Goes to the front!
+#+END_SRC
+#+TITLE: Clojure Notes
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
+#+options: num:nil toc:nil
+
+
+* Preface
+
+These are notes on Clojure - as I learn it. (I'm starting with knowing ELisp already).
+Copying most code from Clojure for the Brave and True and adding some extra tidbits I
+find
+
+* Setup
+
+You need to install =leiningen= and =clojure= and =openjdk= to get started. =leiningen=
+generates your project directories (this shouldn't be done manually for some reason)
+
+#+BEGIN_SRC sh
+lein new app you-application-name
+#+END_SRC
+
+The entry point of the new project will be in =/src/your-application-name/core.clj=
+
+* Control Flow
+
+** if
+~(if boolean-form then-form optional-else-form)~
+#+BEGIN_SRC clojure
+  (if true
+    "By Zeus' hammer!"
+    "By Aquaman's trident")
+  ;; -> "By Zeus' hammer
+#+END_SRC
+
+** do
+~(do thing1 thing2 ..)~ \\
+/executes multiple things in a place that expects on. The last thing will be the return value/
+#+BEGIN_SRC clojure
+  (if true
+    (do (println "Success!")
+        "By Zeus' hammer!")
+    (do (println "Failure!")
+        "By Aquaman's trident!")
+    ;; => Success!
+    ;; => "By Zeus' hammer!"
+#+END_SRC
+
+** when
+~(when test thing1 thing2 ..)~ \\
+/evaluates test. If logical true, evaluates body in an implicit do./
+#+BEGIN_SRC clojure
+  (when true
+    (println "Success!")
+    "abra cadabra")
+#+END_SRC
+
+* Data Structures
+
+** numbers
++ integer: =3=
++ floating: =3.0=
++ fraction: =30/10=
+
+** maps - {}
+Not to be confused with the ~map~ higher-order-function. \\
+/a collection of pairs of keys and items. both can be anything/
+#+BEGIN_SRC clojure
+  {:first-name "Charlie"
+   :last-name "McFishwich"}
+
+  {"string-key" +} ;; weird example. the key is a string and the item is the + symbol
+#+END_SRC
+~(get map key) or (get map key fallback)~
+#+BEGIN_SRC clojure
+  (get {:a 0 :b 1} :b)
+  ;; => 1
+  (get {:a 0 :b {:c "ho hum"}} :b)
+  ;; => {:c "ho hum"}
+  (get {:a 0 :b 1} :c)
+  ;; => nil
+
+  ;; using a default/fallback value
+  (get {:a 0 :b 1} :c "fallback unicorns")
+  ;; => "fallback unicorns"
+#+END_SRC
+/a more short-hand way of doing the same.. use the map as a function itself/
+~({map} key)~
+#+BEGIN_SRC clojure
+  ({:name "The Human Coffeepot"} :name)
+  ;; => "The Human Coffeepot"
+#+END_SRC
+
+*** keywords
+   these are like special keys that can also be used as a function to retrieve items in a map. So sorta inverting the last example \\
+   ~(keyword map) or (keyword map fallback)~
+#+BEGIN_SRC clojure
+  (:a {:a 1 :b 2 :c 3})
+  ;; => 1
+
+  (:d {:a 1 :b 2 :c 3} "more fallback unicorns")
+  ;; => "more fallback unicorns"
+#+END_SRC
+
+** vector - []
+#+BEGIN_SRC clojure
+  [3 2 1]
+
+  (get [3 2 1] 0)
+
+  (get ["a" {:name "Pugsley"} "c"] 1)
+  ;; => {:name "Pugsley"}
+
+  (vector "creepy" "full" "moon")
+  ;; => ["creepy" "full" "moon"]
+
+  (conj [1 2 3] 4)
+  ;; => [1 2 3 4]
+#+END_SRC
+
+** lists - '()
+#+BEGIN_SRC clojure
+  '(1 2 3 4)
+  ;; => (1 2 3 4)
+
+  (nth '(:a :b :c) 2)
+  ;; =? :c
+
+  (list 1 "two" {3 4})
+  ;; => (1 "two {3 4})
+
+  (conj '(1 2 3) 4)
+  ;; => (4 1 2 3)
+  ;; NOTICE! Goes to the front!
+#+END_SRC
