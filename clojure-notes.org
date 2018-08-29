@@ -264,3 +264,169 @@ Not to be confused with the ~map~ higher-order-function. \\
   ;; => (4 1 2 3)
   ;; NOTICE! Goes to the front!
 #+END_SRC
+** sets - #{}
+/collection of unique values/
+#+BEGIN_SRC clojure
+#{"kurt" 20 :icicle}
+
+(hash-set 1 1 2 2)
+;; => #{1 2}
+
+(conj #{:a :b}:b)
+;; => #{:a :b}
+
+(set [3 3 3 4 4])
+;; => #{3 4}
+
+(contains? #{:a :b} :a)
+;; => true
+
+(:a #{:a :b})
+;; => :a
+
+(get #{:a :b} :a)
+;; => :a
+
+(get #{:a nil} nil)
+;; => nil
+
+(get #{:a :b} "kurt")
+;; => nil
+#+END_SRC
+
+* Functions
+
+** overloading
+/done on argument/
+#+BEGIN_SRC clojure
+  (defn x-chop
+    "Describe the kind of chope you inflict"
+    ([name chop-type]
+     (str "I " chop-type " chop" name "! Take that!"))
+    ([name]
+     (x-chop name "karate")))
+#+END_SRC
+** variable arity
+~[& remainding-items]~ 
+/and they are treated as a collection that you can use ~map~ on/
+#+BEGIN_SRC clojure
+  (defn codger-communication
+    [whippersnapper]
+    (str "Get off my lawn, " whippersnapper "!!!"))
+
+  (defn codger
+    [& whippersnappers]
+    (map codger-communication whippersnappers))
+  (codger "Billy" "Ann-Marie" "The Incredible Bulk")
+  ;; => ("Get off my lawn, Billy!!!"
+  ;;     "Get off my lawn,  Anne-Marie!!!"
+  ;;     "Get off my lawn,  The Incredible Bulk")
+#+END_SRC
+** private functions
+/exclusive to a namespace/
+~(defn- privatefn)~
+#+BEGIN_SRC clojure
+  (defn- private-function
+    "Just an empty example"
+    [])
+#+END_SRC
+** destructuring
+/extracts things right in the argument declaration/
+*** first element
+#+BEGIN_SRC clojure
+  (defn my-first
+    [[first-thing]]
+    first-thing)
+
+  (my-first ["over" "bike" "war-axe"])
+  ;; => oven
+#+END_SRC
+*** vectors and variable arity
+/sequencially match vector elements to indices in order. remainer placed with an ampersand/
+#+BEGIN_SRC clojure
+  (defn chooser
+  [[first second &other-stuff]]
+    (println (str "first thing was :" first))
+    (println (str "second was :" second))
+    (println (str "and the rest was  :" 
+                  (clojure.string/join ", " other-stuff))))
+
+(chooser ["icecream", "cake", "apples", "lettuce"])
+;; => first thing was: icecream
+;; => second was: cake
+;; => and the rest was : apples, lettuce
+#+END_SRC
+*** maps and keywords
+#+BEGIN_SRC clojure
+
+
+#+END_SRC
+/assign the map values as the given keys to the matching symbol/
+#+BEGIN_SRC clojure
+  (defn announce-treasure-location
+    [{lat :lat lng :lng}]
+    (print (str "Treasure lat: " lat))
+    (print (str "Treasure lng: " lng)))
+
+  (announce-treasure-location {:lat 28.22 :lng 81.33})
+  :; => Treasure lat : 28.22
+  ;; => Treasure lng: 81.33
+#+END_SRC
+/or automatically make the assigned symbols match the keyword in the map/
+#+BEGIN_SRC clojure
+  (defn announce-treasure-location
+    [{:keys [lat lng]}]
+    (print (str "Treasure lat: " lat))
+    (print (str "Treasure lng: " lng)))
+
+  (announce-treasure-location {:lat 28.22 :lng 81.33})
+  :; => Treasure lat : 28.22
+  ;; => Treasure lng: 81.33
+#+END_SRC
+/if you still need the un-destructured input map you can use the :as keyword/
+#+BEGIN_SRC clojure
+  (defn announce-treasure-location
+    [{:keys [lat lng] :as treasure-location}]
+    (print (str "Treasure lat: " lat))
+    (print (str "Treasure lng: " lng))
+    (steer-ship! treasure-location)) ;; <- we still want the input/map here!
+
+  (announce-treasure-location {:lat 28.22 :lng 81.33}
+
+  :; => Treasure lat : 28.22
+  ;; => Treasure lng: 81.33
+#+END_SRC
+** anonymous
+/create in-place functions with no name/
+#+BEGIN_SRC clojure
+  (fn [param-list]
+    function body)
+#+END_SRC
+example: feeding into the ~(map)~
+#+BEGIN_SRC clojure
+  (map (fn [name] (str "Hi, " name))  ;; <- apply this function
+       ["Darth Vader" "Mr. Magoo"])   ;; <- on these inputs
+
+#+END_SRC
+/shorthand:/
+#+BEGIN_SRC clojure
+#(* % 3) ;; same as (fn [x] (* x 3))
+
+(#(* % 3) 8) ;; applied to the number 8
+;; => 24
+#+END_SRC
+** recusion
+/needs to be stated explicitly with (recur)/
+#+BEGIN_SRC clojure
+  (defn sum
+    ([vals] (sum vals 0))
+    ([vals accumulating-total]
+     (if (empty? vals)
+       accumulating-total
+       (recur (rest vals) 
+              (+ (first vals) accumulating-total))))) 
+;; this calls the second overload with 2 args
+#+END_SRC
+* Datatypes
+** multimethods
+We declare a multimethod with ~defmulti~ which defines the signature and the *dispatch function* for the multimethod. The return value of the dispatch function will need to match a method defined with ~defmethod~
