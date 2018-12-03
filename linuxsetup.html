@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Linux Setup</title>
+<!-- 2018-12-03 Mon 23:01 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="George Kontsevich" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Linux Setup</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Intro</a></li>
+<li><a href="#sec-2">Bash-completion</a></li>
+<li><a href="#sec-3">Syncthing</a></li>
+<li><a href="#sec-4">Fluxbox</a></li>
+<li><a href="#sec-5">Other</a>
+<ul>
+<li><a href="#sec-5-1">fstab settings for autmounting device</a></li>
+<li><a href="#sec-5-2">giving permissions to sigrok</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">Fonts</a></li>
+<li><a href="#sec-7">Emacs Daemon</a>
+<ul>
+<li><a href="#sec-7-1">The Daemon</a></li>
+<li><a href="#sec-7-2">The Client</a></li>
+</ul>
+</li>
+<li><a href="#sec-8">Firefox</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Intro</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Private notes on setting up (or re-setting up) my Linux/Ubuntu/Debian system
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Bash-completion</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+To autocomplete and make life easier
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">apt-get install bash-completion
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Syncthing</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+To sync my document and files
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">apt-get install syncthing
+</pre>
+</div>
+<blockquote>
+<p>
+Note: You can't run syncthing as a daemon in a <code>chroot</code>. So like on a chromebook/crouton, you simply have to run it from the command line as <code>syncthing</code> and then control it throught <a href="https://localhost:8384/">the browser</a>
+</p>
+</blockquote>
+<p>
+Next we need to set up <code>syncthing</code> to autostart on the system and run in the background as a daemon. Daemons are managed by <code>systemd</code>. For a description see: <a href="http://n0where.net/understanding-systemd">http://n0where.net/understanding-systemd</a>
+</p>
+
+<p>
+We will run syncthing as a system-service so it runs even when you're logged out. It can also be configured to run as a user-service that runs only when a user is logged in. This is described in the  <a href="https://docs.syncthing.net/users/autostart.html#linux">documentation</a>. To create the system service, run:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">systemctl enable syncthing@gk.service
+</pre>
+</div>
+<p>
+<code>gk</code> is my user name (replace is appropriate). Why does the <i>system</i> service require a username? <a href="https://www.linuxbabe.com/backup/install-syncthing-debian-8-server-back-up-website">Because</a> "The Syncthing system service must be started for a user with a home directory because Syncthing needs to store configuration files under the user’s home directory."
+</p>
+
+<p>
+This creates some symlink from the <code>systemd</code> config files to some other stored file (for <code>syncthing</code>) that Debian has added to <code>systemd</code> for us. (these paths don't make sense to me&#x2026; but okay)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">/etc/systemd/system/multi-user.target.wants/syncthing@syncthing.service -&gt; /lib/systemd/system/syncthing@.service
+</pre>
+</div>
+<p>
+Next we launch the service we've added
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">systemctl start syncthing@gk.service
+</pre>
+</div>
+<p>
+To check it's status there is the following <code>systemd</code> command
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">systemctl status syncthing@gk.service
+</pre>
+</div>
+<p>
+But it's a bit last-resort. It's easier to check through the <a href="https://localhost:8384/">control panel</a><br  />
+<a href="https://localhost:8384/">https://localhost:8384/</a>
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Fluxbox</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+
+<pre class="src src-sh">apt-get install fluxbox
+apt-get install xorg
+apt-get install xserver-org
+</pre>
+</div>
+<p>
+First install is about 20MB<br  />
+Second is around 200MB
+to launch the X11 server and run <code>fluxbox</code>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">startfluxbox
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">Other</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1">fstab settings for autmounting device</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+/dev/disk/by-id/usb-SanDisk<sub>Cruzer</sub><sub>Blade</sub><sub>4C531001550107103073</sub>-0:0-part1 /home/geokon/USB auto nosuid,nodev,nofail,x-gvfs-show,auto,exec,uid=geokon,gid=geokon,x-systemd.automount 0 0
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2">giving permissions to sigrok</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Need to be done by adding permissions files into <code>/usr/lib/udev/rules.d/</code>
+<a href="https://sigrok.org/gitweb/?p=libsigrok.git;a=blob;f=README.devices">https://sigrok.org/gitweb/?p=libsigrok.git;a=blob;f=README.devices</a>
+<a href="https://raw.githubusercontent.com/sigrokproject/libsigrok/master/contrib/60-libsigrok.rules">https://raw.githubusercontent.com/sigrokproject/libsigrok/master/contrib/60-libsigrok.rules</a>
+<a href="https://raw.githubusercontent.com/sigrokproject/libsigrok/master/contrib/61-libsigrok-uaccess.rules">https://raw.githubusercontent.com/sigrokproject/libsigrok/master/contrib/61-libsigrok-uaccess.rules</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6">Fonts</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+This is super confusing.. so this is just a list of notes
+</p>
+
+<p>
+Ubuntu blocks bitmap fonts by default for some reason - so you need to delete some special file to reenable them. Details are here: <a href="https://wiki.ubuntu.com/Fonts#Enabling_Bitmapped_Fonts">https://wiki.ubuntu.com/Fonts#Enabling_Bitmapped_Fonts</a>
+</p>
+
+<p>
+If a bitmap font comes in a TrueType format, don't use that! It will come out looking weird and will scale in strange ways
+</p>
+
+<p>
+The tewi font has instructions on how to install things; <a href="https://github.com/lucy/tewi-font#installation">https://github.com/lucy/tewi-font#installation</a>  You need to download the BDF file, then convert it to a PCF file, put them into a directory and use <code>xset +fp /path/to/fontdir/</code> to then add that directory to the list of font directories. Then run <code>fc-cache -fv</code> to rescan all the fonts on the system. After that it should show up in the font menues
+</p>
+
+<p>
+The .Xresources file will have two lines to setup Emacs and Xterm:
+</p>
+
+<pre class="example">
+Emacs.font: Zpix
+XTerm*faceName: Zpix
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7">Emacs Daemon</h2>
+<div class="outline-text-2" id="text-7">
+</div><div id="outline-container-sec-7-1" class="outline-3">
+<h3 id="sec-7-1">The Daemon</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+In <code>~/.config/systemd/user/emacs.service</code> you need to add a new service to run the Emacs daemon which should look like this
+</p>
+
+<blockquote>
+<p>
+[Unit]
+Description=Emacs: the extensible, self-documenting text editor
+</p>
+
+<p>
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs &#x2013;daemon
+ExecStop=/usr/bin/emacsclient &#x2013;eval "(progn (setq kill-emacs-hook 'nil) (kill-emacs))"
+Environment="LC<sub>CTYPE</sub>=zh<sub>CN</sub>.UTF-8" "XMODIFIERS=@im=fcitx"
+Restart=always
+</p>
+
+<p>
+TimeoutStartSec=0
+</p>
+
+<p>
+[Install]
+WantedBy=default.target
+</p>
+</blockquote>
+
+<p>
+Then you launch it for the user
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">systemctl --user enable emacs.service
+systemctl --user start emacs.service
+<span style="color: #b2b2b2; font-style: italic;">#</span><span style="color: #b2b2b2; font-style: italic;">systemctl --user status emacs.service</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7-2" class="outline-3">
+<h3 id="sec-7-2">The Client</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+In <code>~/.local/share/applications/</code>
+You need to remove the Emacs entry (usually <code>emacs.desktop</code>) and replace it with <code>~/.local/share/applications/emacsclient.desktop</code>
+</p>
+
+<p>
+Which will look like this
+</p>
+
+<blockquote>
+<p>
+[Desktop Entry]
+Name=Emacs
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=emacsclient -c
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;Utility;
+StartupWMClass=Emacs
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8">Firefox</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+To use the downloaded verison of Firefox you need to add it to the menus and stuff so you can set it as default browser more easy.
+</p>
+
+<p>
+In <code>~/.local/share/applications/</code>
+Add a <code>firefox.desktop</code> with:
+</p>
+
+<blockquote>
+<p>
+[Desktop Entry]
+Type=Application
+Exec=/home/geokon/bin/firefox/firefox %u
+Icon=firefox
+Name=Firefox
+Categories=Internet;
+Comment=Custom definition for Firefox
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: George Kontsevich</p>
+<p class="date">Created: 2018-12-03 Mon 23:01</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

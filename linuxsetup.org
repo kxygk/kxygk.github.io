@@ -1,0 +1,156 @@
+#+TITLE: Linux Setup
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
+#+options: num:nil
+
+* Intro
+Private notes on setting up (or re-setting up) my Linux/Ubuntu/Debian system
+
+* Bash-completion
+To autocomplete and make life easier
+#+BEGIN_SRC sh
+  apt-get install bash-completion
+#+END_SRC
+
+* Syncthing
+To sync my document and files
+#+BEGIN_SRC sh
+  apt-get install syncthing
+#+END_SRC
+#+BEGIN_QUOTE
+Note: You can't run syncthing as a daemon in a ~chroot~. So like on a chromebook/crouton, you simply have to run it from the command line as ~syncthing~ and then control it throught [[https://localhost:8384/][the browser]]
+#+END_QUOTE
+Next we need to set up ~syncthing~ to autostart on the system and run in the background as a daemon. Daemons are managed by ~systemd~. For a description see: http://n0where.net/understanding-systemd
+
+We will run syncthing as a system-service so it runs even when you're logged out. It can also be configured to run as a user-service that runs only when a user is logged in. This is described in the  [[https://docs.syncthing.net/users/autostart.html#linux][documentation]]. To create the system service, run:
+#+BEGIN_SRC sh
+  systemctl enable syncthing@gk.service
+#+END_SRC
+~gk~ is my user name (replace is appropriate). Why does the /system/ service require a username? [[https://www.linuxbabe.com/backup/install-syncthing-debian-8-server-back-up-website][Because]] "The Syncthing system service must be started for a user with a home directory because Syncthing needs to store configuration files under the user’s home directory."
+
+This creates some symlink from the ~systemd~ config files to some other stored file (for ~syncthing~) that Debian has added to ~systemd~ for us. (these paths don't make sense to me... but okay)
+#+BEGIN_SRC sh
+/etc/systemd/system/multi-user.target.wants/syncthing@syncthing.service -> /lib/systemd/system/syncthing@.service
+#+END_SRC
+Next we launch the service we've added
+#+BEGIN_SRC sh
+  systemctl start syncthing@gk.service
+#+END_SRC
+To check it's status there is the following ~systemd~ command
+#+BEGIN_SRC sh
+  systemctl status syncthing@gk.service
+#+END_SRC
+But it's a bit last-resort. It's easier to check through the [[https://localhost:8384/][control panel]]\\
+https://localhost:8384/
+
+
+* Fluxbox
+#+BEGIN_SRC sh
+  apt-get install fluxbox
+  apt-get install xorg
+  apt-get install xserver-org
+#+END_SRC
+First install is about 20MB\\
+Second is around 200MB
+to launch the X11 server and run ~fluxbox~
+#+BEGIN_SRC sh
+  startfluxbox
+#+END_SRC
+
+
+
+* Other
+
+** fstab settings for autmounting device
+/dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C531001550107103073-0:0-part1 /home/geokon/USB auto nosuid,nodev,nofail,x-gvfs-show,auto,exec,uid=geokon,gid=geokon,x-systemd.automount 0 0
+
+** giving permissions to sigrok
+Need to be done by adding permissions files into =/usr/lib/udev/rules.d/=
+https://sigrok.org/gitweb/?p=libsigrok.git;a=blob;f=README.devices
+https://raw.githubusercontent.com/sigrokproject/libsigrok/master/contrib/60-libsigrok.rules
+https://raw.githubusercontent.com/sigrokproject/libsigrok/master/contrib/61-libsigrok-uaccess.rules
+
+* Fonts
+This is super confusing.. so this is just a list of notes
+
+Ubuntu blocks bitmap fonts by default for some reason - so you need to delete some special file to reenable them. Details are here: https://wiki.ubuntu.com/Fonts#Enabling_Bitmapped_Fonts
+
+If a bitmap font comes in a TrueType format, don't use that! It will come out looking weird and will scale in strange ways
+
+The tewi font has instructions on how to install things; https://github.com/lucy/tewi-font#installation  You need to download the BDF file, then convert it to a PCF file, put them into a directory and use ~xset +fp /path/to/fontdir/~ to then add that directory to the list of font directories. Then run ~fc-cache -fv~ to rescan all the fonts on the system. After that it should show up in the font menues
+
+The .Xresources file will have two lines to setup Emacs and Xterm:
+
+#+BEGIN_SRC 
+Emacs.font: Zpix
+XTerm*faceName: Zpix
+#+END_SRC
+
+* Emacs Daemon
+
+** The Daemon
+In =~/.config/systemd/user/emacs.service= you need to add a new service to run the Emacs daemon which should look like this
+
+#+BEGIN_QUOTE
+[Unit]
+Description=Emacs: the extensible, self-documenting text editor
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval "(progn (setq kill-emacs-hook 'nil) (kill-emacs))"
+Environment="LC_CTYPE=zh_CN.UTF-8" "XMODIFIERS=@im=fcitx"
+Restart=always
+
+# Remove the limit in startup timeout, since emacs
+# cloning and building all packages can take time
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
+#+END_QUOTE
+
+Then you launch it for the user
+
+#+BEGIN_SRC sh
+systemctl --user enable emacs.service
+systemctl --user start emacs.service
+#systemctl --user status emacs.service
+#+END_SRC
+
+** The Client
+
+In =~/.local/share/applications/=
+You need to remove the Emacs entry (usually =emacs.desktop=) and replace it with =~/.local/share/applications/emacsclient.desktop=
+
+Which will look like this
+
+#+BEGIN_QUOTE
+[Desktop Entry]
+Name=Emacs
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=emacsclient -c
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;Utility;
+StartupWMClass=Emacs
+#+END_QUOTE
+
+* Firefox
+
+To use the downloaded verison of Firefox you need to add it to the menus and stuff so you can set it as default browser more easy.
+
+In =~/.local/share/applications/=
+Add a =firefox.desktop= with:
+
+#+BEGIN_QUOTE
+[Desktop Entry]
+Type=Application
+Exec=/home/geokon/bin/firefox/firefox %u
+Icon=firefox
+Name=Firefox
+Categories=Internet;
+Comment=Custom definition for Firefox
+#+END_QUOTE
