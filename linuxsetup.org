@@ -1,4 +1,8 @@
 #+TITLE: Linux Setup
+#+HTML_DOCTYPE: html5
+#+DESCRIPTION: Some linear algebra in Clojure - source at https://github.com/geokon-gh/linearsystems-part2
+#+OPTIONS: html-style:nil
+
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
 #+options: num:nil
 
