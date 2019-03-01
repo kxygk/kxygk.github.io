@@ -1,10 +1,12 @@
 #+TITLE:
-#+HTML_DOCTYPE: html5
-#+DESCRIPTION: Some linear algebra in Clojure - source at https://github.com/geokon-gh/linearsystems-part2
-#+OPTIONS: html-style:nil
+#+DESCRIPTION: George Kontsevich's landing page
 
+#+EXPORT_FILE_NAME: index.html
+#+HTML_DOCTYPE: html5
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
-#+options: num:nil
+#+HTML_MATHJAX: path: "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"
+#+OPTIONS: html-style:nil
+#+OPTIONS: num:nil
 #+OPTIONS: html-postamble:nil
 #+OPTIONS: toc:nil 
 
