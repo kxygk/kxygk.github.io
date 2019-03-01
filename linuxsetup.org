@@ -1,10 +1,13 @@
 #+TITLE: Linux Setup
-#+HTML_DOCTYPE: html5
-#+DESCRIPTION: Some linear algebra in Clojure - source at https://github.com/geokon-gh/linearsystems-part2
-#+OPTIONS: html-style:nil
+#+DESCRIPTION: Notes from setting up things on Linux
 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
-#+options: num:nil
+#+HTML_DOCTYPE: html5
+#+HTML_LINK_UP: ./index.html
+#+HTML_LINK_HOME: ./index.html
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
+#+HTML_MATHJAX: path: "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"
+#+OPTIONS: html-style:nil
+#+OPTIONS: num:nil
 
 * Intro
 Private notes on setting up (or re-setting up) my Linux/Ubuntu/Debian system
@@ -27,9 +30,9 @@ Next we need to set up ~syncthing~ to autostart on the system and run in the bac
 
 We will run syncthing as a system-service so it runs even when you're logged out. It can also be configured to run as a user-service that runs only when a user is logged in. This is described in the  [[https://docs.syncthing.net/users/autostart.html#linux][documentation]]. To create the system service, run:
 #+BEGIN_SRC sh
-  systemctl enable syncthing@gk.service
+  systemctl enable syncthing@geokon.service
 #+END_SRC
-~gk~ is my user name (replace is appropriate). Why does the /system/ service require a username? [[https://www.linuxbabe.com/backup/install-syncthing-debian-8-server-back-up-website][Because]] "The Syncthing system service must be started for a user with a home directory because Syncthing needs to store configuration files under the user’s home directory."
+~geokon~ is my user name (replace is appropriate). Why does the /system/ service require a username? [[https://www.linuxbabe.com/backup/install-syncthing-debian-8-server-back-up-website][Because]] "The Syncthing system service must be started for a user with a home directory because Syncthing needs to store configuration files under the user’s home directory."
 
 This creates some symlink from the ~systemd~ config files to some other stored file (for ~syncthing~) that Debian has added to ~systemd~ for us. (these paths don't make sense to me... but okay)
 #+BEGIN_SRC sh
@@ -37,11 +40,11 @@ This creates some symlink from the ~systemd~ config files to some other stored f
 #+END_SRC
 Next we launch the service we've added
 #+BEGIN_SRC sh
-  systemctl start syncthing@gk.service
+  systemctl start syncthing@geokon.service
 #+END_SRC
 To check it's status there is the following ~systemd~ command
 #+BEGIN_SRC sh
-  systemctl status syncthing@gk.service
+  systemctl status syncthing@geokon.service
 #+END_SRC
 But it's a bit last-resort. It's easier to check through the [[https://localhost:8384/][control panel]]\\
 https://localhost:8384/
@@ -65,7 +68,18 @@ to launch the X11 server and run ~fluxbox~
 * Other
 
 ** fstab settings for autmounting device
+
+#+BEGIN_SRC
 /dev/disk/by-id/usb-SanDisk_Cruzer_Blade_4C531001550107103073-0:0-part1 /home/geokon/USB auto nosuid,nodev,nofail,x-gvfs-show,auto,exec,uid=geokon,gid=geokon,x-systemd.automount 0 0
+#+END_SRC
+
+this goes into ~/etc/fstab/~ on a separate line on its own
+
+In another version it looked like this for me
+
+#+BEGIN_SRC
+/dev/disk/by-id/usb-Samsung_Flash_Drive_0376618030015678-0:0-part1 /home/geokon/USB auto nosuid,nodev,nofail,x-gvfs-show,auto,exec,uid=geokon,gid=geokon,x-systemd.automount\0400\0400 0 0 
+#+END_SRC
 
 ** giving permissions to sigrok
 Need to be done by adding permissions files into =/usr/lib/udev/rules.d/=
@@ -90,7 +104,6 @@ XTerm*faceName: Zpix
 #+END_SRC
 
 * Emacs Daemon
-
 ** The Daemon
 In =~/.config/systemd/user/emacs.service= you need to add a new service to run the Emacs daemon which should look like this
 
@@ -158,3 +171,6 @@ Name=Firefox
 Categories=Internet;
 Comment=Custom definition for Firefox
 #+END_QUOTE
+
+* fcitx
+Once you install it and the frontend you need to run =im-config= and then select to configure =fcitx= (so click Yes when it suggests to click No and then you will see the option there). Then restart
