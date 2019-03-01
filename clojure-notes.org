@@ -1,11 +1,13 @@
 #+TITLE: Clojure Notes
+#+DESCRIPTION: Notes from studying Clojure
+
 #+HTML_DOCTYPE: html5
-#+DESCRIPTION: Some linear algebra in Clojure - source at https://github.com/geokon-gh/linearsystems-part2
+#+HTML_LINK_UP: ./index.html
+#+HTML_LINK_HOME: ./index.html
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
+#+HTML_MATHJAX: path: "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"
 #+OPTIONS: html-style:nil
-
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
-#+options: num:nil toc:nil
-
+#+OPTIONS: num:nil
 
 * Preface
 
@@ -434,3 +436,31 @@ example: feeding into the ~(map)~
 * Datatypes
 ** multimethods
 We declare a multimethod with ~defmulti~ which defines the signature and the *dispatch function* for the multimethod. The return value of the dispatch function will need to match a method defined with ~defmethod~
+
+* Notes on performance
+
+From: https://reddit.com/comments/a2ubj8/comment/eb2qthy
+
+#+BEGIN_QUOTE
+You're causing reflection by invoking the .contains method on an unhinted var.  The compiler can't figure out whether the method exists at compile time, so has to resort to invoking clojure.lang method reflectors over and over to lookup the method on the object using java reflection.  This is a canonical source of drastic overhead.
+
+First pass:
+
+    (set! *warn-on-reflection* true)
+
+Will provide warnings where your code is causing reflection, and likely orders of magnitude slowdown.
+
+The fix (for this) is to avoid reflection via type-hints, or better yet, use built-in functions that provide the functionality and/or already have hints in place for you....You could throw a type-hint into the existing code and see if that eliminates reflection (one source of slowdown, maybe enough to get you reasonable speed).
+
+    ;;fix reflection (but not algorithmic complexity) and not
+    ;;idiomatic.
+    (.contains ^clojure.lang.PersistentVector frequencies new-frequency)
+    ;;or use some (there are likely other sequence libraries)
+    (some #{new-frequency} frequencies)
+
+I haven't looked at the AOC day 1 problem, but your use-case looks like maybe a set datastructure would be better than a vector in this case.  If you're checking for membership in a set of numbers, maintaining a set/map/sorted set would likely be better than repeatedly scanning through collection in linear time (may depend on problem size though, small linear scans can be faster in some cases).
+
+Other potential problems: you're using O(N) operations in some cases.  nth, when used on a sequence, is O(N) vs. ~O(1) for a vector or array.  count is similarly potentially slow depending on datatype (although I think count will cache its result for a sequence, but in the worst case, you could also be doing additional O(N) counts every iteration....)  So every time you scan, you have to repeatedly traverse the changes sequence that you read in.  You can avoid this by ensuring that changes is a vector, which will regain lookup efficiency.  Either return a vector from get-numbers, or coerce the get-numbers call to a vec...
+
+Just looking at the uses here, I think there's a better approach (algorithmically speaking) than repeated linear scans, with linear lookups, to satisfy the criteria.  However, for the problem size, it may end up being just fine if you fix the reflection warning :)  I'd be tempted to look at expressing the problem using loop/recur, reduce, and other variants to learn, as well as optimize.
+#+END_QUOTE

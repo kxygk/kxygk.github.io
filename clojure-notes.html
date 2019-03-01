@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2019-03-01 五 19:13 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clojure Notes Clojure Notes</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Notes from studying Clojure"
+>
+<link rel="stylesheet" type="text/css" href="./static/worg.css" />
+<link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Clojure Notes Clojure Notes</h1>
+
+<div id="outline-container-org03e712f" class="outline-2">
+<h2 id="org03e712f">Preface</h2>
+<div class="outline-text-2" id="text-org03e712f">
+<p>
+These are notes on Clojure - as I learn it. (I'm starting with knowing ELisp already).
+Copying most code from Clojure for the Brave and True and adding some extra tidbits I
+find
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8cc461b" class="outline-2">
+<h2 id="org8cc461b">Setup</h2>
+<div class="outline-text-2" id="text-org8cc461b">
+<p>
+You need to install <code>leiningen</code> and <code>clojure</code> and <code>openjdk</code> to get started. <code>leiningen</code>
+generates your project directories (this shouldn't be done manually for some reason)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">lein new app you-application-name
+</pre>
+</div>
+
+<p>
+The entry point of the new project will be in <code>/src/your-application-name/core.clj</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org07a24a6" class="outline-2">
+<h2 id="org07a24a6">Control Flow</h2>
+<div class="outline-text-2" id="text-org07a24a6">
+</div>
+<div id="outline-container-org1a8ba09" class="outline-3">
+<h3 id="org1a8ba09">if</h3>
+<div class="outline-text-3" id="text-org1a8ba09">
+<p>
+<code>(if boolean-form then-form optional-else-form)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">if</span> <span style="color: #1f5bff;">true</span>
+  <span style="color: #ff1f8b;">"By Zeus' hammer!"</span>
+  <span style="color: #ff1f8b;">"By Aquaman's trident"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">-&gt; "By Zeus' hammer</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org35cd208" class="outline-3">
+<h3 id="org35cd208">do</h3>
+<div class="outline-text-3" id="text-org35cd208">
+<p>
+<code>(do thing1 thing2 ..)</code> <br>
+<i>executes multiple things in a place that expects on. The last thing will be the return value</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">if</span> <span style="color: #1f5bff;">true</span>
+  (<span style="color: #00af00;">do</span> (println <span style="color: #ff1f8b;">"Success!"</span><span style="color: #999999;">)</span>
+      <span style="color: #ff1f8b;">"By Zeus' hammer!"</span><span style="color: #999999;">)</span>
+  (<span style="color: #00af00;">do</span> (println <span style="color: #ff1f8b;">"Failure!"</span><span style="color: #999999;">)</span>
+      <span style="color: #ff1f8b;">"By Aquaman's trident!"</span><span style="color: #999999;">)</span>
+  <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; Success!</span>
+  <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "By Zeus' hammer!"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4569def" class="outline-3">
+<h3 id="org4569def">when</h3>
+<div class="outline-text-3" id="text-org4569def">
+<p>
+<code>(when test thing1 thing2 ..)</code> <br>
+<i>evaluates test. If logical true, evaluates body in an implicit do.</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">when</span> <span style="color: #1f5bff;">true</span>
+  (println <span style="color: #ff1f8b;">"Success!"</span><span style="color: #999999;">)</span>
+  <span style="color: #ff1f8b;">"abra cadabra"</span><span style="color: #999999;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3e6788c" class="outline-2">
+<h2 id="org3e6788c">Data Structures</h2>
+<div class="outline-text-2" id="text-org3e6788c">
+</div>
+<div id="outline-container-orgb8cbe55" class="outline-3">
+<h3 id="orgb8cbe55">numbers</h3>
+<div class="outline-text-3" id="text-orgb8cbe55">
+<ul class="org-ul">
+<li>integer: <code>3</code></li>
+<li>floating: <code>3.0</code></li>
+<li>fraction: <code>30/10</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3d14ade" class="outline-3">
+<h3 id="org3d14ade">maps - {}</h3>
+<div class="outline-text-3" id="text-org3d14ade">
+<p>
+Not to be confused with the <code>map</code> higher-order-function. <br>
+<i>a collection of pairs of keys and items. both can be anything</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #1f5bff;">:first-name</span> <span style="color: #ff1f8b;">"Charlie"</span>
+ <span style="color: #1f5bff;">:last-name</span> <span style="color: #ff1f8b;">"McFishwich"</span><span style="color: #999999;">}</span>
+
+{<span style="color: #ff1f8b;">"string-key"</span> +} <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">weird example. the key is a string and the item is the + symbol</span>
+</pre>
+</div>
+<p>
+<code>(get map key) or (get map key fallback)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> 1} <span style="color: #1f5bff;">:b</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; 1</span>
+(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> {<span style="color: #1f5bff;">:c</span> <span style="color: #ff1f8b;">"ho hum"</span>}} <span style="color: #1f5bff;">:b</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; {:c "ho hum"}</span>
+(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> 1} <span style="color: #1f5bff;">:c</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; nil</span>
+
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">using a default/fallback value</span>
+(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> 1} <span style="color: #1f5bff;">:c</span> <span style="color: #ff1f8b;">"fallback unicorns"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "fallback unicorns"</span>
+</pre>
+</div>
+<p>
+<i>a more short-hand way of doing the same.. use the map as a function itself</i>
+<code>({map} key)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">({<span style="color: #1f5bff;">:name</span> <span style="color: #ff1f8b;">"The Human Coffeepot"</span>} <span style="color: #1f5bff;">:name</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "The Human Coffeepot"</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2739158" class="outline-4">
+<h4 id="org2739158">keywords</h4>
+<div class="outline-text-4" id="text-org2739158">
+<p>
+these are like special keys that can also be used as a function to retrieve items in a map. So sorta inverting the last example <br>
+<code>(keyword map) or (keyword map fallback)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #1f5bff;">:a</span> {<span style="color: #1f5bff;">:a</span> 1 <span style="color: #1f5bff;">:b</span> 2 <span style="color: #1f5bff;">:c</span> 3<span style="color: #999999;">})</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; 1</span>
+
+(<span style="color: #1f5bff;">:d</span> {<span style="color: #1f5bff;">:a</span> 1 <span style="color: #1f5bff;">:b</span> 2 <span style="color: #1f5bff;">:c</span> 3} <span style="color: #ff1f8b;">"more fallback unicorns"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "more fallback unicorns"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0c64aeb" class="outline-3">
+<h3 id="org0c64aeb">vector - []</h3>
+<div class="outline-text-3" id="text-org0c64aeb">
+<div class="org-src-container">
+<pre class="src src-clojure">[3 2 1<span style="color: #999999;">]</span>
+
+(get [3 2 1] 0<span style="color: #999999;">)</span>
+
+(get [<span style="color: #ff1f8b;">"a"</span> {<span style="color: #1f5bff;">:name</span> <span style="color: #ff1f8b;">"Pugsley"</span>} <span style="color: #ff1f8b;">"c"</span>] 1<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; {:name "Pugsley"}</span>
+
+(vector <span style="color: #ff1f8b;">"creepy"</span> <span style="color: #ff1f8b;">"full"</span> <span style="color: #ff1f8b;">"moon"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; ["creepy" "full" "moon"]</span>
+
+(conj [1 2 3] 4<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; [1 2 3 4]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org095c27d" class="outline-3">
+<h3 id="org095c27d">lists - '()</h3>
+<div class="outline-text-3" id="text-org095c27d">
+<div class="org-src-container">
+<pre class="src src-clojure">'(1 2 3 4<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (1 2 3 4)</span>
+
+(nth '(<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">:b</span> <span style="color: #1f5bff;">:c</span>) 2<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=? :c</span>
+
+(list 1 <span style="color: #ff1f8b;">"two"</span> {3 4<span style="color: #999999;">})</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (1 "two {3 4})</span>
+
+(conj '(1 2 3) 4<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (4 1 2 3)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">NOTICE! Goes to the front!</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgd296442" class="outline-2">
+<h2 id="orgd296442">Preface</h2>
+<div class="outline-text-2" id="text-orgd296442">
+<p>
+These are notes on Clojure - as I learn it. (I'm starting with knowing ELisp already).
+Copying most code from Clojure for the Brave and True and adding some extra tidbits I
+find
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgff4da08" class="outline-2">
+<h2 id="orgff4da08">Setup</h2>
+<div class="outline-text-2" id="text-orgff4da08">
+<p>
+You need to install <code>leiningen</code> and <code>clojure</code> and <code>openjdk</code> to get started. <code>leiningen</code>
+generates your project directories (this shouldn't be done manually for some reason)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">lein new app you-application-name
+</pre>
+</div>
+
+<p>
+The entry point of the new project will be in <code>/src/your-application-name/core.clj</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org26f3c63" class="outline-2">
+<h2 id="org26f3c63">Control Flow</h2>
+<div class="outline-text-2" id="text-org26f3c63">
+</div>
+<div id="outline-container-orgeb592cb" class="outline-3">
+<h3 id="orgeb592cb">if</h3>
+<div class="outline-text-3" id="text-orgeb592cb">
+<p>
+<code>(if boolean-form then-form optional-else-form)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">if</span> <span style="color: #1f5bff;">true</span>
+  <span style="color: #ff1f8b;">"By Zeus' hammer!"</span>
+  <span style="color: #ff1f8b;">"By Aquaman's trident"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">-&gt; "By Zeus' hammer</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org48f992c" class="outline-3">
+<h3 id="org48f992c">do</h3>
+<div class="outline-text-3" id="text-org48f992c">
+<p>
+<code>(do thing1 thing2 ..)</code> <br>
+<i>executes multiple things in a place that expects on. The last thing will be the return value</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">if</span> <span style="color: #1f5bff;">true</span>
+  (<span style="color: #00af00;">do</span> (println <span style="color: #ff1f8b;">"Success!"</span><span style="color: #999999;">)</span>
+      <span style="color: #ff1f8b;">"By Zeus' hammer!"</span><span style="color: #999999;">)</span>
+  (<span style="color: #00af00;">do</span> (println <span style="color: #ff1f8b;">"Failure!"</span><span style="color: #999999;">)</span>
+      <span style="color: #ff1f8b;">"By Aquaman's trident!"</span><span style="color: #999999;">)</span>
+  <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; Success!</span>
+  <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "By Zeus' hammer!"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdacdbf6" class="outline-3">
+<h3 id="orgdacdbf6">when</h3>
+<div class="outline-text-3" id="text-orgdacdbf6">
+<p>
+<code>(when test thing1 thing2 ..)</code> <br>
+<i>evaluates test. If logical true, evaluates body in an implicit do.</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">when</span> <span style="color: #1f5bff;">true</span>
+  (println <span style="color: #ff1f8b;">"Success!"</span><span style="color: #999999;">)</span>
+  <span style="color: #ff1f8b;">"abra cadabra"</span><span style="color: #999999;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a5628e" class="outline-2">
+<h2 id="org1a5628e">Data Structures</h2>
+<div class="outline-text-2" id="text-org1a5628e">
+</div>
+<div id="outline-container-orgcc9d865" class="outline-3">
+<h3 id="orgcc9d865">numbers</h3>
+<div class="outline-text-3" id="text-orgcc9d865">
+<ul class="org-ul">
+<li>integer: <code>3</code></li>
+<li>floating: <code>3.0</code></li>
+<li>fraction: <code>30/10</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbb6483d" class="outline-3">
+<h3 id="orgbb6483d">maps - {}</h3>
+<div class="outline-text-3" id="text-orgbb6483d">
+<p>
+Not to be confused with the <code>map</code> higher-order-function. <br>
+<i>a collection of pairs of keys and items. both can be anything</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #1f5bff;">:first-name</span> <span style="color: #ff1f8b;">"Charlie"</span>
+ <span style="color: #1f5bff;">:last-name</span> <span style="color: #ff1f8b;">"McFishwich"</span><span style="color: #999999;">}</span>
+
+{<span style="color: #ff1f8b;">"string-key"</span> +} <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">weird example. the key is a string and the item is the + symbol</span>
+</pre>
+</div>
+<p>
+<code>(get map key) or (get map key fallback)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> 1} <span style="color: #1f5bff;">:b</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; 1</span>
+(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> {<span style="color: #1f5bff;">:c</span> <span style="color: #ff1f8b;">"ho hum"</span>}} <span style="color: #1f5bff;">:b</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; {:c "ho hum"}</span>
+(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> 1} <span style="color: #1f5bff;">:c</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; nil</span>
+
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">using a default/fallback value</span>
+(get {<span style="color: #1f5bff;">:a</span> 0 <span style="color: #1f5bff;">:b</span> 1} <span style="color: #1f5bff;">:c</span> <span style="color: #ff1f8b;">"fallback unicorns"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "fallback unicorns"</span>
+</pre>
+</div>
+<p>
+<i>a more short-hand way of doing the same.. use the map as a function itself</i>
+<code>({map} key)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">({<span style="color: #1f5bff;">:name</span> <span style="color: #ff1f8b;">"The Human Coffeepot"</span>} <span style="color: #1f5bff;">:name</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "The Human Coffeepot"</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgada0cef" class="outline-4">
+<h4 id="orgada0cef">keywords</h4>
+<div class="outline-text-4" id="text-orgada0cef">
+<p>
+these are like special keys that can also be used as a function to retrieve items in a map. So sorta inverting the last example <br>
+<code>(keyword map) or (keyword map fallback)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #1f5bff;">:a</span> {<span style="color: #1f5bff;">:a</span> 1 <span style="color: #1f5bff;">:b</span> 2 <span style="color: #1f5bff;">:c</span> 3<span style="color: #999999;">})</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; 1</span>
+
+(<span style="color: #1f5bff;">:d</span> {<span style="color: #1f5bff;">:a</span> 1 <span style="color: #1f5bff;">:b</span> 2 <span style="color: #1f5bff;">:c</span> 3} <span style="color: #ff1f8b;">"more fallback unicorns"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; "more fallback unicorns"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa80043" class="outline-3">
+<h3 id="orgfa80043">vector - []</h3>
+<div class="outline-text-3" id="text-orgfa80043">
+<div class="org-src-container">
+<pre class="src src-clojure">[3 2 1<span style="color: #999999;">]</span>
+
+(get [3 2 1] 0<span style="color: #999999;">)</span>
+
+(get [<span style="color: #ff1f8b;">"a"</span> {<span style="color: #1f5bff;">:name</span> <span style="color: #ff1f8b;">"Pugsley"</span>} <span style="color: #ff1f8b;">"c"</span>] 1<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; {:name "Pugsley"}</span>
+
+(vector <span style="color: #ff1f8b;">"creepy"</span> <span style="color: #ff1f8b;">"full"</span> <span style="color: #ff1f8b;">"moon"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; ["creepy" "full" "moon"]</span>
+
+(conj [1 2 3] 4<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; [1 2 3 4]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org479a766" class="outline-3">
+<h3 id="org479a766">lists - '()</h3>
+<div class="outline-text-3" id="text-org479a766">
+<div class="org-src-container">
+<pre class="src src-clojure">'(1 2 3 4<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (1 2 3 4)</span>
+
+(nth '(<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">:b</span> <span style="color: #1f5bff;">:c</span>) 2<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=? :c</span>
+
+(list 1 <span style="color: #ff1f8b;">"two"</span> {3 4<span style="color: #999999;">})</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (1 "two {3 4})</span>
+
+(conj '(1 2 3) 4<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (4 1 2 3)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">NOTICE! Goes to the front!</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcc76c9f" class="outline-3">
+<h3 id="orgcc76c9f">sets - #{}</h3>
+<div class="outline-text-3" id="text-orgcc76c9f">
+<p>
+<i>collection of unique values</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">#{<span style="color: #ff1f8b;">"kurt"</span> 20 <span style="color: #1f5bff;">:icicle</span><span style="color: #999999;">}</span>
+
+(hash-set 1 1 2 2<span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; #{1 2}</span>
+
+(conj #{<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">:b</span>}<span style="color: #1f5bff;">:b</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; #{:a :b}</span>
+
+(set [3 3 3 4 4<span style="color: #999999;">])</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; #{3 4}</span>
+
+(contains? #{<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">:b</span>} <span style="color: #1f5bff;">:a</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; true</span>
+
+(<span style="color: #1f5bff;">:a</span> #{<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">:b</span><span style="color: #999999;">})</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; :a</span>
+
+(get #{<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">:b</span>} <span style="color: #1f5bff;">:a</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; :a</span>
+
+(get #{<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">nil</span>} <span style="color: #1f5bff;">nil</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; nil</span>
+
+(get #{<span style="color: #1f5bff;">:a</span> <span style="color: #1f5bff;">:b</span>} <span style="color: #ff1f8b;">"kurt"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; nil</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5a00571" class="outline-2">
+<h2 id="org5a00571">Functions</h2>
+<div class="outline-text-2" id="text-org5a00571">
+</div>
+<div id="outline-container-org13ed1f5" class="outline-3">
+<h3 id="org13ed1f5">overloading</h3>
+<div class="outline-text-3" id="text-org13ed1f5">
+<p>
+<i>done on argument</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">x-chop</span>
+  <span style="color: #cc0000;">"Describe the kind of chope you inflict"</span>
+  ([name chop-type<span style="color: #999999;">]</span>
+   (str <span style="color: #ff1f8b;">"I "</span> chop-type <span style="color: #ff1f8b;">" chop"</span> name <span style="color: #ff1f8b;">"! Take that!"</span><span style="color: #999999;">))</span>
+  ([name<span style="color: #999999;">]</span>
+   (x-chop name <span style="color: #ff1f8b;">"karate"</span><span style="color: #999999;">)))</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org70e3cd7" class="outline-3">
+<h3 id="org70e3cd7">variable arity</h3>
+<div class="outline-text-3" id="text-org70e3cd7">
+<p>
+<code>[&amp; remainding-items]</code> 
+<i>and they are treated as a collection that you can use <code>map</code> on</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">codger-communication</span>
+  [whippersnapper<span style="color: #999999;">]</span>
+  (str <span style="color: #ff1f8b;">"Get off my lawn, "</span> whippersnapper <span style="color: #ff1f8b;">"!!!"</span><span style="color: #999999;">))</span>
+
+(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">codger</span>
+  [&amp; whippersnappers<span style="color: #999999;">]</span>
+  (map codger-communication whippersnappers<span style="color: #999999;">))</span>
+(codger <span style="color: #ff1f8b;">"Billy"</span> <span style="color: #ff1f8b;">"Ann-Marie"</span> <span style="color: #ff1f8b;">"The Incredible Bulk"</span><span style="color: #999999;">)</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; ("Get off my lawn, Billy!!!"</span>
+<span style="color: #b2b2b2; font-style: italic;">;;     </span><span style="color: #b2b2b2; font-style: italic;">"Get off my lawn,  Anne-Marie!!!"</span>
+<span style="color: #b2b2b2; font-style: italic;">;;     </span><span style="color: #b2b2b2; font-style: italic;">"Get off my lawn,  The Incredible Bulk")</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org0f6b9c4" class="outline-3">
+<h3 id="org0f6b9c4">private functions</h3>
+<div class="outline-text-3" id="text-org0f6b9c4">
+<p>
+<i>exclusive to a namespace</i>
+<code>(defn- privatefn)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">defn-</span> <span style="color: #ef2929;">private-function</span>
+  <span style="color: #cc0000;">"Just an empty example"</span>
+  [<span style="color: #999999;">])</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf21f14c" class="outline-3">
+<h3 id="orgf21f14c">destructuring</h3>
+<div class="outline-text-3" id="text-orgf21f14c">
+<p>
+<i>extracts things right in the argument declaration</i>
+</p>
+</div>
+<div id="outline-container-orgd68586a" class="outline-4">
+<h4 id="orgd68586a">first element</h4>
+<div class="outline-text-4" id="text-orgd68586a">
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">my-first</span>
+  [[first-thing<span style="color: #999999;">]]</span>
+  first-thing<span style="color: #999999;">)</span>
+
+(my-first [<span style="color: #ff1f8b;">"over"</span> <span style="color: #ff1f8b;">"bike"</span> <span style="color: #ff1f8b;">"war-axe"</span><span style="color: #999999;">])</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; oven</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1092bc6" class="outline-4">
+<h4 id="org1092bc6">vectors and variable arity</h4>
+<div class="outline-text-4" id="text-org1092bc6">
+<p>
+<i>sequencially match vector elements to indices in order. remainer placed with an ampersand</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">  (<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">chooser</span>
+  [[first second &amp;other-stuff<span style="color: #999999;">]]</span>
+    (println (str <span style="color: #ff1f8b;">"first thing was :"</span> first<span style="color: #999999;">))</span>
+    (println (str <span style="color: #ff1f8b;">"second was :"</span> second<span style="color: #999999;">))</span>
+    (println (str <span style="color: #ff1f8b;">"and the rest was  :"</span> 
+                  (<span style="color: #18b2b2;">clojure.string</span>/join <span style="color: #ff1f8b;">", "</span> other-stuff<span style="color: #999999;">))))</span>
+
+(chooser [<span style="color: #ff1f8b;">"icecream"</span>, <span style="color: #ff1f8b;">"cake"</span>, <span style="color: #ff1f8b;">"apples"</span>, <span style="color: #ff1f8b;">"lettuce"</span><span style="color: #999999;">])</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; first thing was: icecream</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; second was: cake</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; and the rest was : apples, lettuce</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge1ea396" class="outline-4">
+<h4 id="orge1ea396">maps and keywords</h4>
+<div class="outline-text-4" id="text-orge1ea396">
+<div class="org-src-container">
+<pre class="src src-clojure">
+
+</pre>
+</div>
+<p>
+<i>assign the map values as the given keys to the matching symbol</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">announce-treasure-location</span>
+  [{lat <span style="color: #1f5bff;">:lat</span> lng <span style="color: #1f5bff;">:lng</span><span style="color: #999999;">}]</span>
+  (print (str <span style="color: #ff1f8b;">"Treasure lat: "</span> lat<span style="color: #999999;">))</span>
+  (print (str <span style="color: #ff1f8b;">"Treasure lng: "</span> lng<span style="color: #999999;">)))</span>
+
+(announce-treasure-location {<span style="color: #1f5bff;">:lat</span> 28.22 <span style="color: #1f5bff;">:lng</span> 81.33<span style="color: #999999;">})</span>
+:<span style="color: #b2b2b2; font-style: italic;">; =&gt; Treasure lat : 28.22</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; Treasure lng: 81.33</span>
+</pre>
+</div>
+<p>
+<i>or automatically make the assigned symbols match the keyword in the map</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">announce-treasure-location</span>
+  [{<span style="color: #1f5bff;">:keys</span> [lat lng<span style="color: #999999;">]}]</span>
+  (print (str <span style="color: #ff1f8b;">"Treasure lat: "</span> lat<span style="color: #999999;">))</span>
+  (print (str <span style="color: #ff1f8b;">"Treasure lng: "</span> lng<span style="color: #999999;">)))</span>
+
+(announce-treasure-location {<span style="color: #1f5bff;">:lat</span> 28.22 <span style="color: #1f5bff;">:lng</span> 81.33<span style="color: #999999;">})</span>
+:<span style="color: #b2b2b2; font-style: italic;">; =&gt; Treasure lat : 28.22</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; Treasure lng: 81.33</span>
+</pre>
+</div>
+<p>
+<i>if you still need the un-destructured input map you can use the :as keyword</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">announce-treasure-location</span>
+  [{<span style="color: #1f5bff;">:keys</span> [lat lng] <span style="color: #1f5bff;">:as</span> treasure-location<span style="color: #999999;">}]</span>
+  (print (str <span style="color: #ff1f8b;">"Treasure lat: "</span> lat<span style="color: #999999;">))</span>
+  (print (str <span style="color: #ff1f8b;">"Treasure lng: "</span> lng<span style="color: #999999;">))</span>
+  (steer-ship! treasure-location)) <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">&lt;- we still want the input/map here!</span>
+
+(announce-treasure-location {<span style="color: #1f5bff;">:lat</span> 28.22 <span style="color: #1f5bff;">:lng</span> 81.33<span style="color: #999999;">}</span>
+
+:<span style="color: #b2b2b2; font-style: italic;">; =&gt; Treasure lat : 28.22</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; Treasure lng: 81.33</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org41b41f2" class="outline-3">
+<h3 id="org41b41f2">anonymous</h3>
+<div class="outline-text-3" id="text-org41b41f2">
+<p>
+<i>create in-place functions with no name</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #00af00;">fn</span> [param-list<span style="color: #999999;">]</span>
+  function body<span style="color: #999999;">)</span>
+</pre>
+</div>
+<p>
+example: feeding into the <code>(map)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(map (<span style="color: #00af00;">fn</span> [name] (str <span style="color: #ff1f8b;">"Hi, "</span> name))  <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">&lt;- apply this function</span>
+     [<span style="color: #ff1f8b;">"Darth Vader"</span> <span style="color: #ff1f8b;">"Mr. Magoo"</span>])   <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">&lt;- on these inputs</span>
+
+</pre>
+</div>
+<p>
+<i>shorthand:</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">#(* <span style="color: #ff8700;">%</span> 3) <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">same as (fn [x] (* x 3))</span>
+
+(#(* <span style="color: #ff8700;">%</span> 3) 8) <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">applied to the number 8</span>
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; 24</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf4ee0a8" class="outline-3">
+<h3 id="orgf4ee0a8">recusion</h3>
+<div class="outline-text-3" id="text-orgf4ee0a8">
+<p>
+<i>needs to be stated explicitly with (recur)</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">  (<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">sum</span>
+    ([vals] (sum vals 0<span style="color: #999999;">))</span>
+    ([vals accumulating-total<span style="color: #999999;">]</span>
+     (<span style="color: #00af00;">if</span> (empty? vals<span style="color: #999999;">)</span>
+       accumulating-total
+       (<span style="color: #00af00;">recur</span> (rest vals) 
+              (+ (first vals) accumulating-total))))) 
+<span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">this calls the second overload with 2 args</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3c57c78" class="outline-2">
+<h2 id="org3c57c78">Datatypes</h2>
+<div class="outline-text-2" id="text-org3c57c78">
+</div>
+<div id="outline-container-org0377cf1" class="outline-3">
+<h3 id="org0377cf1">multimethods</h3>
+<div class="outline-text-3" id="text-org0377cf1">
+<p>
+We declare a multimethod with <code>defmulti</code> which defines the signature and the <b>dispatch function</b> for the multimethod. The return value of the dispatch function will need to match a method defined with <code>defmethod</code>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7f862ef" class="outline-2">
+<h2 id="org7f862ef">Notes on performance</h2>
+<div class="outline-text-2" id="text-org7f862ef">
+<p>
+From: <a href="https://reddit.com/comments/a2ubj8/comment/eb2qthy">https://reddit.com/comments/a2ubj8/comment/eb2qthy</a>
+</p>
+
+<blockquote>
+<p>
+You're causing reflection by invoking the .contains method on an unhinted var.  The compiler can't figure out whether the method exists at compile time, so has to resort to invoking clojure.lang method reflectors over and over to lookup the method on the object using java reflection.  This is a canonical source of drastic overhead.
+</p>
+
+<p>
+First pass:
+</p>
+
+<p>
+(set! <b>warn-on-reflection</b> true)
+</p>
+
+<p>
+Will provide warnings where your code is causing reflection, and likely orders of magnitude slowdown.
+</p>
+
+<p>
+The fix (for this) is to avoid reflection via type-hints, or better yet, use built-in functions that provide the functionality and/or already have hints in place for you&#x2026;.You could throw a type-hint into the existing code and see if that eliminates reflection (one source of slowdown, maybe enough to get you reasonable speed).
+</p>
+
+<p>
+;;fix reflection (but not algorithmic complexity) and not
+;;idiomatic.
+(.contains ^clojure.lang.PersistentVector frequencies new-frequency)
+;;or use some (there are likely other sequence libraries)
+(some #{new-frequency} frequencies)
+</p>
+
+<p>
+I haven't looked at the AOC day 1 problem, but your use-case looks like maybe a set datastructure would be better than a vector in this case.  If you're checking for membership in a set of numbers, maintaining a set/map/sorted set would likely be better than repeatedly scanning through collection in linear time (may depend on problem size though, small linear scans can be faster in some cases).
+</p>
+
+<p>
+Other potential problems: you're using O(N) operations in some cases.  nth, when used on a sequence, is O(N) vs. ~O(1) for a vector or array.  count is similarly potentially slow depending on datatype (although I think count will cache its result for a sequence, but in the worst case, you could also be doing additional O(N) counts every iteration&#x2026;.)  So every time you scan, you have to repeatedly traverse the changes sequence that you read in.  You can avoid this by ensuring that changes is a vector, which will regain lookup efficiency.  Either return a vector from get-numbers, or coerce the get-numbers call to a vec&#x2026;
+</p>
+
+<p>
+Just looking at the uses here, I think there's a better approach (algorithmically speaking) than repeated linear scans, with linear lookups, to satisfy the criteria.  However, for the problem size, it may end up being just fine if you fix the reflection warning :)  I'd be tempted to look at expressing the problem using loop/recur, reduce, and other variants to learn, as well as optimize.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: George Kontsevich</p>
+<p class="date">Created: 2019-03-01 五 19:13</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
