@@ -1,6 +1,13 @@
 #+TITLE: A Quick introduction to Hunter
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
-#+options: num:nil toc:nil
+#+DESCRIPTION: Notes from setting up things on Linux
+
+#+HTML_DOCTYPE: html5
+#+HTML_LINK_UP: ./index.html
+#+HTML_LINK_HOME: ./index.html
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
+#+HTML_MATHJAX: path: "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"
+#+OPTIONS: html-style:nil
+#+OPTIONS: num:nil toc:nil
 
 * Motivation
 

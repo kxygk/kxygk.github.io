@@ -1,100 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
+<!-- 2019-03-02 六 16:47 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A Quick introduction to Hunter</title>
-<!-- 2018-03-20 Tue 18:30 -->
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="George Kontsevich" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { color: green; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  pre.src-sh:before    { content: 'sh'; }
-  pre.src-bash:before  { content: 'sh'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-R:before     { content: 'R'; }
-  pre.src-perl:before  { content: 'Perl'; }
-  pre.src-java:before  { content: 'Java'; }
-  pre.src-sql:before   { content: 'SQL'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.right  { text-align: center;  }
-  th.left   { text-align: center;   }
-  th.center { text-align: center; }
-  td.right  { text-align: right;  }
-  td.left   { text-align: left;   }
-  td.center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara:nth-child(2) { display: inline; }
-  .footpara { display: block; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  /*]]>*/-->
-</style>
-<link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Notes from setting up things on Linux"
+>
+<link rel="stylesheet" type="text/css" href="./static/worg.css" />
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -137,23 +58,28 @@ for the JavaScript code in this tag.
 </script>
 </head>
 <body>
-<div id="content">
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div><div id="content">
 <h1 class="title">A Quick introduction to Hunter</h1>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Motivation</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgd183706" class="outline-2">
+<h2 id="orgd183706">Motivation</h2>
+<div class="outline-text-2" id="text-orgd183706">
 <p>
 <code>Hunter</code> is a easy-to-use and easy-to-integrate dependency manager for C++ projects that run <code>CMake</code>. It works entirely from within <code>CMake</code>, so you don't need any extra software. Once your project is integrated with <code>Hunter</code>, contributors can clone your repository and immediately start working. During <code>CMake</code>'s configuration step all dependencies will be downloaded and built from source. This makes your project 100% independent of system libraries (other than the system's standard-library/libc)
 </p>
 </div>
 
-<div id="outline-container-sec-1-1" class="outline-3">
-<h3 id="sec-1-1">Alternate dependency managment strategies</h3>
-<div class="outline-text-3" id="text-1-1">
-</div><div id="outline-container-sec-1-1-1" class="outline-4">
-<h4 id="sec-1-1-1">ExternalProject<sub>Add</sub></h4>
-<div class="outline-text-4" id="text-1-1-1">
+<div id="outline-container-org1535245" class="outline-3">
+<h3 id="org1535245">Alternate dependency managment strategies</h3>
+<div class="outline-text-3" id="text-org1535245">
+</div>
+<div id="outline-container-orge497809" class="outline-4">
+<h4 id="orge497809">ExternalProject<sub>Add</sub></h4>
+<div class="outline-text-4" id="text-orge497809">
 <p>
 <a href="https://cmake.org/cmake/help/v3.2/module/ExternalProject.html">ExternalProject<sub>Add</sub>()</a> is a functionality built into <code>CMake</code> itself and will build 3rd party projects <i>in parallel</i> to your own project. It allows for custom build/install instructions and can support non-CMake based dependencies. It will fetch source code from <code>URL</code>'s / <code>git</code> and is very flexible but it has some serious drawbacks. Libraries are added by using <code>find_package()</code> and then juggling the  <code>CMake</code> variables you get back. 
 </p>
@@ -163,9 +89,9 @@ The reality is that it only works out-of-the-box for header-only libraries. Beca
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-1-2" class="outline-4">
-<h4 id="sec-1-1-2">git-submodule</h4>
-<div class="outline-text-4" id="text-1-1-2">
+<div id="outline-container-orge6157a4" class="outline-4">
+<h4 id="orge6157a4">git-submodule</h4>
+<div class="outline-text-4" id="text-orge6157a4">
 <p>
 A better solution (for dependencies that use <code>CMake</code>) is to put them in a <code>git-submodule</code>. This is described in more detail <a href="http://foonathan.net/blog/2016/07/07/cmake-dependency-handling.html">in this blog</a>, but typically your dependencies will live in a folder like <code>/contrib/</code> or <code>/externals/</code> and are directly linked to other repositories and don't bloat your own codebase. The submodule can be pinned to a commit or it can track a branch/tag so you get the latest changes. To use the submodule you simply add its top-level <code>CMakeLists.txt</code> directory with <code>add_subdirectory()</code> - just like it was another folder in your project - and then the submodule's targets become available directly for you to link with. This is a very clean solution because:
 </p>
@@ -192,9 +118,9 @@ But in a large project you will quickly hit some issues:
 </div>
 </div>
 
-<div id="outline-container-sec-1-1-3" class="outline-4">
-<h4 id="sec-1-1-3">a bigger pervasive issue.. DRY</h4>
-<div class="outline-text-4" id="text-1-1-3">
+<div id="outline-container-org9adddf6" class="outline-4">
+<h4 id="org9adddf6">a bigger pervasive issue.. DRY</h4>
+<div class="outline-text-4" id="text-org9adddf6">
 <p>
 The last issue affect both solutions and has no adequate fix in vanilla <code>CMake</code>. Mutliple libraries will share dependencies, especially with common libraries like <code>zlib</code>. Sometimes you will see a library simply build its own copy of <code>zlib</code> without asking, sometimes you can override it - but what you end up with is a final binary that has multiple linked <code>zlib</code>'s - typically at different version numbers! This <i>usually</i> works fine, but is undefined behavior. The linker doesn't have mechanisms for managing this. Not only is this sloppy, but the more libraries you have the more this becomes a potential issue.
 </p>
@@ -202,9 +128,9 @@ The last issue affect both solutions and has no adequate fix in vanilla <code>CM
 </div>
 </div>
 
-<div id="outline-container-sec-1-2" class="outline-3">
-<h3 id="sec-1-2">The Hunter fixes</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-orgd9c16d0" class="outline-3">
+<h3 id="orgd9c16d0">The Hunter fixes</h3>
+<div class="outline-text-3" id="text-orgd9c16d0">
 <p>
 <b>Dependencies are built at configuration time</b>:
 Hunter will download the source and build all your dependencies during configuration time.
@@ -234,27 +160,27 @@ If two dependencies need <code>zlib</code> then <code>Hunter</code> will install
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Integrating Hunter</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-org82ae235" class="outline-2">
+<h2 id="org82ae235">Integrating Hunter</h2>
+<div class="outline-text-2" id="text-org82ae235">
 <p>
 Adding <code>Hunter</code> to an existing project is actually pretty easy. <code>Hunter</code> is split into two parts. A small gate file which seems to define all <code>Hunter</code>'s  <code>CMake</code> functions, and the <code>Hunter</code> archive which holds all the information about the dependencies (hashes,urls,version-numbers,etc.). Copy the gate file <code>/cmake/HunterGate.cmake</code> from <a href="https://github.com/hunter-packages/gate">their repository</a> into your own project directory and then you can load <code>Hunter</code> and its archive in 2 lines at the top of your <code>CMakeLists.txt</code> (be sure it's before the <code>project(ProjectName)</code> line):
 </p>
 
 <div class="org-src-container">
+<pre class="src src-cmake">cmake_minimum_required(VERSION 3.1)
 
-<pre class="src src-cmake"><span style="color: #ef2929;">cmake_minimum_required</span>(VERSION 3.1)
-
-<span style="color: #b2b2b2; font-style: italic;"># HUNTER dependencency manager</span>
-<span style="color: #ef2929;">include</span>(<span style="color: #ff1f8b;">"cmake/HunterGate.cmake"</span>)
-<span style="color: #ef2929;">HunterGate</span>(
-    URL <span style="color: #ff1f8b;">"https://github.com/ruslo/hunter/archive/v0.19.240.tar.gz"</span>
-    SHA1 <span style="color: #ff1f8b;">"aa3cd9c45391d8bd14441971b00a43c05d40347c"</span>
+# HUNTER dependencency manager
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.19.240.tar.gz"
+    SHA1 "aa3cd9c45391d8bd14441971b00a43c05d40347c"
     LOCAL
 )
 
 
-<span style="color: #ef2929;">project</span>(ExampleProject)
+project(ExampleProject)
+
 </pre>
 </div>
 <p>
@@ -263,30 +189,28 @@ The third line here loads a particular version of the archive so you don't have 
 </div>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">Adding dependencies</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgc0eb1c8" class="outline-2">
+<h2 id="orgc0eb1c8">Adding dependencies</h2>
+<div class="outline-text-2" id="text-orgc0eb1c8">
 <p>
 Now that we have <code>Hunter</code> in our project we want to add dependencies. This turns out to be a quick ttwo lines of code. Before <code>Hunter</code> we'd look for system libraries and then get the resulting variable to link it in to our code
 </p>
 <div class="org-src-container">
-
-<pre class="src src-cmake"><span style="color: #b2b2b2; font-style: italic;"># CMAKE STYLE</span>
-<span style="color: #ef2929;">find_package</span>(Boost)
+<pre class="src src-cmake"># CMAKE STYLE
+find_package(Boost)
 ...
-<span style="color: #ef2929;">target_link_libraries</span>(OurTarget ${<span style="color: #ff8700;">Boost_Lib_Pack</span>})
+target_link_libraries(OurTarget ${Boost_Lib_Pack})
 </pre>
 </div>
 <p>
 Now you just tell <code>Hunter</code> to get <code>Boost</code> with the components we want and we link directly to the targets
 </p>
 <div class="org-src-container">
-
-<pre class="src src-cmake"><span style="color: #b2b2b2; font-style: italic;"># HUNTER STYLE</span>
-<span style="color: #ef2929;">hunter_add_package</span>(Boost COMPONENTS chrono date_time filesystem regex system thread)
-<span style="color: #ef2929;">find_package</span>(Boost CONFIG REQUIRED chrono date_time filesystem regex system thread)
+<pre class="src src-cmake"># HUNTER STYLE
+hunter_add_package(Boost COMPONENTS chrono date_time filesystem regex system thread)
+find_package(Boost CONFIG REQUIRED chrono date_time filesystem regex system thread)
 ...
-<span style="color: #ef2929;">target_link_libraries</span>(OurTarget Boost::chrono Boost::date_time Boost::filesystem Boost::regex Boost::system Boost::thread)
+target_link_libraries(OurTarget Boost::chrono Boost::date_time Boost::filesystem Boost::regex Boost::system Boost::thread)
 </pre>
 </div>
 <p>
@@ -295,17 +219,16 @@ And that's it! When you run <code>cmake</code> on your project, <code>Boost</cod
 </div>
 </div>
 
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">Customizing dependencies</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orge0050fa" class="outline-2">
+<h2 id="orge0050fa">Customizing dependencies</h2>
+<div class="outline-text-2" id="text-orge0050fa">
 <p>
 So far everything is working great and it's about on-par with linking to system libraries. The build is repeatable and should work on any system you throw it on. But it would be nice to have a bit more control over the dependencies. We still haven't really addressed what version are the dependencies being built at and what build flags they use. Often libraries, like <code>OpenCV</code> and <code>Boost</code> will have dozens of components and features that we can toggled. These are all controlled with CMake variables that get passed in during configuration, either on the command line <code>cmake -DOPTION1=ON/OFF</code> or in a cmake GUI. When you use a <code>git-submodule</code> you can declare these variables in the parent project and they would toggle things in the subdirectory, but as I said before, <code>Hunter</code> builds things separately and doesn't pass anything between parent project and dependency (except for the toolchain file). So <code>Hunter</code> has a separate dependency configuration file <code>/cmake/Hunter/config.cmake</code> (it's optional). This file simply has a list of lines reading <code>hunter_config({dependency name} {version number} CMAKE_ARGS {...list of cmake args you would pass in at the command line...)</code>. Some examples:
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-cmake"><span style="color: #ef2929;">hunter_config</span>(OpenCV VERSION 3.3.1-p1 CMAKE_ARGS BUILD_DOCS=OFF BUILD_EXAMPLES=OFF WITH_IPP=OFF WITH_IPP_A=OFF)
-<span style="color: #ef2929;">hunter_config</span>(CURL VERSION 7.49.1-DEV-v9 CMAKE_ARGS CMAKE_USE_OPENSSL=ON CMAKE_USE_LIBSSH2=OFF BUILD_CURL_EXE=OFF BUILD_CURL_TESTS=OFF)
+<pre class="src src-cmake">hunter_config(OpenCV VERSION 3.3.1-p1 CMAKE_ARGS BUILD_DOCS=OFF BUILD_EXAMPLES=OFF WITH_IPP=OFF WITH_IPP_A=OFF)
+hunter_config(CURL VERSION 7.49.1-DEV-v9 CMAKE_ARGS CMAKE_USE_OPENSSL=ON CMAKE_USE_LIBSSH2=OFF BUILD_CURL_EXE=OFF BUILD_CURL_TESTS=OFF)
 </pre>
 </div>
 
@@ -315,25 +238,25 @@ The versions can either be found on the <i>hunterized</i> repository or more con
 </div>
 </div>
 
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">Toolchain files</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgc96e84f" class="outline-2">
+<h2 id="orgc96e84f">Toolchain files</h2>
+<div class="outline-text-2" id="text-orgc96e84f">
 <p>
 There is one caveat to configuration - often project will provide flags for selecting if you want to make a shared library, or a static one (and other things of that sort). I would strongly urge not playing with these setting. Everything that can be specified in the toolchain file should be in the toolchain file b/c as mentioned a couple of times, the only part that is passed from your parent project to the dependencies is the toolchain file. That means that your project and all it's dependencies will be built with the same exact tools and with the same build flags. If you start forcing contradictory things in your configurations, I'm not really sure what the result will be. Keeping everything in the toolchain file is great for consistency and for trying out different configurations for your whole "stack". If you want to rebuild everything with debug information it's a simple toolchain file swap away. If you want to build for a different platform, compiler, strip all the symbols, etc. all can be quickly done with a change of a toolchain. Because toolchain files are a bit tricky to write, the <code>Hunter</code> maintainer has a separate project that maintains toolchains called <a href="https://github.com/ruslo/polly">Polly</a>. I recommend cloning the repository and looking at the different toolchains files. They're organized in a very modular way which makes modifying and creating your own toolchains less scary and almost painless.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-6" class="outline-2">
-<h2 id="sec-6">Files living on your system</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-org5ca6f1d" class="outline-2">
+<h2 id="org5ca6f1d">Files living on your system</h2>
+<div class="outline-text-2" id="text-org5ca6f1d">
 <p>
 The last big question that arises is, for instance, if you build with debug information turned on and then switch to building release, is all your debug build information lost? Will you have to rebuild everything again when you build debug again? The answer is no. All dependency source/build/installs are cached in a special central system directory (on Linux it's in <code>/home/username/.hunter/</code> and on Windows you need to set it manually). They're saved with a hash based on the <i>version number</i>, <i>configuration flags</i> and <i>toolchain</i> used. So as long as you use the same version/configuration/toolchain on a dependency the build will get reused. However if you play around with a lot of flags you may quickly find your disk space disappearing! So it can be good to periodically delete the directory and just start the cache from scratch.
 </p>
 </div>
 </div>
-<div id="outline-container-sec-7" class="outline-2">
-<h2 id="sec-7">Adding unsupported projects</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-org920f3ca" class="outline-2">
+<h2 id="org920f3ca">Adding unsupported projects</h2>
+<div class="outline-text-2" id="text-org920f3ca">
 <p>
 While the <code>Hunter</code> has pretty much every commonly used dependency - sometimes you will need to add something else. This part I don't really have a good grasp of and the process of forking the <code>Hunter</code> archive and adding a dependency is a bit confusing to me. If you have control over the dependency (it's another library you are working on or are comfortable forking and maintaining) then I suggest ensuring the target names don't collide and just using it as subdirectory. As a subdirectory you can still use <code>Hunter</code> inside of it to manage secondary dependencies so you will still get the benefit of avoid double-linking issues.
 </p>
@@ -342,8 +265,7 @@ While the <code>Hunter</code> has pretty much every commonly used dependency - s
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: George Kontsevich</p>
-<p class="date">Created: 2018-03-20 Tue 18:30</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2019-03-02 六 16:47</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
