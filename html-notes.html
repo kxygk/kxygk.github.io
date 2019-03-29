@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2019-03-31 日 17:26 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes on HTML and related things</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Notes on HTML and related things like CSS etc."
+>
+<link rel="stylesheet" type="text/css" href="./static/worg.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Notes on HTML and related things</h1>
+
+<div id="outline-container-orga57d542" class="outline-2">
+<h2 id="orga57d542">Intro</h2>
+<div class="outline-text-2" id="text-orga57d542">
+<p>
+Private notes on HTML and CSS .. etc. <br>
+Starting from the material <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML">provided by Mozilla</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeee844a" class="outline-2">
+<h2 id="orgeee844a">HTML</h2>
+<div class="outline-text-2" id="text-orgeee844a">
+</div>
+<div id="outline-container-org20cefbe" class="outline-3">
+<h3 id="org20cefbe">Opening</h3>
+<div class="outline-text-3" id="text-org20cefbe">
+<p>
+An <b>HTML</b> file starts with stating which standard it holds to. A minimal example that works is the following
+</p>
+<div class="org-src-container">
+<pre class="src src-html"><span style="color: #ff1f8b;">&lt;!DOCTYPE html&gt;</span>
+</pre>
+</div>
+<p>
+Next you declare the opening of the document. This wraps all the content
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">html</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org07e4534" class="outline-3">
+<h3 id="org07e4534">Head</h3>
+<div class="outline-text-3" id="text-org07e4534">
+<p>
+Next we open up the "head" which will contain info about the document - but things that aren't directly visible.<br>
+Ex:<br>
+</p>
+<ul class="org-ul">
+<li>The title that will show up at the top (as the tab name for instance)</li>
+<li>Metadata:
+<ul class="org-ul">
+<li>The character set used by the webpage</li>
+<li>The author</li>
+<li>Other stuff for OpenGraph/Twitter etc. see: <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#Other_types_of_metadata">https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#Other_types_of_metadata</a></li>
+</ul></li>
+<li></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">head</span>&gt;
+  &lt;<span style="color: #ef2929;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">My test page</span>&lt;/<span style="color: #ef2929;">title</span>&gt;
+  &lt;<span style="color: #ef2929;">meta</span> <span style="color: #ff8700;">charset</span>=<span style="color: #ff1f8b;">"utf-8"</span>&gt;
+  &lt;<span style="color: #ef2929;">meta</span> <span style="color: #ff8700;">name</span>=<span style="color: #ff1f8b;">"author"</span> <span style="color: #ff8700;">content</span>=<span style="color: #ff1f8b;">"George Kontsevich"</span>&gt;
+  &lt;<span style="color: #ef2929;">meta</span> <span style="color: #ff8700;">name</span>=<span style="color: #ff1f8b;">"description"</span> <span style="color: #ff8700;">content</span>=<span style="color: #ff1f8b;">"This is a dummy description for a test page</span>
+<span style="color: #ff1f8b;">                                    that I've made to remind myself of HTML stuff"</span>&gt;
+  &lt;<span style="color: #ef2929;">link</span> <span style="color: #ff8700;">rel</span>=<span style="color: #ff1f8b;">"shortcut icon"</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"gk.ico"</span> <span style="color: #ff8700;">type</span>=<span style="color: #ff1f8b;">"image/x-icon"</span>&gt;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;/<span style="color: #ef2929;">head</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org39f6a15" class="outline-3">
+<h3 id="org39f6a15">Body</h3>
+<div class="outline-text-3" id="text-org39f6a15">
+<p>
+Now we have the stuff that ends up displaying on the page
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">body</span>&gt;
+  &lt;<span style="color: #ef2929;">h1</span>&gt;<span style="font-weight: bold; text-decoration: underline;"> This is an h1 (top level) header - usuall one per page </span>&lt;/<span style="color: #ef2929;">h1</span>&gt;
+</pre>
+</div>
+</div>
+<div id="outline-container-orgae7ea09" class="outline-4">
+<h4 id="orgae7ea09">Text formating</h4>
+<div class="outline-text-4" id="text-orgae7ea09">
+<div class="org-src-container">
+<pre class="src src-html">  &lt;<span style="color: #ef2929;">p</span>&gt;This is a paragraph&lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;<span style="color: #ef2929;">ul</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;unordered&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;list&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;of&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;words&lt;/<span style="color: #ef2929;">li</span>&gt;
+  &lt;/<span style="color: #ef2929;">ul</span>&gt;
+  &lt;<span style="color: #ef2929;">ol</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;ordered&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;list&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;of&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;<span style="color: #ef2929;">li</span>&gt;words&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;<span style="color: #ef2929;">ul</span>&gt;
+      &lt;<span style="color: #ef2929;">li</span>&gt;with&lt;/<span style="color: #ef2929;">li</span>&gt;
+      &lt;<span style="color: #ef2929;">li</span>&gt;an&lt;/<span style="color: #ef2929;">li</span>&gt;
+      &lt;<span style="color: #ef2929;">li</span>&gt;unordered&lt;/<span style="color: #ef2929;">li</span>&gt;
+      &lt;<span style="color: #ef2929;">li</span>&gt;list&lt;/<span style="color: #ef2929;">li</span>&gt;
+      &lt;<span style="color: #ef2929;">li</span>&gt;of&lt;/<span style="color: #ef2929;">li</span>&gt;
+      &lt;<span style="color: #ef2929;">li</span>&gt;words&lt;/<span style="color: #ef2929;">li</span>&gt;
+      &lt;<span style="color: #ef2929;">li</span>&gt;inside&lt;/<span style="color: #ef2929;">li</span>&gt;
+    &lt;/<span style="color: #ef2929;">ul</span>&gt;
+  &lt;/<span style="color: #ef2929;">ol</span>&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;The following is with emphasis: &lt;<span style="color: #ef2929;">em</span>&gt;<span style="text-decoration: underline;">pandas</span>&lt;/<span style="color: #ef2929;">em</span>&gt;&lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;The following is strong: &lt;<span style="color: #ef2929;">strong</span>&gt;<span style="font-weight: bold;">more pandas</span>&lt;/<span style="color: #ef2929;">strong</span>&gt;&lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;Similarly bold (which should be used less b/c it has no semantic meaning): &lt;<span style="color: #ef2929;">b</span>&gt;<span style="font-weight: bold;">all the pandas</span>&lt;/<span style="color: #ef2929;">b</span>&gt;&lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;
+    Descriptions List:
+    &lt;<span style="color: #ef2929;">dl</span>&gt;
+      &lt;<span style="color: #ef2929;">dt</span>&gt;soliloquy&lt;/<span style="color: #ef2929;">dt</span>&gt;
+      &lt;<span style="color: #ef2929;">dd</span>&gt;In drama, where a character speaks to themselves, representing their inner thoughts or feelings and in the process relaying them to the audience (but not to other characters.)&lt;/<span style="color: #ef2929;">dd</span>&gt;
+      &lt;<span style="color: #ef2929;">dt</span>&gt;monologue&lt;/<span style="color: #ef2929;">dt</span>&gt;
+      &lt;<span style="color: #ef2929;">dd</span>&gt;In drama, where a character speaks their thoughts out loud to share them with the audience and any other characters present.&lt;/<span style="color: #ef2929;">dd</span>&gt;
+      &lt;<span style="color: #ef2929;">dt</span>&gt;aside&lt;/<span style="color: #ef2929;">dt</span>&gt;
+      &lt;<span style="color: #ef2929;">dd</span>&gt;In drama, where a character shares a comment only with the audience for humorous or dramatic effect. This is usually a feeling, thought, or piece of additional background information.&lt;/<span style="color: #ef2929;">dd</span>&gt;
+    &lt;/<span style="color: #ef2929;">dl</span>&gt;
+  &lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;The quote element &#8212; &lt;<span style="color: #ef2929;">code</span>&gt;<span style="color: #ff8700;">&amp;lt;</span>q<span style="color: #ff8700;">&amp;gt;</span>&lt;/<span style="color: #ef2929;">code</span>&gt; &#8212; is &lt;<span style="color: #ef2929;">q</span> <span style="color: #ff8700;">cite</span>=<span style="color: #ff1f8b;">"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q"</span>&gt;intended
+      for short quotations that don't require paragraph breaks.&lt;/<span style="color: #ef2929;">q</span>&gt;&lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;<span style="color: #ef2929;">blockquote</span> <span style="color: #ff8700;">cite</span>=<span style="color: #ff1f8b;">"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote"</span>&gt;
+    &lt;<span style="color: #ef2929;">p</span>&gt;The &lt;<span style="color: #ef2929;">strong</span>&gt;HTML &lt;<span style="color: #ef2929;">code</span>&gt;<span style="color: #ff8700;">&amp;lt;</span>blockquote<span style="color: #ff8700;">&amp;gt;</span>&lt;/<span style="color: #ef2929;">code</span>&gt; Element&lt;/<span style="color: #ef2929;">strong</span>&gt; (or &lt;<span style="color: #ef2929;">em</span>&gt;<span style="text-decoration: underline;">HTML Block</span>
+<span style="text-decoration: underline;">        Quotation Element</span>&lt;/<span style="color: #ef2929;">em</span>&gt;) indicates that the enclosed text is an extended quotation.&lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;/<span style="color: #ef2929;">blockquote</span>&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;We use &lt;<span style="color: #ef2929;">abbr</span> <span style="color: #ff8700;">title</span>=<span style="color: #ff1f8b;">"Hypertext Markup Language"</span>&gt;HTML&lt;/<span style="color: #ef2929;">abbr</span>&gt; to structure our web documents.&lt;/<span style="color: #ef2929;">p</span>&gt;
+
+  &lt;<span style="color: #ef2929;">p</span>&gt;I think &lt;<span style="color: #ef2929;">abbr</span> <span style="color: #ff8700;">title</span>=<span style="color: #ff1f8b;">"Reverend"</span>&gt;Rev.&lt;/<span style="color: #ef2929;">abbr</span>&gt; Green did it in the kitchen with the chainsaw.&lt;/<span style="color: #ef2929;">p</span>&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;Caffeine's chemical formula is C&lt;<span style="color: #ef2929;">sub</span>&gt;8&lt;/<span style="color: #ef2929;">sub</span>&gt;H&lt;<span style="color: #ef2929;">sub</span>&gt;10&lt;/<span style="color: #ef2929;">sub</span>&gt;N&lt;<span style="color: #ef2929;">sub</span>&gt;4&lt;/<span style="color: #ef2929;">sub</span>&gt;O&lt;<span style="color: #ef2929;">sub</span>&gt;2&lt;/<span style="color: #ef2929;">sub</span>&gt;.&lt;/<span style="color: #ef2929;">p</span>&gt;
+&lt;<span style="color: #ef2929;">pre</span>&gt;&lt;<span style="color: #ef2929;">code</span>&gt;var para = document.querySelector('p');
+
+para.onclick = function() {
+  alert('Owww, stop poking me!');
+}&lt;/<span style="color: #ef2929;">code</span>&gt;&lt;/<span style="color: #ef2929;">pre</span>&gt;
+
+&lt;<span style="color: #ef2929;">p</span>&gt;You shouldn't use presentational elements like &lt;<span style="color: #ef2929;">code</span>&gt;<span style="color: #ff8700;">&amp;lt;</span>font<span style="color: #ff8700;">&amp;gt;</span>&lt;/<span style="color: #ef2929;">code</span>&gt; and &lt;<span style="color: #ef2929;">code</span>&gt;<span style="color: #ff8700;">&amp;lt;</span>center<span style="color: #ff8700;">&amp;gt;</span>&lt;/<span style="color: #ef2929;">code</span>&gt;.&lt;/<span style="color: #ef2929;">p</span>&gt;
+
+&lt;<span style="color: #ef2929;">p</span>&gt;In the above JavaScript example, &lt;<span style="color: #ef2929;">var</span>&gt;<span style="text-decoration: underline;">para</span>&lt;/<span style="color: #ef2929;">var</span>&gt; represents a paragraph element.&lt;/<span style="color: #ef2929;">p</span>&gt;
+
+
+&lt;<span style="color: #ef2929;">p</span>&gt;Select all the text with &lt;<span style="color: #ef2929;">kbd</span>&gt;Ctrl&lt;/<span style="color: #ef2929;">kbd</span>&gt;/&lt;<span style="color: #ef2929;">kbd</span>&gt;Cmd&lt;/<span style="color: #ef2929;">kbd</span>&gt; + &lt;<span style="color: #ef2929;">kbd</span>&gt;A&lt;/<span style="color: #ef2929;">kbd</span>&gt;.&lt;/<span style="color: #ef2929;">p</span>&gt;
+
+&lt;<span style="color: #ef2929;">pre</span>&gt;$ &lt;<span style="color: #ef2929;">kbd</span>&gt;ping mozilla.org&lt;/<span style="color: #ef2929;">kbd</span>&gt;
+&lt;<span style="color: #ef2929;">samp</span>&gt;PING mozilla.org (63.245.215.20): 56 data bytes
+64 bytes from 63.245.215.20: icmp_seq=0 ttl=40 time=158.233 ms&lt;/<span style="color: #ef2929;">samp</span>&gt;&lt;/<span style="color: #ef2929;">pre</span>&gt;
+
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org68bb5af" class="outline-4">
+<h4 id="org68bb5af">Links</h4>
+<div class="outline-text-4" id="text-org68bb5af">
+<p>
+In the following example we wrap some text with a hyperlink
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">p</span>&gt;Now we want to create to my github
+  &lt;<span style="color: #ef2929;">a</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"https://github.com/geokon-gh/"</span>
+     <span style="color: #ff8700;">title</span>=<span style="color: #ff1f8b;">"This is the mouseover text! :)"</span>&gt;My Github (with special mouse over text!)&lt;/<span style="color: #ef2929;">a</span>&gt;
+&lt;/<span style="color: #ef2929;">p</span>&gt;
+</pre>
+</div>
+<p>
+However you can also wrap images and other elements<br>
+As well as link to IDs (once set)
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">h2</span> <span style="color: #ff8700;">id</span>=<span style="color: #ff1f8b;">"Mailing_address"</span>&gt;<span style="font-weight: bold; font-style: italic; text-decoration: underline;">Mailing address</span>&lt;/<span style="color: #ef2929;">h2</span>&gt;
+&lt;<span style="color: #ef2929;">p</span>&gt;Want to write us a letter? Use our &lt;<span style="color: #ef2929;">a</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"html-demo.html#Mailing_address"</span>&gt;mailing address&lt;/<span style="color: #ef2929;">a</span>&gt;.&lt;/<span style="color: #ef2929;">p</span>&gt;
+</pre>
+</div>
+<p>
+You can also set default download names. For instance this is a link to the latest Firefox:
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">p</span>&gt;
+&lt;<span style="color: #ef2929;">a</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"https://download.mozilla.org/?product=firefox-latest-ssl&amp;os=win64&amp;lang=en-US"</span>
+   <span style="color: #ff8700;">download</span>=<span style="color: #ff1f8b;">"some-silly-default-file-name.exe"</span>&gt;
+  Download Latest Firefox for Windows (64-bit) (English, US)
+&lt;/<span style="color: #ef2929;">a</span>&gt;
+&lt;/<span style="color: #ef2929;">p</span>&gt;
+</pre>
+</div>
+<p>
+Or link to emails
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">p</span>&gt;
+&lt;<span style="color: #ef2929;">a</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"mailto:nowhere@mozilla.org?cc=name2@rapidtables.com&amp;bcc=name3@rapidtables.com&amp;subject=The%20subject%20of%20the%20email&amp;body=The%20body%20of%20the%20email"</span>&gt;
+  Send mail with cc, bcc, subject and body
+&lt;/<span style="color: #ef2929;">a</span>&gt;
+&lt;/<span style="color: #ef2929;">p</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga74f43d" class="outline-4">
+<h4 id="orga74f43d">Images</h4>
+<div class="outline-text-4" id="text-orga74f43d">
+<p>
+The <code>&lt;figure&gt;</code> wrapper <code>&lt;figcaption&gt;</code> elements are for <b>HTML5</b> and allow for captions with an element that has the appropriate semantic meaning (I've doubled the icon's actual width and height)
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">figure</span>&gt;
+  &lt;<span style="color: #ef2929;">img</span> <span style="color: #ff8700;">src</span>=<span style="color: #ff1f8b;">"gk.ico"</span>
+       <span style="color: #ff8700;">alt</span>=<span style="color: #ff1f8b;">"This is text that displays if the image doesn't load"</span>
+       <span style="color: #ff8700;">width</span>=<span style="color: #ff1f8b;">"94"</span>
+       <span style="color: #ff8700;">height</span>=<span style="color: #ff1f8b;">"112"</span>
+       <span style="color: #ff8700;">title</span>=<span style="color: #ff1f8b;">"This is some mouse-over text"</span>&gt;
+
+  &lt;<span style="color: #ef2929;">figcaption</span>&gt;This is the caption below the icon image.&lt;/<span style="color: #ef2929;">figcaption</span>&gt;
+&lt;/<span style="color: #ef2929;">figure</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org23d659b" class="outline-4">
+<h4 id="org23d659b">Video/Audio</h4>
+<div class="outline-text-4" id="text-org23d659b">
+<p>
+Just a small basic example (205kB file). For more details see: <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content">https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">video</span> <span style="color: #ff8700;">src</span>=<span style="color: #ff1f8b;">"pregnant-shrimp.webm"</span> controls&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt;Your browser doesn't support HTML5 video. Here is a &lt;<span style="color: #ef2929;">a</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"pregnant-shrimp.webm"</span>&gt;link to the video&lt;/<span style="color: #ef2929;">a</span>&gt; instead.&lt;/<span style="color: #ef2929;">p</span>&gt; 
+&lt;/<span style="color: #ef2929;">video</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3b4131" class="outline-4">
+<h4 id="orgd3b4131">iframes</h4>
+<div class="outline-text-4" id="text-orgd3b4131">
+<p>
+Are used to embed other webpages into the current page
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #ef2929;">p</span>&gt; Below is an iframe 200 pix high &lt;/<span style="color: #ef2929;">p</span>&gt;
+&lt;<span style="color: #ef2929;">iframe</span> <span style="color: #ff8700;">src</span>=<span style="color: #ff1f8b;">"index.html"</span>
+        <span style="color: #ff8700;">width</span>=<span style="color: #ff1f8b;">"100%"</span> <span style="color: #ff8700;">height</span>=<span style="color: #ff1f8b;">"200"</span> <span style="color: #ff8700;">frameborder</span>=<span style="color: #ff1f8b;">"0"</span>
+        allowfullscreen sandbox&gt;
+  &lt;<span style="color: #ef2929;">p</span>&gt; &lt;<span style="color: #ef2929;">a</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"https://geokon-gh.github.io/index.html"</span>
+    Fallback link for browsers that don't support iframes
+  &lt;/<span style="color: #ef2929;">a</span>&gt; &lt;/<span style="color: #ef2929;">p</span>&gt;
+&lt;/<span style="color: #ef2929;">iframe</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9fb5273" class="outline-3">
+<h3 id="org9fb5273">Closing stuff</h3>
+<div class="outline-text-3" id="text-org9fb5273">
+<p>
+Gotta close some of the outer brackets
+</p>
+<div class="org-src-container">
+<pre class="src src-html">  &lt;/<span style="color: #ef2929;">body</span>&gt;
+&lt;/<span style="color: #ef2929;">html</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: George Kontsevich</p>
+<p class="date">Created: 2019-03-31 日 17:26</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
