@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2019-03-31 日 17:26 -->
+<!-- 2019-04-05 五 15:17 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Notes on HTML and related things</title>
@@ -65,9 +65,9 @@ for the JavaScript code in this tag.
 </div><div id="content">
 <h1 class="title">Notes on HTML and related things</h1>
 
-<div id="outline-container-orga57d542" class="outline-2">
-<h2 id="orga57d542">Intro</h2>
-<div class="outline-text-2" id="text-orga57d542">
+<div id="outline-container-org78a1661" class="outline-2">
+<h2 id="org78a1661">Intro</h2>
+<div class="outline-text-2" id="text-org78a1661">
 <p>
 Private notes on HTML and CSS .. etc. <br>
 Starting from the material <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML">provided by Mozilla</a>
@@ -75,13 +75,13 @@ Starting from the material <a href="https://developer.mozilla.org/en-US/docs/Lea
 </div>
 </div>
 
-<div id="outline-container-orgeee844a" class="outline-2">
-<h2 id="orgeee844a">HTML</h2>
-<div class="outline-text-2" id="text-orgeee844a">
+<div id="outline-container-org6f0e7ef" class="outline-2">
+<h2 id="org6f0e7ef">HTML</h2>
+<div class="outline-text-2" id="text-org6f0e7ef">
 </div>
-<div id="outline-container-org20cefbe" class="outline-3">
-<h3 id="org20cefbe">Opening</h3>
-<div class="outline-text-3" id="text-org20cefbe">
+<div id="outline-container-orgcae0715" class="outline-3">
+<h3 id="orgcae0715">Opening</h3>
+<div class="outline-text-3" id="text-orgcae0715">
 <p>
 An <b>HTML</b> file starts with stating which standard it holds to. A minimal example that works is the following
 </p>
@@ -98,9 +98,9 @@ Next you declare the opening of the document. This wraps all the content
 </div>
 </div>
 </div>
-<div id="outline-container-org07e4534" class="outline-3">
-<h3 id="org07e4534">Head</h3>
-<div class="outline-text-3" id="text-org07e4534">
+<div id="outline-container-org19b60f1" class="outline-3">
+<h3 id="org19b60f1">Head</h3>
+<div class="outline-text-3" id="text-org19b60f1">
 <p>
 Next we open up the "head" which will contain info about the document - but things that aren't directly visible.<br>
 Ex:<br>
@@ -113,7 +113,8 @@ Ex:<br>
 <li>The author</li>
 <li>Other stuff for OpenGraph/Twitter etc. see: <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#Other_types_of_metadata">https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#Other_types_of_metadata</a></li>
 </ul></li>
-<li></li>
+<li>The icon</li>
+<li>The CSS stylesheet (covered in the latter part of the document)</li>
 </ul>
 <div class="org-src-container">
 <pre class="src src-html">&lt;<span style="color: #ef2929;">head</span>&gt;
@@ -123,6 +124,7 @@ Ex:<br>
   &lt;<span style="color: #ef2929;">meta</span> <span style="color: #ff8700;">name</span>=<span style="color: #ff1f8b;">"description"</span> <span style="color: #ff8700;">content</span>=<span style="color: #ff1f8b;">"This is a dummy description for a test page</span>
 <span style="color: #ff1f8b;">                                    that I've made to remind myself of HTML stuff"</span>&gt;
   &lt;<span style="color: #ef2929;">link</span> <span style="color: #ff8700;">rel</span>=<span style="color: #ff1f8b;">"shortcut icon"</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"gk.ico"</span> <span style="color: #ff8700;">type</span>=<span style="color: #ff1f8b;">"image/x-icon"</span>&gt;
+  &lt;<span style="color: #ef2929;">link</span> <span style="color: #ff8700;">rel</span>=<span style="color: #ff1f8b;">"stylesheet"</span> <span style="color: #ff8700;">href</span>=<span style="color: #ff1f8b;">"css-demo.css"</span>&gt;
 </pre>
 </div>
 
@@ -132,9 +134,9 @@ Ex:<br>
 </div>
 </div>
 </div>
-<div id="outline-container-org39f6a15" class="outline-3">
-<h3 id="org39f6a15">Body</h3>
-<div class="outline-text-3" id="text-org39f6a15">
+<div id="outline-container-orgdb31d2e" class="outline-3">
+<h3 id="orgdb31d2e">Body</h3>
+<div class="outline-text-3" id="text-orgdb31d2e">
 <p>
 Now we have the stuff that ends up displaying on the page
 </p>
@@ -144,9 +146,9 @@ Now we have the stuff that ends up displaying on the page
 </pre>
 </div>
 </div>
-<div id="outline-container-orgae7ea09" class="outline-4">
-<h4 id="orgae7ea09">Text formating</h4>
-<div class="outline-text-4" id="text-orgae7ea09">
+<div id="outline-container-org858a6ed" class="outline-4">
+<h4 id="org858a6ed">Text formating</h4>
+<div class="outline-text-4" id="text-org858a6ed">
 <div class="org-src-container">
 <pre class="src src-html">  &lt;<span style="color: #ef2929;">p</span>&gt;This is a paragraph&lt;/<span style="color: #ef2929;">p</span>&gt;
   &lt;<span style="color: #ef2929;">ul</span>&gt;
@@ -215,9 +217,9 @@ para.onclick = function() {
 </div>
 </div>
 </div>
-<div id="outline-container-org68bb5af" class="outline-4">
-<h4 id="org68bb5af">Links</h4>
-<div class="outline-text-4" id="text-org68bb5af">
+<div id="outline-container-orgd3e8996" class="outline-4">
+<h4 id="orgd3e8996">Links</h4>
+<div class="outline-text-4" id="text-orgd3e8996">
 <p>
 In the following example we wrap some text with a hyperlink
 </p>
@@ -262,9 +264,9 @@ Or link to emails
 </div>
 </div>
 </div>
-<div id="outline-container-orga74f43d" class="outline-4">
-<h4 id="orga74f43d">Images</h4>
-<div class="outline-text-4" id="text-orga74f43d">
+<div id="outline-container-org4e02f63" class="outline-4">
+<h4 id="org4e02f63">Images</h4>
+<div class="outline-text-4" id="text-org4e02f63">
 <p>
 The <code>&lt;figure&gt;</code> wrapper <code>&lt;figcaption&gt;</code> elements are for <b>HTML5</b> and allow for captions with an element that has the appropriate semantic meaning (I've doubled the icon's actual width and height)
 </p>
@@ -282,9 +284,9 @@ The <code>&lt;figure&gt;</code> wrapper <code>&lt;figcaption&gt;</code> elements
 </div>
 </div>
 </div>
-<div id="outline-container-org23d659b" class="outline-4">
-<h4 id="org23d659b">Video/Audio</h4>
-<div class="outline-text-4" id="text-org23d659b">
+<div id="outline-container-org35dfcf8" class="outline-4">
+<h4 id="org35dfcf8">Video/Audio</h4>
+<div class="outline-text-4" id="text-org35dfcf8">
 <p>
 Just a small basic example (205kB file). For more details see: <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content">https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content</a>
 </p>
@@ -297,9 +299,9 @@ Just a small basic example (205kB file). For more details see: <a href="https://
 </div>
 </div>
 
-<div id="outline-container-orgd3b4131" class="outline-4">
-<h4 id="orgd3b4131">iframes</h4>
-<div class="outline-text-4" id="text-orgd3b4131">
+<div id="outline-container-orge4890d8" class="outline-4">
+<h4 id="orge4890d8">iframes</h4>
+<div class="outline-text-4" id="text-orge4890d8">
 <p>
 Are used to embed other webpages into the current page
 </p>
@@ -318,9 +320,9 @@ Are used to embed other webpages into the current page
 </div>
 </div>
 
-<div id="outline-container-org9fb5273" class="outline-3">
-<h3 id="org9fb5273">Closing stuff</h3>
-<div class="outline-text-3" id="text-org9fb5273">
+<div id="outline-container-org001de5c" class="outline-3">
+<h3 id="org001de5c">Closing stuff</h3>
+<div class="outline-text-3" id="text-org001de5c">
 <p>
 Gotta close some of the outer brackets
 </p>
@@ -332,10 +334,69 @@ Gotta close some of the outer brackets
 </div>
 </div>
 </div>
+
+<div id="outline-container-orgb65161a" class="outline-2">
+<h2 id="orgb65161a">CSS</h2>
+<div class="outline-text-2" id="text-orgb65161a">
+</div>
+<div id="outline-container-org377062c" class="outline-3">
+<h3 id="org377062c">Rules</h3>
+<div class="outline-text-3" id="text-org377062c">
+<p>
+Or <i>ruleset</i>. Each <i>rule</i> is a paired <b>selector</b> and a <b>declaration block</b>
+</p>
+</div>
+<div id="outline-container-org90761b8" class="outline-4">
+<h4 id="org90761b8">Selector</h4>
+<div class="outline-text-4" id="text-org90761b8">
+<p>
+Is a pattern that matches some element on a page
+</p>
+<div class="org-src-container">
+<pre class="src src-css">h1
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge175079" class="outline-4">
+<h4 id="orge175079">Declaration Block</h4>
+<div class="outline-text-4" id="text-orge175079">
+<p>
+Is a series of declaration - each a pair of a <i>property</i> and a <i>value</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-css">{
+<span style="color: #00af00;">color</span>: <span style="color: #ffffff; background-color: #ff0000;">red</span>;
+<span style="color: #00af00;">background-color</span>: <span style="color: #ffffff; background-color: #808080;">grey</span>;
+<span style="color: #00af00;">border</span>: 1px solid <span style="color: #ffffff; background-color: #000000;">black</span>;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7eac715" class="outline-3">
+<h3 id="org7eac715">Statements</h3>
+<div class="outline-text-3" id="text-org7eac715">
+<p>
+Are additional blocks that can be written in CSS. The most common are <i>at-rules</i> which sometimes can be <i>nested</i>
+</p>
+<div class="org-src-container">
+<pre class="src src-css"><span style="color: #b218b2;">@media</span> (min-width: 801px) {
+  <span style="color: #ef2929;">body </span>{
+    <span style="color: #00af00;">margin</span>: 0 auto;
+    <span style="color: #00af00;">width</span>: 800px;
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: George Kontsevich</p>
-<p class="date">Created: 2019-03-31 日 17:26</p>
+<p class="date">Created: 2019-04-05 五 15:17</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

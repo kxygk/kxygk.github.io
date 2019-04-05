@@ -1,0 +1,14 @@
+h1
+
+{
+color: red;
+background-color: grey;
+border: 1px solid black;
+}
+
+@media (min-width: 801px) {
+  body {
+    margin: 0 auto;
+    width: 800px;
+  }
+}

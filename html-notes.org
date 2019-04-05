@@ -31,15 +31,17 @@ Ex:\\
    + The character set used by the webpage 
    + The author
    + Other stuff for OpenGraph/Twitter etc. see: https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#Other_types_of_metadata
- - 
+ - The icon
+ - The CSS stylesheet (covered in the latter part of the document)
 #+BEGIN_SRC html :tangle html-demo.html
-      <head>
-	<title>My test page</title>
-	<meta charset="utf-8">
-	<meta name="author" content="George Kontsevich">
-	<meta name="description" content="This is a dummy description for a test page
-					  that I've made to remind myself of HTML stuff">
-	<link rel="shortcut icon" href="gk.ico" type="image/x-icon">
+  <head>
+    <title>My test page</title>
+    <meta charset="utf-8">
+    <meta name="author" content="George Kontsevich">
+    <meta name="description" content="This is a dummy description for a test page
+				      that I've made to remind myself of HTML stuff">
+    <link rel="shortcut icon" href="gk.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css-demo.css">
 #+END_SRC
 
 #+BEGIN_SRC html :tangle html-demo.html
@@ -187,4 +189,32 @@ Gotta close some of the outer brackets
 #+BEGIN_SRC html :tangle html-demo.html
   </body>
 </html>
+#+END_SRC
+
+* CSS
+** Rules
+Or /ruleset/. Each /rule/ is a paired *selector* and a *declaration block*
+*** Selector
+Is a pattern that matches some element on a page
+#+BEGIN_SRC css :tangle css-demo.css
+h1
+#+END_SRC
+*** Declaration Block
+Is a series of declaration - each a pair of a /property/ and a /value/
+#+BEGIN_SRC css :tangle css-demo.css
+  {
+  color: red;
+  background-color: grey;
+  border: 1px solid black;
+  }
+#+END_SRC
+** Statements
+Are additional blocks that can be written in CSS. The most common are /at-rules/ which sometimes can be /nested/
+#+BEGIN_SRC css :tangle css-demo.css
+@media (min-width: 801px) {
+  body {
+    margin: 0 auto;
+    width: 800px;
+  }
+}
 #+END_SRC
