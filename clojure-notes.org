@@ -436,7 +436,527 @@ example: feeding into the ~(map)~
 * Datatypes
 ** multimethods
 We declare a multimethod with ~defmulti~ which defines the signature and the *dispatch function* for the multimethod. The return value of the dispatch function will need to match a method defined with ~defmethod~
+#+BEGIN_SRC clojure
+  (ns were-creatures)
 
+  ;; this is the dispatch function
+  (defmulti full-moon-behavior (fn [were-creatures] (:were-type were-creature)))
+
+  (defmethod full-moon-behavior :wolf
+    [were-creature]
+    (str (:name were-creature) " will howl and murder"))
+
+  (defmethod full-moon-behavior :simmons
+    [were-creature]
+    (str (:name were-creature) " will encourage people and sweat to the oldies"))
+
+  (defmethod full-moon-behavior nil
+    [were-creature]
+    (str (:name were-creature) " will stay at home and eat ice cream"))
+
+  (full-moon-behavior {:were-type :wolf
+		       :name "Rachel from next door"})
+  ;; Rachel from next door will howl and murder
+
+  (full-moon-behavior {:were-type :simmons
+		       :name "Andy the baker"})
+  ;; Andy the baker will encourage people and sweat to the oldies
+
+  (full-moon-behavior {:were-type nil
+		       :name "Martin the nurse"})
+  ;; Martin the nurse will stay at home and eat ice cream
+#+END_SRC
+
+You can use this to call different functions based on the input's type
+#+BEGIN_SRC clojure
+  (ns user)
+  (defmulti types (fn [x y] [(class x) (class y)]))
+  (defmethod types [java.lang.String java.lang.String]
+    [x y]
+    "Two strings!")
+
+  (types "String 1" "String 2")
+  ;; "Two strings!"
+#+END_SRC
+
+** protocol
+However if you want to work based on the input type it's better to use *protocols*. This is sort of an inversion of the usual way of writing a method/function
+#+BEGIN_SRC clojure
+  (ns data-psychology)
+
+  (defprotocol Psychodynamics
+    "Plumb the inner depths of your data types" ;; protocol doc string
+    (thoughts [x] "The data type's innermost thoughts") ;; the protocol methods and a doctring
+    (feelings-about [x] [x y] "Feelings about self or other")) ;; "" ""
+#+END_SRC
+This in effect reserves the name ~thoughts~ and ~feelings-about~ and then you need to provide implementations for different input types (this is called /extending/ a datatype to /implement/ a protocol). For instance here we implement the ~Psychodynamics~ protocol for the ~String~ class.
+#+BEGIN_SRC clojure
+  (extend-type java.lang.String
+    Psychodynamics
+    (thoughts [x] (str x " thinks, 'Truly, the character defines the data type'"))
+    (feelings-about
+      ([x] (str x " is longing for a simpler way of life"))
+      ([x y] (str x " is envious of " y "'s simpler way of life"))))
+
+  (thoughts "blorb")
+   ; => "blorb thinks, 'Truly, the character defines the data type'"
+  (feelings-about "schmorb")
+  ; => "schmorb is longing for a simpler way of life"
+  (feelings-about "schmorb" 2)
+  ; => "schmorb is envious of 2's simpler way of life"
+#+END_SRC
+As you can see, you need to implement the whole protocol (every method) with optionally adding multi-arity support - so the end result looks like a function call
+
+To provide a "default" behavior for a protocol, you can provide an implementation for the ~Object~ class since it's the root/parent of all classes in Java
+#+BEGIN_SRC clojure
+  (extend-type java.lang.Object
+    Psychodynamics
+    (thoughts [x] "Maybe the Internet is just a vector for toxoplasmosis")
+    (feelings-about
+      ([x] "meh")
+      ([x y] (str "meh about " y))))
+  (thoughts 3)
+  ; => "Maybe the Internet is just a vector for toxoplasmosis"
+  (feelings-about 3)
+  ; => "meh"
+  (feelings-about 3 "blorb")
+  ; => "meh about blorb"
+#+END_SRC
+To extend the protocol to multiple types at once you can use ~extend-protocol~ instead which has slightly different syntax
+#+BEGIN_SRC clojure
+  (extend-protocol Psychodynamics
+    java.lang.String
+    (thoughts [x] "Truly, the character defines the data type")
+    (feelings-about
+      ([x] "longing for a simpler way of life")
+      ([x y] (str "envious of " y "'s simpler way of life")))
+    java.lang.Object
+    (thoughts [x] "Maybe the Internet is just a vector for toxoplasmosis")
+    (feelings-about
+      ([x] "meh")
+      ([x y] (str "meh about " y))))
+#+END_SRC
+
+** records
+Similar to maps, but the /fields/ are set in stone (kinda like set *keys*, but they are tied to the name of the record) and they're faster
+#+BEGIN_SRC clojure
+  (ns were-records
+    (defrecord WereWolf [name title]
+
+
+    ;; 3 Different way to create one
+
+     (WereWolf. "David" "London Tourist") ;; like calling a Java Object Constructor
+    ; => #were_records.WereWolf{:name "David", :title "London Tourist"}
+     (->WereWolf "Jacob" "Lead Shirt Discarder")
+    ; => #were_records.WereWolf{:name "Jacob", :title "Lead Shirt Discarder"}
+     (map->WereWolf {:name "Lucian" :title "CEO of Melodrama"}))
+    ; => #were_records.WereWolf{:name "Lucian", :title "CEO of Melodrama"}
+
+    ;; 3 Different ways to access the fields
+
+    (def jacob (->WereWolf "Jacob" "Lead Shirt Discarder")
+     (.name jacob)
+    ; => "Jacob"
+     (:name jacob)
+    ; => "Jacob"
+     (get jacob :name))
+    ; => "Jacob"
+
+    ;; They sorta behave like maps as well
+
+   (= jacob (->WereWolf "Jacob" "Lead Shirt Discarder"))
+  ; => true
+   (= jacob (WereWolf. "David" "London Tourist"))
+  ; => false
+   (= jacob {:name "Jacob" :title "Lead Shirt Discarder"}))
+  ; => false
+
+  ;; Can assoc into a record
+  (assoc jacob :title "Lead Third Wheel")
+					  ; => #were_records.WereWolf{:name "Jacob", :title "Lead Third Wheel"}
+
+  ;; But when you break it up you get back maps again
+  (dissoc jacob :title)
+					  ; => {:name "Jacob"} <- that's not a were_records.WereWolf
+#+END_SRC
+Most importantly, you can implement a protocol right as you define the record itself. It goes right into the ~defrecord~ itself
+#+BEGIN_SRC clojure
+  (defprotocol WereCreature
+    (full-moon-behavior [x]))
+
+  (defrecord WereWolf [name title]
+    WereCreature
+    (full-moon-behavior [x]
+      (str name " will howl and murder")))
+
+  (full-moon-behavior (map->WereWolf {:name "Lucian" :title "CEO of Melodrama"}))
+  ; => "Lucian will howl and murder"
+#+END_SRC
+
+* Higher Order Functions
+** seq functions
+Take sequences and return sequences
+*** map
+apply a function to each element
+#+BEGIN_SRC clojure
+(map inc [1 2 3])
+;; ( 2 3 4)
+#+END_SRC
+apply a function to each pair of elements
+#+BEGIN_SRC clojure
+(map str ["a" "b" "c"] ["A" "B" "C"])
+;; ("aA" "bB" "cC")
+#+END_SRC
+And you can use a trick to apply multiple functions to one sequence
+#+BEGIN_SRC clojure
+  (def sum #(reduce + %))
+  (def avg #(/ (sum %) (count %)))
+  (defn stats
+    [numbers]
+    (map #(% numbers) [sum count avg]))
+
+  (stats [3 4 10])
+  ; => (17 3 17/3)
+  (stats [80 1 44 13 6])
+  ; => (144 5 144/5)
+#+END_SRC
+~keywords~ as functions also works
+#+BEGIN_SRC clojure
+  (def identities
+    [{:alias "Batman" :real "Bruce Wayne"}
+     {:alias "Spider-Man" :real "Peter Parker"}
+     {:alias "Santa" :real "Your mom"}
+     {:alias "Easter Bunny" :real "Your dad"}])
+
+  (map :real identities)
+  ; => ("Bruce Wayne" "Peter Parker" "Your mom" "Your dad")
+#+END_SRC
+*** reduce
+accumulates results
+#+BEGIN_SRC clojure
+(reduce + [1 2 3 4])
+;; 10
+#+END_SRC
+And can be provided with an initial/starting value
+#+BEGIN_SRC clojure
+(reduce + 15 [1 2 3 4])
+;; 25
+#+END_SRC
+Can accumulate the intermediary values into a seq as well
+#+BEGIN_SRC clojure
+  (reduce (fn [new-map [key val]]
+	    (assoc new-map key (inc val)))
+	  {}
+	  {:max 30 :min 10})
+  ;; => {:max 31, :min 11}
+#+END_SRC
+This can also be done conditionally to filter out values
+#+BEGIN_SRC clojure
+  (reduce (fn [new-map [key val]]
+	    (if (> val 4)
+	      (assoc new-map key val)
+	      new-map))
+	  {}
+	  {:human 4.1
+	   :critter 3.9})
+  ;; => {:human 4.1}
+#+END_SRC
+*** take/drop/take-while/drop-while
+Common shortcuts
+#+BEGIN_SRC clojure
+  (take 3 [1 2 3 4 5 6 7 8 9 10])
+  ;; => (1 2 3)
+  (drop 3 [1 2 3 4 5 6 7 8 9 10])
+  ;; => (4 5 6 7 8 9 10)
+
+  (def food-journal
+    [{:month 1 :day 1 :human 5.3 :critter 2.3}
+     {:month 1 :day 2 :human 5.1 :critter 2.0}
+     {:month 2 :day 1 :human 4.9 :critter 2.1}
+     {:month 2 :day 2 :human 5.0 :critter 2.5}
+     {:month 3 :day 1 :human 4.2 :critter 3.3}
+     {:month 3 :day 2 :human 4.0 :critter 3.8}
+     {:month 4 :day 1 :human 3.7 :critter 3.9}
+     {:month 4 :day 2 :human 3.7 :critter 3.6}]))
+
+  (take-while #(< (:month %) 3) food-journal)
+  ;; => ({:month 1 :day 1 :human 5.3 :critter 2.3}
+  ;;     {:month 1 :day 2 :human 5.1 :critter 2.0}
+  ;;     {:month 2 :day 1 :human 4.9 :critter 2.1}
+  ;;     {:month 2 :day 2 :human 5.0 :critter 2.5})
+
+(drop-while #(< (:month %) 3) food-journal)
+;;...
+;; or combined
+(take-while #(< (:month %) 4) (drop-while #(< (:month %) 2) food-journal))
+
+#+END_SRC
+*** filter/some
+returns a seq of all elements that are true
+#+BEGIN_SRC clojure
+  (filter #(< (:human %) 5) food-journal)
+#+END_SRC
+~some~ tells you is any passed
+#+BEGIN_SRC clojure
+  (some #(> (:critter %) 5) food-journal)
+  ;; => nil
+  (some #(> (:critter %) 3) food-journal)
+  ;; => true
+#+END_SRC
+*** sort/sort-by/concat
+#+BEGIN_SRC clojure
+(sort [3 1 2])
+; => (1 2 3)
+(sort-by count ["aaa" "c" "bb"])
+; => ("c" "bb" "aaa")
+(concat [1 2] [3 4])
+; => (1 2 3 4)
+#+END_SRC
+** lazy sequences
+*Higher Order* functions will usually return /lazy sequences/, and their values will only be calculated when you access them (and /realize/ the sequence member)
+#+BEGIN_SRC clojure
+  (def
+    vampire-database
+    {0
+     {:makes-blood-puns?
+      false,
+      :has-pulse?
+      true
+      :name
+      "McFishwich"}
+     1
+     {:makes-blood-puns?
+      false,
+      :has-pulse?
+      true
+      :name
+      "McMackson"}
+     2
+     {:makes-blood-puns?
+      true,
+      :has-pulse?
+      false
+      :name
+      "Damon Salvatore"}
+     3
+     {:makes-blood-puns?
+      true,
+      :has-pulse?
+      true
+      :name
+      "Mickey Mouse"}})
+
+  (defn vampire-related-details
+    [social-security-number]
+    (Thread/sleep 1000)
+    (get vampire-database social-security-number))
+
+  (defn vampire?
+    [record]
+    (and (:makes-blood-puns? record)
+	 (not (:has-pulse? record))
+	 record))
+
+  (defn identify-vampire
+    [social-security-numbers]
+    (first (filter vampire?)
+       (map vampire-related-details social-security-numbers)))
+#+END_SRC
+As expected accessing a record takes a second
+#+BEGIN_SRC clojure
+  (time (vampire-related-details 0))
+  ;; => "Elapsed time: 1001.042 msecs"
+  ;; => {:name "McFishwich", :makes-blood-puns? false, :has-pulse? true}
+
+#+END_SRC
+Applying our database-access-function to every social security number happens instantly b/c it's not actually applied
+#+BEGIN_SRC clojure
+  (time (def mapped-details (map vampire-related-details (range 0 1000000))))
+  ;; => "Elapsed time: 0.049 msecs"
+  ;; => #'user/mapped-details
+#+END_SRC
+However when we try to get an actual result it ends up taking time. It's done in chunks (of 32) for efficiency
+#+BEGIN_SRC clojure
+  (time (first mapped-details))
+  ;; => "Elapsed time: 32030.767 msecs"
+  ;; => {:name "McFishwich", :makes-blood-puns? false, :has-pulse? true}
+
+#+END_SRC
+Afterwards the result is cached and instantaneous
+#+BEGIN_SRC clojure
+  (time (first mapped-details))
+  ;; => "Elapsed time: 0.022 msecs"
+  ;; => {:name "McFishwich", :makes-blood-puns? false, :has-pulse? true}
+#+END_SRC
+*** infinite sequences
+Using ~repeat~ and ~repeatedly~
+#+BEGIN_SRC clojure
+  (concat (take 8 (repeat "na")) ["Batman!"])
+  ; => ("na" "na" "na" "na" "na" "na" "na" "na" "Batman!")
+
+  (take 3 (repeatedly (fn [] (rand-int 10))))
+  ; => (1 4 0)
+
+  (defn even-numbers
+    ([] (even-numbers 0))
+    ([n] (cons n (lazy-seq (even-numbers (+ n 2))))))
+
+  (take 10 (even-numbers))
+  ; => (0 2 4 6 8 10 12 14 16 18)
+#+END_SRC
+** col functions
+Operate on the whole collection at once
+#+BEGIN_SRC clojure
+  (empty? [])
+  ; => true
+  (empty? ["no!"])
+  ; => false
+#+END_SRC
+To make a seq operation return a particular kind, you need to use ~into~
+#+BEGIN_SRC clojure
+  (map identity {:sunlight-reaction "Glitter!"})
+  ; => ([:sunlight-reaction "Glitter!"])
+  (into {} (map identity {:sunlight-reaction "Glitter!"}))
+  ; => {:sunlight-reaction "Glitter!"}
+#+END_SRC
+#+BEGIN_SRC clojure
+  (map identity [:garlic :sesame-oil :fried-eggs])
+  ; => (:garlic :sesame-oil :fried-eggs)
+  (into [] (map identity [:garlic :sesame-oil :fried-eggs]))
+  ; => [:garlic :sesame-oil :fried-eggs]
+#+END_SRC
+#+BEGIN_SRC clojure
+  (map identity [:garlic-clove :garlic-clove])
+  ; => (:garlic-clove :garlic-clove)
+  (into #{} (map identity [:garlic-clove :garlic-clove]))
+  ; => #{:garlic-clove}
+#+END_SRC
+You can also use it to add the elements to an existing sequence
+#+BEGIN_SRC clojure
+  (into {:favorite-emotion "gloomy"} [[:sunlight-reaction "Glitter!"]])
+  ;; => {:favorite-emotion "gloomy" :sunlight-reaction "Glitter!"}
+  (into ["cherry"] '("pine" "spruce"))
+  ;; => ["cherry" "pine" "spruce"]
+  (into {:favorite-animal "kitty"} {:least-favorite-smell "dog"})
+  :relationship-with-teenager "creepy"
+  ;; => {:favorite-animal "kitty"
+  :relationship-with-teenager "creepy"
+  :least-favorite-smell "dog"
+#+END_SRC
+*** conj/into
+~conj~ sticks the remaining things into the first thing
+#+BEGIN_SRC  clojure
+  (conj [0] [1])
+  ; => [0 [1]]
+  (into [0] [1])
+  ; => [0 1]
+  (conj [0] 1 2 3 4)
+  ; => [0 1 2 3 4]
+  (conj {:time "midnight"} [:place "ye olde cemetarium"])
+  ; => {:place "ye olde cemetarium" :time "midnight"}
+#+END_SRC
+*** apply
+When you want to take a sequence and supply it as function argument to a function. So it unpacks the sequence and feeds it into the function
+#+BEGIN_SRC clojure
+  (apply max [0 1 2])
+  ; => 2
+#+END_SRC
+*** partial
+Makes a new function from an existing function with part of the arguments already filled in
+#+BEGIN_SRC clojure
+  (def add10 (partial + 10))
+  (add10 3)
+  ; => 13
+
+  (def add-missing-elements
+  (partial conj ["water" "earth" "air"]))
+  (add-missing-elements "unobtainium" "adamantium")
+  ; => ["water" "earth" "air" "unobtainium" "adamantium"]
+#+END_SRC
+#+BEGIN_SRC clojure
+  (defn lousy-logger
+    [log-level message]
+    (condp = log-level
+      :warn (clojure.string/lower-case message)
+      :emergency (clojure.string/upper-case message)))
+
+  (def warn (partial lousy-logger :warn))
+
+  (warn "Red light ahead")
+  ;; => "red light ahead"
+#+END_SRC
+*** complement
+Creates a function that is the inverse of an existing bool function
+#+BEGIN_SRC clojure
+  (defn identify-humans
+    [social-security-numbers]
+    (filter #(not (vampire? %))
+	    (map vampire-related-details social-security-numbers)))
+
+  (def not-vampire? (complement vampire?))
+  (defn identify-humans
+    [social-security-numbers]
+    (filter not-vampire?
+	    (map vampire-related-details social-security-numbers)))
+#+END_SRC
+*** comp
+applies function in order
+#+BEGIN_SRC clojure
+((comp inc *) 2 3)
+; => 7
+#+END_SRC
+Can be handy for digging into maps
+#+BEGIN_SRC clojure
+  (def character
+    {:name "Smooches McCutes"
+     :attributes {:intelligence 10
+		  :strength 4
+		  :dexterity 5}})
+
+  (def c-int (comp :intelligence :attributes))
+
+  (def c-str (comp :strength :attributes))
+
+  (def c-dex (comp :dexterity :attributes))
+
+  (c-int character)
+  ; => 10
+  (c-str character)
+  ; => 4
+  (c-dex character)
+  ; => 5
+#+END_SRC
+As usual you can use ~%~ as a placeholder in a /anonymous function/
+#+BEGIN_SRC clojure
+  (defn spell-slots
+    [char]
+    (int (inc (/ (c-int char) 2))))
+
+  ;;equivalent to
+  (def spell-slots-comp (comp int inc #(/ % 2) c-int))
+
+#+END_SRC
+*** memoize
+Creates a wrapper around a function, so that when it's called again with the same arguments it returns a cached result
+#+BEGIN_SRC clojure
+(defn sleepy-identity
+"Returns the given value after 1 second"
+[x]
+(Thread/sleep 1000)
+x)
+(sleepy-identity "Mr. Fantastico")
+; => "Mr. Fantastico" after 1 second
+(sleepy-identity "Mr. Fantastico")
+; => "Mr. Fantastico" after 1 second
+
+(def memo-sleepy-identity (memoize sleepy-identity))
+
+(memo-sleepy-identity "Mr. Fantastico")
+; => "Mr. Fantastico" after 1 second
+(memo-sleepy-identity "Mr. Fantastico")
+; => "Mr. Fantastico" immediately
+#+END_SRC
 * Notes on performance
 
 From: https://reddit.com/comments/a2ubj8/comment/eb2qthy
