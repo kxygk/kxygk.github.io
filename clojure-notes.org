@@ -957,6 +957,190 @@ x)
 (memo-sleepy-identity "Mr. Fantastico")
 ; => "Mr. Fantastico" immediately
 #+END_SRC
+* Namespaces
+Create with ~create-ns~, go into with ~ns-name~, and both create and go into with ~in-ns~ (unless it already exists, in which case you just enter)
+#+BEGIN_SRC clojure
+user=> (create-ns 'cheese.taxonomy)
+; => #<Namespace cheese.taxonomy>
+
+user=> (ns-name (create-ns 'cheese.taxonomy))
+; => cheese-taxonomy
+
+user=> (in-ns 'cheese.analysis)
+; => #<Namespace cheese.analysis>
+
+
+
+(in-ns 'cheese.taxonomy)
+(def cheddars ["mild" "medium" "strong" "sharp" "extra sharp"])
+(in-ns 'cheese.analysis)
+
+cheese.analysis=> cheese.taxonomy/cheddars
+; => ["mild" "medium" "strong" "sharp" "extra sharp"]
+
+#+END_SRC
+Use ~refer~ to add a namespace to your current namespace
+#+BEGIN_SRC clojure
+user=> (in-ns 'cheese.taxonomy)
+cheese.taxonomy=> (def cheddars ["mild" "medium" "strong" "sharp" "extra sharp"])
+cheese.taxonomy=> (def bries ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"])
+cheese.taxonomy=> (in-ns 'cheese.analysis)
+
+cheese.analysis=> (clojure.core/refer 'cheese.taxonomy)
+cheese.analysis=> bries
+; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
+cheese.analysis=> cheddars
+; => ["mild" "medium" "strong" "sharp" "extra sharp"]
+
+;; OR
+
+cheese.analysis=> (clojure.core/refer 'cheese.taxonomy :only ['bries])
+cheese.analysis=> bries
+; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
+cheese.analysis=> cheddars
+; => RuntimeException: Unable to resolve symbol: cheddars
+
+;; OR
+
+cheese.analysis=> (clojure.core/refer 'cheese.taxonomy :exclude ['bries])
+cheese.analysis=> bries
+; => RuntimeException: Unable to resolve symbol: bries
+cheese.analysis=> cheddars
+; => ["mild" "medium" "strong" "sharp" "extra sharp"]
+
+;; OR
+
+cheese.analysis=> (clojure.core/refer 'cheese.taxonomy :rename {'bries 'yummy-bries})
+cheese.analysis=> bries
+; => RuntimeException: Unable to resolve symbol: bries
+cheese.analysis=> yummy-bries
+; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
+
+#+END_SRC
+Use ~defn-~ instead of ~defn~ to create private functions
+
+Use ~alias~ to rename the namespace to something sorter
+#+BEGIN_SRC clojure
+cheese.analysis=> (clojure.core/alias 'taxonomy 'cheese.taxonomy)
+cheese.analysis=> taxonomy/bries
+; => ["Wisconsin" "Somerset" "Brie de Meaux" "Brie de Melun"]
+#+END_SRC
+To actually have a namespace evaluated, you need to use ~require~
+#+BEGIN_SRC clojure
+  ;; In visualization/svg.clj
+  (ns the-divine-cheese-code.visualization.svg)
+  (defn latlng->point
+    "Convert lat/lng map to comma-separated string"
+    [latlng]
+    (str (:lng latlng) "," (:lat latlng)))
+  (defn points
+    [locations]
+    (clojure.string/join " " (map latlng->point locations)))
+
+
+  ;; In your core.clj you will have to require it so that it's evaluated and added
+  (ns the-divine-cheese-code.core)
+  ;; Ensure that the SVG code is evaluated
+  (require 'the-divine-cheese-code.visualization.svg)
+  ;; Refer the namespace so that you don't have to use the
+  ;; fully qualified name to reference svg functions
+  (refer 'the-divine-cheese-code.visualization.svg)
+  (def heists [{:location "Cologne, Germany"
+		:cheese-name "Archbishop Hildebold's Cheese Pretzel"
+		:lat 50.95
+		:lng 6.97}
+	       {:location "Zurich, Switzerland"
+		:cheese-name "The Standard Emmental"
+		:lat 47.37
+		:lng 8.55}
+	       {:location "Marseille, France"
+		:cheese-name "Le Fromage de Cosquer"
+		:lat 43.30
+		:lng 5.37}
+	       {:location "Zurich, Switzerland"
+		:cheese-name "The Lesser Emmental"
+		:lat 47.37
+		:lng 8.55}
+	       {:location "Vatican City"
+		:cheese-name "The Cheese of Turin"
+		:lat 41.90
+		:lng 12.45}])
+  (defn -main
+    [& args]
+    (println (points heists)))
+
+
+#+END_SRC
+You can ~alias~ and ~require~ all in one statement
+#+BEGIN_SRC clojure
+  (require 'the-divine-cheese-code.visualization.svg)
+  (alias 'svg 'the-divine-cheese-code.visualization.svg)
+  ;; same as
+  (require '[the-divine-cheese-code.visualization.svg :as svg])
+#+END_SRC
+And you can ~require~ and ~refer~ in one statement as well using the ~use~ keyword
+#+BEGIN_SRC clojure
+  (require 'the-divine-cheese-code.visualization.svg)
+  (refer 'the-divine-cheese-code.visualization.svg)
+  ;; same as
+  (use 'the-divine-cheese-code.visualization.svg)
+#+END_SRC
+And you can ~alias~ with ~use~ as well
+#+BEGIN_SRC clojure
+  (require 'the-divine-cheese-code.visualization.svg)
+  (refer 'the-divine-cheese-code.visualization.svg)
+  (alias 'svg 'the-divine-cheese-code.visualization.svg)
+  ;; same as
+  (use '[the-divine-cheese-code.visualization.svg :as svg])
+#+END_SRC
+** ns
+The ~ns~ macro allows us to combine everything together. Both declaraction of a new namespace and adding other namespaces to it
+#+BEGIN_SRC clojure
+  (in-ns 'the-divine-cheese-code.core)
+  (refer 'clojure.core :exclude ['println])
+  ;; same as
+  (ns the-divine-cheese-code.core
+    (:require the-divine-cheese-code.visualization.svg))
+
+  (in-ns 'the-divine-cheese-code.core)
+  (require ['the-divine-cheese-code.visualization.svg :as 'svg])
+  ;; same as
+  (ns the-divine-cheese-code.core
+    (:require [the-divine-cheese-code.visualization.svg :as svg]))
+
+
+  (in-ns 'the-divine-cheese-code.core)
+  (require ['the-divine-cheese-code.visualization.svg :as 'svg])
+  (require ['clojure.java.browse :as 'browse])
+  ;; same as
+  (ns the-divine-cheese-code.core
+    (:require [the-divine-cheese-code.visualization.svg :as svg]
+	      [clojure.java.browse :as browse]))
+#+END_SRC
+But the ~ns~ macro seems to discourage adding a whole namespace and you need to add a bit to do it
+#+BEGIN_SRC clojure
+  (in-ns 'the-divine-cheese-code.core)
+  (require 'the-divine-cheese-code.visualization.svg)
+  (refer 'the-divine-cheese-code.visualization.svg)
+  ;; same as
+  (ns the-divine-cheese-code.core
+    (:require [the-divine-cheese-code.visualization.svg :refer :all]))
+#+END_SRC
+Though you could use the ~use~ keyword as before (this is discouraged for some reason)
+#+BEGIN_SRC clojure
+  (in-ns 'the-divine-cheese-code.core)
+  (use 'clojure.java.browse)
+  ;; same as
+  (ns the-divine-cheese-code.core
+    (:use clojure.java.browse))
+
+  (in-ns 'the-divine-cheese-code.core)
+  (use 'clojure.java.browse)
+  (use 'clojure.java.io)
+  ;; same as
+  (ns the-divine-cheese-code.core
+    (:use [clojure.java browse io]))
+#+END_SRC
 * Notes on performance
 
 From: https://reddit.com/comments/a2ubj8/comment/eb2qthy
