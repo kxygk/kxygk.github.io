@@ -105,7 +105,19 @@ Not to be confused with the ~map~ higher-order-function. \\
   (:d {:a 1 :b 2 :c 3} "more fallback unicorns")
   ;; => "more fallback unicorns"
 #+END_SRC
+If you use a double colon then the keyword is namespaced
+#+BEGIN_SRC clojure
+  user> :foo
+  ;; :foo
+  user> ::foo
+  ;; :user/foo
 
+  user> (namespace :foo)
+  ;; nil
+  user> (namespace ::foo)
+  ;; "user"
+#+END_SRC
+See: https://stackoverflow.com/questions/1527548/why-does-clojure-have-keywords-in-addition-to-symbols
 ** vector - []
 #+BEGIN_SRC clojure
   [3 2 1]
