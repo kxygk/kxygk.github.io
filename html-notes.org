@@ -195,10 +195,97 @@ Gotta close some of the outer brackets
 ** Rules
 Or /ruleset/. Each /rule/ is a paired *selector* and a *declaration block*
 *** Selector
-Is a pattern that matches some element on a page
+Is a pattern that matches some element on a page like
 #+BEGIN_SRC css :tangle css-demo.css
 h1
 #+END_SRC
+**** Class selectors
+You can explicitely give HTML elements a class name in an /HTML attribute/. Classes can be assigned at random and reused
+#+BEGIN_SRC html
+<ul>
+  <li class="first done">Create an HTML document</li>
+  <li class="second done">Create a CSS style sheet</li>
+  <li class="third">Link them all together</li>
+</ul>
+#+END_SRC
+And then using a dot notation you can select based on the class name
+#+BEGIN_SRC css
+.first {
+  font-weight: bold;
+}
+
+.done {
+  text-decoration: line-through;
+}
+
+#+END_SRC
+**** ID selectors
+Similar to Class selectors but for a /unique/ ID
+#+BEGIN_SRC html
+<p id="polite"> — "Good morning."</p>
+<p id="rude"> — "Go away!"</p>
+#+END_SRC
+And you can can then reference it in your CSS with the pound notation
+#+BEGIN_SRC css
+#polite {
+  font-family: cursive;
+}
+
+#rude {
+  font-family: monospace;
+  text-transform: uppercase;
+}
+#+END_SRC
+**** Universal selectors
+Just selects everything. Can be useful to combine with other selectors
+#+BEGIN_SRC css
+* {
+  padding: 5px;
+  border: 1px solid black;
+  background: rgba(255,0,0,0.25)
+}
+#+END_SRC
+**** Attribute selectors
+~[attr]~ : This selector will select all elements with the attribute attr, whatever its value.
+~[attr=val]~ : This selector will select all elements with the attribute attr, but only if its value is val.
+~[attr~=val]~ : This selector will select all elements with the attribute attr, but only if  val is one of a space-separated list of words contained in attr's value. 
+~[attr^=val]~ : This selector will select all elements with the attribute attr for which the value starts with val.
+~[attr$=val]~ : This selector will select all elements with the attribute attr for which the value ends with val.
+~[attr*=val]~ : This selector will select all elements with the attribute attr for which the value contains the substring val. (A substring is simply part of a string, e.g. "cat" is a substring in the string "caterpillar".) 
+**** Pseudo-class selectors
+Are a bit involved. These are at the end of an attribute and go after a /colon/. The designate a certain element state. See the page: https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Pseudo-classes_and_pseudo-elements
+example:
+#+BEGIN_SRC css
+a {
+  color: blue;
+  font-weight: bold;
+}
+
+a:visited {
+  color: blue;
+}
+
+a:hover,
+a:active,
+a:focus {
+  color: darkred;
+  text-decoration: none;
+}
+
+#+END_SRC
+**** Pseudo-element selectors
+Can let you select a part of the element to modify. For instance this appends a little arrow to the element
+#+BEGIN_SRC css
+[href^=http]::after {
+  content: '⤴';
+}
+#+END_SRC
+**** Combinators
+~A, B~ - matches A and/or B
+~A B~ - matches a B that is a descendent of A
+~A > B~ - matches B that is a direct child of an A
+~A + B~ - matches B that is the next sibling of an element matching A
+~A ~ B~ - matches B that is the one of the next sibling of an element matching A
 *** Declaration Block
 Is a series of declaration - each a pair of a /property/ and a /value/
 #+BEGIN_SRC css :tangle css-demo.css
@@ -208,6 +295,38 @@ Is a series of declaration - each a pair of a /property/ and a /value/
   border: 1px solid black;
   }
 #+END_SRC
+Numbers can be in *absolute units* like ~px~ (pixels) or ~q~ (quarter millimeters) ~mm~ ~cm~ ~in~ ~pt~ (1/72 of an inch) ~pc~ (picas - 12 points). Or they can be in *relative units* like ~em~ (font size of the current element), ~ex~ (size of an x) ~ch~ (size of the number 0), ~rem~ (root ~em~, ie. the top level default font), ~vw~/~vh~ 1/100^{th} of the width/height of the viewport
+
+You can also add things for animation:
+#+BEGIN_SRC css
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+p {
+  color: red;
+  width: 100px;
+  font-size: 40px;
+  transform-origin: center;
+}
+
+p:hover {
+  animation-name: rotate;
+  animation-duration: 0.6s;
+  animation-timing-function: linear;
+  animation-iteration-count: 5;
+}
+#+END_SRC
+
+For details concerning colors, see the Mozilla tutorial: https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Values_and_units
+
+More specific rules will override less specific ones
 ** Statements
 Are additional blocks that can be written in CSS. The most common are /at-rules/ which sometimes can be /nested/
 #+BEGIN_SRC css :tangle css-demo.css
