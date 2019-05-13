@@ -1,0 +1,13 @@
+#+TITLE:
+#+DESCRIPTION:
+
+#+EXPORT_FILE_NAME: common-header.html
+#+HTML_DOCTYPE: html5
+
+#+HTML_MATHJAX: path: "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"
+#+OPTIONS: html-style:nil
+#+OPTIONS: num:nil
+#+OPTIONS: html-postamble:nil
+#+OPTIONS: toc:nil
+
+* geokon

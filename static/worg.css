@@ -8,13 +8,19 @@ and modified a bit.. */
     html {
         margin: 0;
         /*font: 300 .9em/1.6em "Droid Serif", Cambria, Georgia, "DejaVu Serif", serif;*/
-        /* background-image: url(http://orgmode.org/img/org-mode-unicorn-logo-worg.png); */
+	background-image: url(./panda.svg);
+	background-size: auto 245px;
         background-attachment: fixed;
-        background-position: right bottom;
+        background-position: right top;
         background-repeat: no-repeat;
         background-color: white;
-    }
 
+    }
+    iframe {
+        padding-top: 50px;
+	border-bottom: 1px double grey;
+	overflow:hidden;
+    }
     body {
         font-size: 12pt;
         line-height: 18pt;
@@ -23,12 +29,11 @@ and modified a bit.. */
 
     }
     body #content {
-        padding-top: 0px;
-        max-width: 80%;
-        min-width: 700px;
+        padding-top: 100px;
+        /* min-width: 700px; */
         margin-left: 20px;
-        background-color: white;
-        padding: 2em;
+        margin-right: 95px;
+        padding: 0em;
         /* box-shadow: 3px 3px 5px #888; */
     }
     body .title {
@@ -115,7 +120,7 @@ content: "*** "
         line-height:16px;
         padding:10px 0 10px 0;
         color: black;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid  #eeeeee;
     }
 
     .outline-text-2 {
