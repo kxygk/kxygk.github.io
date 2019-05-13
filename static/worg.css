@@ -9,7 +9,7 @@ and modified a bit.. */
         margin: 0;
         /*font: 300 .9em/1.6em "Droid Serif", Cambria, Georgia, "DejaVu Serif", serif;*/
 	background-image: url(./panda.svg);
-	background-size: auto 245px;
+	background-size: auto 246px;
         background-position: right top;
         background-repeat: no-repeat;
         background-color: white;
@@ -31,7 +31,7 @@ and modified a bit.. */
         padding-top: 100px;
         /* min-width: 700px; */
         margin-left: 20px;
-        margin-right: 95px;
+        margin-right: 93px;
         padding: 0em;
         /* box-shadow: 3px 3px 5px #888; */
     }
