@@ -10,7 +10,6 @@ and modified a bit.. */
         /*font: 300 .9em/1.6em "Droid Serif", Cambria, Georgia, "DejaVu Serif", serif;*/
 	background-image: url(./panda.svg);
 	background-size: auto 245px;
-        background-attachment: fixed;
         background-position: right top;
         background-repeat: no-repeat;
         background-color: white;
