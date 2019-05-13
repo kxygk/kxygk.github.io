@@ -20,13 +20,13 @@
 </iframe>
 #+END_EXPORT
 
-[[file:resume.html][=Resume=]] \\
-[[file:.emacs.d/][=.emacs.d=]]- My emacs configuration and a short ELisp intro \\
-[[file:cindertemplate/][=cinder-template=]] - A template for Cinder (broken) \\
-[[file:linearsystems-part1/][=linear-systems part 1=]]- Linear albegra in ELisp: Basics, LU, Least Squares, QR \\
-[[file:linearsystems-part2/][=linear-systems part 2=]] - Linear albegra in Clojure: QR and on \\
-[[file:hunterintro.html][=hunter-intro=]] - Intro to managing dependencies in C++ using Hunter \\
-[[file:buubletea/][=buubletea=]] - Basic example for working in Clojure with JavaFX, OpenCV and simple plotting \\
-[[file:bluepill/][=bluepill=]] - A GCC/CMake Build environment for the STM32F1 based Bluepill board \\
-[[file:stm32f1-ll/][=stm32f1-ll=]]- CMake wrapper for the STM32F1 Low Level API library - extracted from the STM32 Cube HAL \\
-[[file:discoveryf4-std-periph/][=discoveryf4-std-periph=]] - A GCC/CMake Build environment for the STM32F4 Discovery
+- [[file:resume.html][=Resume=]] ::  \\
+- [[file:.emacs.d/][=.emacs.d=]] :: My emacs configuration and a short ELisp intro \\
+- [[file:cindertemplate/][=cinder-template=]] :: A template for Cinder (broken) \\
+- [[file:linearsystems-part1/][=linear-systems part 1=]] :: Linear albegra in ELisp: Basics, LU, Least Squares, QR \\
+- [[file:linearsystems-part2/][=linear-systems part 2=]] :: Linear albegra in Clojure: QR and on \\
+- [[file:hunterintro.html][=hunter-intro=]] :: Intro to managing dependencies in C++ using Hunter \\
+- [[file:buubletea/][=buubletea=]] :: Basic example for working in Clojure with JavaFX, OpenCV and simple plotting \\
+- [[file:bluepill/][=bluepill=]] :: A GCC/CMake Build environment for the STM32F1 based Bluepill board \\
+- [[file:stm32f1-ll/][=stm32f1-ll=]] :: CMake wrapper for the STM32F1 Low Level API library - extracted from the STM32 Cube HAL \\
+- [[file:discoveryf4-std-periph/][=discoveryf4-std-periph=]] :: A GCC/CMake Build environment for the STM32F4 Discovery
