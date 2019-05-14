@@ -149,11 +149,6 @@ See: https://stackoverflow.com/questions/1527548/why-does-clojure-have-keywords-
   ;; => (4 1 2 3)
   ;; NOTICE! Goes to the front!
 #+END_SRC
-#+TITLE: Clojure Notes
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
-#+options: num:nil toc:nil
-
-
 * Preface
 
 These are notes on Clojure - as I learn it. (I'm starting with knowing ELisp already).

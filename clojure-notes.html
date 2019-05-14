@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2019-04-25 四 00:05 -->
+<!-- 2019-05-14 Tue 21:02 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Clojure Notes Clojure Notes</title>
+<title>Clojure Notes</title>
 <meta name="generator" content="Org mode">
 <meta name="author" content="George Kontsevich">
 <meta name="description" content="Notes from studying Clojure"
 >
 <link rel="stylesheet" type="text/css" href="./static/worg.css" />
-<link rel="stylesheet" type="text/css" href="https://geokon-gh.github.io/static/worg.css" />
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -64,11 +63,118 @@ for the JavaScript code in this tag.
  |
  <a accesskey="H" href="./index.html"> HOME </a>
 </div><div id="content">
-<h1 class="title">Clojure Notes Clojure Notes</h1>
+<h1 class="title">Clojure Notes</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org832e249">Preface</a></li>
+<li><a href="#org50edeeb">Setup</a></li>
+<li><a href="#org65ba9c0">Control Flow</a>
+<ul>
+<li><a href="#org72fe43d">if</a></li>
+<li><a href="#orgd95c64d">do</a></li>
+<li><a href="#orgeb93bca">when</a></li>
+</ul>
+</li>
+<li><a href="#org5b4568d">Data Structures</a>
+<ul>
+<li><a href="#orgc8909a4">numbers</a></li>
+<li><a href="#org2c0fb17">maps - {}</a>
+<ul>
+<li><a href="#org73ec0cd">keywords</a></li>
+</ul>
+</li>
+<li><a href="#orga6af1b8">vector - []</a></li>
+<li><a href="#org9ee5626">lists - '()</a></li>
+</ul>
+</li>
+<li><a href="#org6d34f7d">Preface</a></li>
+<li><a href="#org42f3ae3">Setup</a></li>
+<li><a href="#org0660b61">Control Flow</a>
+<ul>
+<li><a href="#org444b1ac">if</a></li>
+<li><a href="#org8a4587a">do</a></li>
+<li><a href="#org7e58035">when</a></li>
+</ul>
+</li>
+<li><a href="#orga2648df">Data Structures</a>
+<ul>
+<li><a href="#orgdab7e6b">numbers</a></li>
+<li><a href="#org4d6b4b7">maps - {}</a>
+<ul>
+<li><a href="#org9182b9c">keywords</a></li>
+</ul>
+</li>
+<li><a href="#orgebe3365">vector - []</a></li>
+<li><a href="#org9b4d5c5">lists - '()</a></li>
+<li><a href="#org358ebe7">sets - #{}</a></li>
+</ul>
+</li>
+<li><a href="#orgd5a5471">Functions</a>
+<ul>
+<li><a href="#orgf8ad711">overloading</a></li>
+<li><a href="#org571d26a">variable arity</a></li>
+<li><a href="#org5642d3e">private functions</a></li>
+<li><a href="#org8615c9b">destructuring</a>
+<ul>
+<li><a href="#orgda8dd77">first element</a></li>
+<li><a href="#org9cdd800">vectors and variable arity</a></li>
+<li><a href="#orgb8f88f7">maps and keywords</a></li>
+</ul>
+</li>
+<li><a href="#org56d424e">anonymous</a></li>
+<li><a href="#org20d1401">recusion</a></li>
+</ul>
+</li>
+<li><a href="#org3c19280">Datatypes</a>
+<ul>
+<li><a href="#org1fe2870">multimethods</a></li>
+<li><a href="#orgbd4ada5">protocol</a></li>
+<li><a href="#org0d31ef4">records</a></li>
+</ul>
+</li>
+<li><a href="#org1a94722">Higher Order Functions</a>
+<ul>
+<li><a href="#org753c29f">seq functions</a>
+<ul>
+<li><a href="#orgb4d3ceb">map</a></li>
+<li><a href="#orga395450">reduce</a></li>
+<li><a href="#org29f89cb">take/drop/take-while/drop-while</a></li>
+<li><a href="#orgf750766">filter/some</a></li>
+<li><a href="#org958ff35">sort/sort-by/concat</a></li>
+</ul>
+</li>
+<li><a href="#org214a1f5">lazy sequences</a>
+<ul>
+<li><a href="#orga2180df">infinite sequences</a></li>
+</ul>
+</li>
+<li><a href="#org0240569">col functions</a>
+<ul>
+<li><a href="#org3a2d8a3">conj/into</a></li>
+<li><a href="#orgd427a18">apply</a></li>
+<li><a href="#org8287749">partial</a></li>
+<li><a href="#org00309de">complement</a></li>
+<li><a href="#org5780c6a">comp</a></li>
+<li><a href="#orge1df843">memoize</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgba4ff12">Namespaces</a>
+<ul>
+<li><a href="#orge4e5097">ns</a></li>
+</ul>
+</li>
+<li><a href="#orgef6ee12">Notes on performance</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-org631f375" class="outline-2">
-<h2 id="org631f375">Preface</h2>
-<div class="outline-text-2" id="text-org631f375">
+<div id="outline-container-org832e249" class="outline-2">
+<h2 id="org832e249">Preface</h2>
+<div class="outline-text-2" id="text-org832e249">
 <p>
 These are notes on Clojure - as I learn it. (I'm starting with knowing ELisp already).
 Copying most code from Clojure for the Brave and True and adding some extra tidbits I
@@ -77,9 +183,9 @@ find
 </div>
 </div>
 
-<div id="outline-container-org6a81ce7" class="outline-2">
-<h2 id="org6a81ce7">Setup</h2>
-<div class="outline-text-2" id="text-org6a81ce7">
+<div id="outline-container-org50edeeb" class="outline-2">
+<h2 id="org50edeeb">Setup</h2>
+<div class="outline-text-2" id="text-org50edeeb">
 <p>
 You need to install <code>leiningen</code> and <code>clojure</code> and <code>openjdk</code> to get started. <code>leiningen</code>
 generates your project directories (this shouldn't be done manually for some reason)
@@ -96,13 +202,13 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org5326bfd" class="outline-2">
-<h2 id="org5326bfd">Control Flow</h2>
-<div class="outline-text-2" id="text-org5326bfd">
+<div id="outline-container-org65ba9c0" class="outline-2">
+<h2 id="org65ba9c0">Control Flow</h2>
+<div class="outline-text-2" id="text-org65ba9c0">
 </div>
-<div id="outline-container-org882d0c1" class="outline-3">
-<h3 id="org882d0c1">if</h3>
-<div class="outline-text-3" id="text-org882d0c1">
+<div id="outline-container-org72fe43d" class="outline-3">
+<h3 id="org72fe43d">if</h3>
+<div class="outline-text-3" id="text-org72fe43d">
 <p>
 <code>(if boolean-form then-form optional-else-form)</code>
 </p>
@@ -116,9 +222,9 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org6e432a3" class="outline-3">
-<h3 id="org6e432a3">do</h3>
-<div class="outline-text-3" id="text-org6e432a3">
+<div id="outline-container-orgd95c64d" class="outline-3">
+<h3 id="orgd95c64d">do</h3>
+<div class="outline-text-3" id="text-orgd95c64d">
 <p>
 <code>(do thing1 thing2 ..)</code> <br>
 <i>executes multiple things in a place that expects on. The last thing will be the return value</i>
@@ -136,9 +242,9 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org8579ea5" class="outline-3">
-<h3 id="org8579ea5">when</h3>
-<div class="outline-text-3" id="text-org8579ea5">
+<div id="outline-container-orgeb93bca" class="outline-3">
+<h3 id="orgeb93bca">when</h3>
+<div class="outline-text-3" id="text-orgeb93bca">
 <p>
 <code>(when test thing1 thing2 ..)</code> <br>
 <i>evaluates test. If logical true, evaluates body in an implicit do.</i>
@@ -153,13 +259,13 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org56b5fd3" class="outline-2">
-<h2 id="org56b5fd3">Data Structures</h2>
-<div class="outline-text-2" id="text-org56b5fd3">
+<div id="outline-container-org5b4568d" class="outline-2">
+<h2 id="org5b4568d">Data Structures</h2>
+<div class="outline-text-2" id="text-org5b4568d">
 </div>
-<div id="outline-container-org9e6652e" class="outline-3">
-<h3 id="org9e6652e">numbers</h3>
-<div class="outline-text-3" id="text-org9e6652e">
+<div id="outline-container-orgc8909a4" class="outline-3">
+<h3 id="orgc8909a4">numbers</h3>
+<div class="outline-text-3" id="text-orgc8909a4">
 <ul class="org-ul">
 <li>integer: <code>3</code></li>
 <li>floating: <code>3.0</code></li>
@@ -168,9 +274,9 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org90bea0d" class="outline-3">
-<h3 id="org90bea0d">maps - {}</h3>
-<div class="outline-text-3" id="text-org90bea0d">
+<div id="outline-container-org2c0fb17" class="outline-3">
+<h3 id="org2c0fb17">maps - {}</h3>
+<div class="outline-text-3" id="text-org2c0fb17">
 <p>
 Not to be confused with the <code>map</code> higher-order-function. <br>
 <i>a collection of pairs of keys and items. both can be anything</i>
@@ -209,9 +315,9 @@ Not to be confused with the <code>map</code> higher-order-function. <br>
 </div>
 </div>
 
-<div id="outline-container-org00a9090" class="outline-4">
-<h4 id="org00a9090">keywords</h4>
-<div class="outline-text-4" id="text-org00a9090">
+<div id="outline-container-org73ec0cd" class="outline-4">
+<h4 id="org73ec0cd">keywords</h4>
+<div class="outline-text-4" id="text-org73ec0cd">
 <p>
 these are like special keys that can also be used as a function to retrieve items in a map. So sorta inverting the last example <br>
 <code>(keyword map) or (keyword map fallback)</code>
@@ -245,9 +351,9 @@ See: <a href="https://stackoverflow.com/questions/1527548/why-does-clojure-have-
 </div>
 </div>
 </div>
-<div id="outline-container-org045ca3d" class="outline-3">
-<h3 id="org045ca3d">vector - []</h3>
-<div class="outline-text-3" id="text-org045ca3d">
+<div id="outline-container-orga6af1b8" class="outline-3">
+<h3 id="orga6af1b8">vector - []</h3>
+<div class="outline-text-3" id="text-orga6af1b8">
 <div class="org-src-container">
 <pre class="src src-clojure">[3 2 1<span style="color: #999999;">]</span>
 
@@ -266,9 +372,9 @@ See: <a href="https://stackoverflow.com/questions/1527548/why-does-clojure-have-
 </div>
 </div>
 
-<div id="outline-container-orgf87ae15" class="outline-3">
-<h3 id="orgf87ae15">lists - '()</h3>
-<div class="outline-text-3" id="text-orgf87ae15">
+<div id="outline-container-org9ee5626" class="outline-3">
+<h3 id="org9ee5626">lists - '()</h3>
+<div class="outline-text-3" id="text-org9ee5626">
 <div class="org-src-container">
 <pre class="src src-clojure">'(1 2 3 4<span style="color: #999999;">)</span>
 <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (1 2 3 4)</span>
@@ -287,11 +393,9 @@ See: <a href="https://stackoverflow.com/questions/1527548/why-does-clojure-have-
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-orgece09e3" class="outline-2">
-<h2 id="orgece09e3">Preface</h2>
-<div class="outline-text-2" id="text-orgece09e3">
+<div id="outline-container-org6d34f7d" class="outline-2">
+<h2 id="org6d34f7d">Preface</h2>
+<div class="outline-text-2" id="text-org6d34f7d">
 <p>
 These are notes on Clojure - as I learn it. (I'm starting with knowing ELisp already).
 Copying most code from Clojure for the Brave and True and adding some extra tidbits I
@@ -300,9 +404,9 @@ find
 </div>
 </div>
 
-<div id="outline-container-orge130369" class="outline-2">
-<h2 id="orge130369">Setup</h2>
-<div class="outline-text-2" id="text-orge130369">
+<div id="outline-container-org42f3ae3" class="outline-2">
+<h2 id="org42f3ae3">Setup</h2>
+<div class="outline-text-2" id="text-org42f3ae3">
 <p>
 You need to install <code>leiningen</code> and <code>clojure</code> and <code>openjdk</code> to get started. <code>leiningen</code>
 generates your project directories (this shouldn't be done manually for some reason)
@@ -319,13 +423,13 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-orgfe951c4" class="outline-2">
-<h2 id="orgfe951c4">Control Flow</h2>
-<div class="outline-text-2" id="text-orgfe951c4">
+<div id="outline-container-org0660b61" class="outline-2">
+<h2 id="org0660b61">Control Flow</h2>
+<div class="outline-text-2" id="text-org0660b61">
 </div>
-<div id="outline-container-org20a93c4" class="outline-3">
-<h3 id="org20a93c4">if</h3>
-<div class="outline-text-3" id="text-org20a93c4">
+<div id="outline-container-org444b1ac" class="outline-3">
+<h3 id="org444b1ac">if</h3>
+<div class="outline-text-3" id="text-org444b1ac">
 <p>
 <code>(if boolean-form then-form optional-else-form)</code>
 </p>
@@ -339,9 +443,9 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org20bbf29" class="outline-3">
-<h3 id="org20bbf29">do</h3>
-<div class="outline-text-3" id="text-org20bbf29">
+<div id="outline-container-org8a4587a" class="outline-3">
+<h3 id="org8a4587a">do</h3>
+<div class="outline-text-3" id="text-org8a4587a">
 <p>
 <code>(do thing1 thing2 ..)</code> <br>
 <i>executes multiple things in a place that expects on. The last thing will be the return value</i>
@@ -359,9 +463,9 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-orgf1c5860" class="outline-3">
-<h3 id="orgf1c5860">when</h3>
-<div class="outline-text-3" id="text-orgf1c5860">
+<div id="outline-container-org7e58035" class="outline-3">
+<h3 id="org7e58035">when</h3>
+<div class="outline-text-3" id="text-org7e58035">
 <p>
 <code>(when test thing1 thing2 ..)</code> <br>
 <i>evaluates test. If logical true, evaluates body in an implicit do.</i>
@@ -376,13 +480,13 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org60cbb2c" class="outline-2">
-<h2 id="org60cbb2c">Data Structures</h2>
-<div class="outline-text-2" id="text-org60cbb2c">
+<div id="outline-container-orga2648df" class="outline-2">
+<h2 id="orga2648df">Data Structures</h2>
+<div class="outline-text-2" id="text-orga2648df">
 </div>
-<div id="outline-container-org8af1854" class="outline-3">
-<h3 id="org8af1854">numbers</h3>
-<div class="outline-text-3" id="text-org8af1854">
+<div id="outline-container-orgdab7e6b" class="outline-3">
+<h3 id="orgdab7e6b">numbers</h3>
+<div class="outline-text-3" id="text-orgdab7e6b">
 <ul class="org-ul">
 <li>integer: <code>3</code></li>
 <li>floating: <code>3.0</code></li>
@@ -391,9 +495,9 @@ The entry point of the new project will be in <code>/src/your-application-name/c
 </div>
 </div>
 
-<div id="outline-container-org26c1968" class="outline-3">
-<h3 id="org26c1968">maps - {}</h3>
-<div class="outline-text-3" id="text-org26c1968">
+<div id="outline-container-org4d6b4b7" class="outline-3">
+<h3 id="org4d6b4b7">maps - {}</h3>
+<div class="outline-text-3" id="text-org4d6b4b7">
 <p>
 Not to be confused with the <code>map</code> higher-order-function. <br>
 <i>a collection of pairs of keys and items. both can be anything</i>
@@ -432,9 +536,9 @@ Not to be confused with the <code>map</code> higher-order-function. <br>
 </div>
 </div>
 
-<div id="outline-container-org5a3eaff" class="outline-4">
-<h4 id="org5a3eaff">keywords</h4>
-<div class="outline-text-4" id="text-org5a3eaff">
+<div id="outline-container-org9182b9c" class="outline-4">
+<h4 id="org9182b9c">keywords</h4>
+<div class="outline-text-4" id="text-org9182b9c">
 <p>
 these are like special keys that can also be used as a function to retrieve items in a map. So sorta inverting the last example <br>
 <code>(keyword map) or (keyword map fallback)</code>
@@ -451,9 +555,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 
-<div id="outline-container-orgb5f1cc3" class="outline-3">
-<h3 id="orgb5f1cc3">vector - []</h3>
-<div class="outline-text-3" id="text-orgb5f1cc3">
+<div id="outline-container-orgebe3365" class="outline-3">
+<h3 id="orgebe3365">vector - []</h3>
+<div class="outline-text-3" id="text-orgebe3365">
 <div class="org-src-container">
 <pre class="src src-clojure">[3 2 1<span style="color: #999999;">]</span>
 
@@ -472,9 +576,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 
-<div id="outline-container-org360ff7a" class="outline-3">
-<h3 id="org360ff7a">lists - '()</h3>
-<div class="outline-text-3" id="text-org360ff7a">
+<div id="outline-container-org9b4d5c5" class="outline-3">
+<h3 id="org9b4d5c5">lists - '()</h3>
+<div class="outline-text-3" id="text-org9b4d5c5">
 <div class="org-src-container">
 <pre class="src src-clojure">'(1 2 3 4<span style="color: #999999;">)</span>
 <span style="color: #b2b2b2; font-style: italic;">;; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (1 2 3 4)</span>
@@ -492,9 +596,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 </div>
-<div id="outline-container-org73c3261" class="outline-3">
-<h3 id="org73c3261">sets - #{}</h3>
-<div class="outline-text-3" id="text-org73c3261">
+<div id="outline-container-org358ebe7" class="outline-3">
+<h3 id="org358ebe7">sets - #{}</h3>
+<div class="outline-text-3" id="text-org358ebe7">
 <p>
 <i>collection of unique values</i>
 </p>
@@ -530,13 +634,13 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 
-<div id="outline-container-orgf764356" class="outline-2">
-<h2 id="orgf764356">Functions</h2>
-<div class="outline-text-2" id="text-orgf764356">
+<div id="outline-container-orgd5a5471" class="outline-2">
+<h2 id="orgd5a5471">Functions</h2>
+<div class="outline-text-2" id="text-orgd5a5471">
 </div>
-<div id="outline-container-org9dc373f" class="outline-3">
-<h3 id="org9dc373f">overloading</h3>
-<div class="outline-text-3" id="text-org9dc373f">
+<div id="outline-container-orgf8ad711" class="outline-3">
+<h3 id="orgf8ad711">overloading</h3>
+<div class="outline-text-3" id="text-orgf8ad711">
 <p>
 <i>done on argument</i>
 </p>
@@ -551,9 +655,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 </div>
-<div id="outline-container-org8169efb" class="outline-3">
-<h3 id="org8169efb">variable arity</h3>
-<div class="outline-text-3" id="text-org8169efb">
+<div id="outline-container-org571d26a" class="outline-3">
+<h3 id="org571d26a">variable arity</h3>
+<div class="outline-text-3" id="text-org571d26a">
 <p>
 <code>[&amp; remainding-items]</code> 
 <i>and they are treated as a collection that you can use <code>map</code> on</i>
@@ -574,9 +678,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 </div>
-<div id="outline-container-org58368c0" class="outline-3">
-<h3 id="org58368c0">private functions</h3>
-<div class="outline-text-3" id="text-org58368c0">
+<div id="outline-container-org5642d3e" class="outline-3">
+<h3 id="org5642d3e">private functions</h3>
+<div class="outline-text-3" id="text-org5642d3e">
 <p>
 <i>exclusive to a namespace</i>
 <code>(defn- privatefn)</code>
@@ -589,16 +693,16 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 </div>
-<div id="outline-container-org98c000c" class="outline-3">
-<h3 id="org98c000c">destructuring</h3>
-<div class="outline-text-3" id="text-org98c000c">
+<div id="outline-container-org8615c9b" class="outline-3">
+<h3 id="org8615c9b">destructuring</h3>
+<div class="outline-text-3" id="text-org8615c9b">
 <p>
 <i>extracts things right in the argument declaration</i>
 </p>
 </div>
-<div id="outline-container-org765c0fe" class="outline-4">
-<h4 id="org765c0fe">first element</h4>
-<div class="outline-text-4" id="text-org765c0fe">
+<div id="outline-container-orgda8dd77" class="outline-4">
+<h4 id="orgda8dd77">first element</h4>
+<div class="outline-text-4" id="text-orgda8dd77">
 <div class="org-src-container">
 <pre class="src src-clojure">(<span style="color: #00af00;">defn</span> <span style="color: #ef2929;">my-first</span>
   [[first-thing<span style="color: #999999;">]]</span>
@@ -610,9 +714,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 </div>
-<div id="outline-container-org1594ad9" class="outline-4">
-<h4 id="org1594ad9">vectors and variable arity</h4>
-<div class="outline-text-4" id="text-org1594ad9">
+<div id="outline-container-org9cdd800" class="outline-4">
+<h4 id="org9cdd800">vectors and variable arity</h4>
+<div class="outline-text-4" id="text-org9cdd800">
 <p>
 <i>sequencially match vector elements to indices in order. remainer placed with an ampersand</i>
 </p>
@@ -632,9 +736,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 </div>
-<div id="outline-container-org580d221" class="outline-4">
-<h4 id="org580d221">maps and keywords</h4>
-<div class="outline-text-4" id="text-org580d221">
+<div id="outline-container-orgb8f88f7" class="outline-4">
+<h4 id="orgb8f88f7">maps and keywords</h4>
+<div class="outline-text-4" id="text-orgb8f88f7">
 <div class="org-src-container">
 <pre class="src src-clojure">
 
@@ -687,9 +791,9 @@ these are like special keys that can also be used as a function to retrieve item
 </div>
 </div>
 </div>
-<div id="outline-container-org7015da4" class="outline-3">
-<h3 id="org7015da4">anonymous</h3>
-<div class="outline-text-3" id="text-org7015da4">
+<div id="outline-container-org56d424e" class="outline-3">
+<h3 id="org56d424e">anonymous</h3>
+<div class="outline-text-3" id="text-org56d424e">
 <p>
 <i>create in-place functions with no name</i>
 </p>
@@ -719,9 +823,9 @@ example: feeding into the <code>(map)</code>
 </div>
 </div>
 </div>
-<div id="outline-container-orge770b4b" class="outline-3">
-<h3 id="orge770b4b">recusion</h3>
-<div class="outline-text-3" id="text-orge770b4b">
+<div id="outline-container-org20d1401" class="outline-3">
+<h3 id="org20d1401">recusion</h3>
+<div class="outline-text-3" id="text-org20d1401">
 <p>
 <i>needs to be stated explicitly with (recur)</i>
 </p>
@@ -739,13 +843,13 @@ example: feeding into the <code>(map)</code>
 </div>
 </div>
 </div>
-<div id="outline-container-orgbab9628" class="outline-2">
-<h2 id="orgbab9628">Datatypes</h2>
-<div class="outline-text-2" id="text-orgbab9628">
+<div id="outline-container-org3c19280" class="outline-2">
+<h2 id="org3c19280">Datatypes</h2>
+<div class="outline-text-2" id="text-org3c19280">
 </div>
-<div id="outline-container-org41fc3b6" class="outline-3">
-<h3 id="org41fc3b6">multimethods</h3>
-<div class="outline-text-3" id="text-org41fc3b6">
+<div id="outline-container-org1fe2870" class="outline-3">
+<h3 id="org1fe2870">multimethods</h3>
+<div class="outline-text-3" id="text-org1fe2870">
 <p>
 We declare a multimethod with <code>defmulti</code> which defines the signature and the <b>dispatch function</b> for the multimethod. The return value of the dispatch function will need to match a method defined with <code>defmethod</code>
 </p>
@@ -798,9 +902,9 @@ You can use this to call different functions based on the input's type
 </div>
 </div>
 
-<div id="outline-container-org21b247b" class="outline-3">
-<h3 id="org21b247b">protocol</h3>
-<div class="outline-text-3" id="text-org21b247b">
+<div id="outline-container-orgbd4ada5" class="outline-3">
+<h3 id="orgbd4ada5">protocol</h3>
+<div class="outline-text-3" id="text-orgbd4ada5">
 <p>
 However if you want to work based on the input type it's better to use <b>protocols</b>. This is sort of an inversion of the usual way of writing a method/function
 </p>
@@ -874,9 +978,9 @@ To extend the protocol to multiple types at once you can use <code>extend-protoc
 </div>
 </div>
 
-<div id="outline-container-org5c92bda" class="outline-3">
-<h3 id="org5c92bda">records</h3>
-<div class="outline-text-3" id="text-org5c92bda">
+<div id="outline-container-org0d31ef4" class="outline-3">
+<h3 id="org0d31ef4">records</h3>
+<div class="outline-text-3" id="text-org0d31ef4">
 <p>
 Similar to maps, but the <i>fields</i> are set in stone (kinda like set <b>keys</b>, but they are tied to the name of the record) and they're faster
 </p>
@@ -942,20 +1046,20 @@ Most importantly, you can implement a protocol right as you define the record it
 </div>
 </div>
 
-<div id="outline-container-org5228515" class="outline-2">
-<h2 id="org5228515">Higher Order Functions</h2>
-<div class="outline-text-2" id="text-org5228515">
+<div id="outline-container-org1a94722" class="outline-2">
+<h2 id="org1a94722">Higher Order Functions</h2>
+<div class="outline-text-2" id="text-org1a94722">
 </div>
-<div id="outline-container-org4f23296" class="outline-3">
-<h3 id="org4f23296">seq functions</h3>
-<div class="outline-text-3" id="text-org4f23296">
+<div id="outline-container-org753c29f" class="outline-3">
+<h3 id="org753c29f">seq functions</h3>
+<div class="outline-text-3" id="text-org753c29f">
 <p>
 Take sequences and return sequences
 </p>
 </div>
-<div id="outline-container-org3dc5d85" class="outline-4">
-<h4 id="org3dc5d85">map</h4>
-<div class="outline-text-4" id="text-org3dc5d85">
+<div id="outline-container-orgb4d3ceb" class="outline-4">
+<h4 id="orgb4d3ceb">map</h4>
+<div class="outline-text-4" id="text-orgb4d3ceb">
 <p>
 apply a function to each element
 </p>
@@ -1004,9 +1108,9 @@ And you can use a trick to apply multiple functions to one sequence
 </div>
 </div>
 </div>
-<div id="outline-container-org8513e63" class="outline-4">
-<h4 id="org8513e63">reduce</h4>
-<div class="outline-text-4" id="text-org8513e63">
+<div id="outline-container-orga395450" class="outline-4">
+<h4 id="orga395450">reduce</h4>
+<div class="outline-text-4" id="text-orga395450">
 <p>
 accumulates results
 </p>
@@ -1050,9 +1154,9 @@ This can also be done conditionally to filter out values
 </div>
 </div>
 </div>
-<div id="outline-container-org28383be" class="outline-4">
-<h4 id="org28383be">take/drop/take-while/drop-while</h4>
-<div class="outline-text-4" id="text-org28383be">
+<div id="outline-container-org29f89cb" class="outline-4">
+<h4 id="org29f89cb">take/drop/take-while/drop-while</h4>
+<div class="outline-text-4" id="text-org29f89cb">
 <p>
 Common shortcuts
 </p>
@@ -1087,9 +1191,9 @@ Common shortcuts
 </div>
 </div>
 </div>
-<div id="outline-container-org99f6991" class="outline-4">
-<h4 id="org99f6991">filter/some</h4>
-<div class="outline-text-4" id="text-org99f6991">
+<div id="outline-container-orgf750766" class="outline-4">
+<h4 id="orgf750766">filter/some</h4>
+<div class="outline-text-4" id="text-orgf750766">
 <p>
 returns a seq of all elements that are true
 </p>
@@ -1109,9 +1213,9 @@ returns a seq of all elements that are true
 </div>
 </div>
 </div>
-<div id="outline-container-orgb44c507" class="outline-4">
-<h4 id="orgb44c507">sort/sort-by/concat</h4>
-<div class="outline-text-4" id="text-orgb44c507">
+<div id="outline-container-org958ff35" class="outline-4">
+<h4 id="org958ff35">sort/sort-by/concat</h4>
+<div class="outline-text-4" id="text-org958ff35">
 <div class="org-src-container">
 <pre class="src src-clojure">(sort [3 1 2<span style="color: #999999;">])</span>
 <span style="color: #b2b2b2; font-style: italic;">; </span><span style="color: #b2b2b2; font-style: italic;">=&gt; (1 2 3)</span>
@@ -1124,9 +1228,9 @@ returns a seq of all elements that are true
 </div>
 </div>
 </div>
-<div id="outline-container-org39110c1" class="outline-3">
-<h3 id="org39110c1">lazy sequences</h3>
-<div class="outline-text-3" id="text-org39110c1">
+<div id="outline-container-org214a1f5" class="outline-3">
+<h3 id="org214a1f5">lazy sequences</h3>
+<div class="outline-text-3" id="text-org214a1f5">
 <p>
 <b>Higher Order</b> functions will usually return <i>lazy sequences</i>, and their values will only be calculated when you access them (and <i>realize</i> the sequence member)
 </p>
@@ -1218,9 +1322,9 @@ Afterwards the result is cached and instantaneous
 </pre>
 </div>
 </div>
-<div id="outline-container-org97153c5" class="outline-4">
-<h4 id="org97153c5">infinite sequences</h4>
-<div class="outline-text-4" id="text-org97153c5">
+<div id="outline-container-orga2180df" class="outline-4">
+<h4 id="orga2180df">infinite sequences</h4>
+<div class="outline-text-4" id="text-orga2180df">
 <p>
 Using <code>repeat</code> and <code>repeatedly</code>
 </p>
@@ -1242,9 +1346,9 @@ Using <code>repeat</code> and <code>repeatedly</code>
 </div>
 </div>
 </div>
-<div id="outline-container-orgcf082bb" class="outline-3">
-<h3 id="orgcf082bb">col functions</h3>
-<div class="outline-text-3" id="text-orgcf082bb">
+<div id="outline-container-org0240569" class="outline-3">
+<h3 id="org0240569">col functions</h3>
+<div class="outline-text-3" id="text-org0240569">
 <p>
 Operate on the whole collection at once
 </p>
@@ -1295,9 +1399,9 @@ You can also use it to add the elements to an existing sequence
 </pre>
 </div>
 </div>
-<div id="outline-container-org949cd45" class="outline-4">
-<h4 id="org949cd45">conj/into</h4>
-<div class="outline-text-4" id="text-org949cd45">
+<div id="outline-container-org3a2d8a3" class="outline-4">
+<h4 id="org3a2d8a3">conj/into</h4>
+<div class="outline-text-4" id="text-org3a2d8a3">
 <p>
 <code>conj</code> sticks the remaining things into the first thing
 </p>
@@ -1314,9 +1418,9 @@ You can also use it to add the elements to an existing sequence
 </div>
 </div>
 </div>
-<div id="outline-container-orgbd6cd5b" class="outline-4">
-<h4 id="orgbd6cd5b">apply</h4>
-<div class="outline-text-4" id="text-orgbd6cd5b">
+<div id="outline-container-orgd427a18" class="outline-4">
+<h4 id="orgd427a18">apply</h4>
+<div class="outline-text-4" id="text-orgd427a18">
 <p>
 When you want to take a sequence and supply it as function argument to a function. So it unpacks the sequence and feeds it into the function
 </p>
@@ -1327,9 +1431,9 @@ When you want to take a sequence and supply it as function argument to a functio
 </div>
 </div>
 </div>
-<div id="outline-container-orgf5ebfee" class="outline-4">
-<h4 id="orgf5ebfee">partial</h4>
-<div class="outline-text-4" id="text-orgf5ebfee">
+<div id="outline-container-org8287749" class="outline-4">
+<h4 id="org8287749">partial</h4>
+<div class="outline-text-4" id="text-org8287749">
 <p>
 Makes a new function from an existing function with part of the arguments already filled in
 </p>
@@ -1359,9 +1463,9 @@ Makes a new function from an existing function with part of the arguments alread
 </div>
 </div>
 </div>
-<div id="outline-container-org8cd6cc1" class="outline-4">
-<h4 id="org8cd6cc1">complement</h4>
-<div class="outline-text-4" id="text-org8cd6cc1">
+<div id="outline-container-org00309de" class="outline-4">
+<h4 id="org00309de">complement</h4>
+<div class="outline-text-4" id="text-org00309de">
 <p>
 Creates a function that is the inverse of an existing bool function
 </p>
@@ -1380,9 +1484,9 @@ Creates a function that is the inverse of an existing bool function
 </div>
 </div>
 </div>
-<div id="outline-container-orgc88d76e" class="outline-4">
-<h4 id="orgc88d76e">comp</h4>
-<div class="outline-text-4" id="text-orgc88d76e">
+<div id="outline-container-org5780c6a" class="outline-4">
+<h4 id="org5780c6a">comp</h4>
+<div class="outline-text-4" id="text-org5780c6a">
 <p>
 applies function in order
 </p>
@@ -1430,9 +1534,9 @@ As usual you can use <code>%</code> as a placeholder in a <i>anonymous function<
 </div>
 </div>
 </div>
-<div id="outline-container-org4dcb66c" class="outline-4">
-<h4 id="org4dcb66c">memoize</h4>
-<div class="outline-text-4" id="text-org4dcb66c">
+<div id="outline-container-orge1df843" class="outline-4">
+<h4 id="orge1df843">memoize</h4>
+<div class="outline-text-4" id="text-orge1df843">
 <p>
 Creates a wrapper around a function, so that when it's called again with the same arguments it returns a cached result
 </p>
@@ -1459,9 +1563,9 @@ x<span style="color: #999999;">)</span>
 </div>
 </div>
 </div>
-<div id="outline-container-org47b6839" class="outline-2">
-<h2 id="org47b6839">Namespaces</h2>
-<div class="outline-text-2" id="text-org47b6839">
+<div id="outline-container-orgba4ff12" class="outline-2">
+<h2 id="orgba4ff12">Namespaces</h2>
+<div class="outline-text-2" id="text-orgba4ff12">
 <p>
 Create with <code>create-ns</code>, go into with <code>ns-name</code>, and both create and go into with <code>in-ns</code> (unless it already exists, in which case you just enter)
 </p>
@@ -1621,9 +1725,9 @@ And you can <code>alias</code> with <code>use</code> as well
 </pre>
 </div>
 </div>
-<div id="outline-container-org4bfe453" class="outline-3">
-<h3 id="org4bfe453">ns</h3>
-<div class="outline-text-3" id="text-org4bfe453">
+<div id="outline-container-orge4e5097" class="outline-3">
+<h3 id="orge4e5097">ns</h3>
+<div class="outline-text-3" id="text-orge4e5097">
 <p>
 The <code>ns</code> macro allows us to combine everything together. Both declaraction of a new namespace and adding other namespaces to it
 </p>
@@ -1683,9 +1787,9 @@ Though you could use the <code>use</code> keyword as before (this is discouraged
 </div>
 </div>
 </div>
-<div id="outline-container-orgae396da" class="outline-2">
-<h2 id="orgae396da">Notes on performance</h2>
-<div class="outline-text-2" id="text-orgae396da">
+<div id="outline-container-orgef6ee12" class="outline-2">
+<h2 id="orgef6ee12">Notes on performance</h2>
+<div class="outline-text-2" id="text-orgef6ee12">
 <p>
 From: <a href="https://reddit.com/comments/a2ubj8/comment/eb2qthy">https://reddit.com/comments/a2ubj8/comment/eb2qthy</a>
 </p>
@@ -1736,7 +1840,7 @@ Just looking at the uses here, I think there's a better approach (algorithmicall
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: George Kontsevich</p>
-<p class="date">Created: 2019-04-25 四 00:05</p>
+<p class="date">Created: 2019-05-14 Tue 21:02</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
