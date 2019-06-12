@@ -9,8 +9,8 @@ and modified a bit.. */
         margin: 0;
         /*font: 300 .9em/1.6em "Droid Serif", Cambria, Georgia, "DejaVu Serif", serif;*/
 	background-image: url(./panda.svg);
-	background-size: auto 214px;
-        background-position: right top;
+	background-size: auto 200px;
+        background-position: right 13px top 7px;
         background-repeat: no-repeat;
         background-color: white;
 
