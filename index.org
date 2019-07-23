@@ -5,7 +5,6 @@
 #+HTML_DOCTYPE: html5
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../web/worg.css" />
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
-#+HTML_MATHJAX: path: "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"
 #+OPTIONS: html-style:nil
 #+OPTIONS: num:nil
 #+OPTIONS: html-postamble:nil
