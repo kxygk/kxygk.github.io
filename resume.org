@@ -1,4 +1,4 @@
-#+TITLE:
+#+TITLE:George Kontsevich
 #+HTML_DOCTYPE: html5
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../web/worg.css" />
 #+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
@@ -8,8 +8,6 @@
 #+OPTIONS: toc:nil 
 #+OPTIONS: num:nil
 #+OPTIONS: html-scripts:nil
-
-* George Kontsevich
 
 /BA Physics UCSB/ \\
 /BS Computer Science UCSB/
