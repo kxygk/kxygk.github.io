@@ -1,6 +1,13 @@
 #+TITLE:
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
-#+options: num:nil
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../web/worg.css" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
+#+OPTIONS: html-style:nil
+#+OPTIONS: num:nil
+#+OPTIONS: html-postamble:nil
+#+OPTIONS: toc:nil 
+#+OPTIONS: num:nil
+#+OPTIONS: html-scripts:nil
 
 * George Kontsevich
 
@@ -23,47 +30,47 @@ I'm also available for limited R and MATLAB work.
         - A full statistical evaluation of the mathematical correctness of the optimization algorithm.
 #+END_QUOTE
 
-[[www.toyon.com][Toyon Research Corporation]], /Santa Barbara CA/
+[[https://www.toyon.com][Toyon Research Corporation]], /Santa Barbara CA/
 2012-2015
 *** Quasioptical research
 #+BEGIN_QUOTE
 *internship* - Researching the transmission of terahertz radiation through ITOcoated touch screens for Synaptics Inc. on behalf of the ITST at the UCSB. 
 #+END_QUOTE
-[[www.synaptics.com][Synaptics]], UCSB
+[[https://www.synaptics.com][Synaptics]] UCSB
 2011
 *** Nonlinear systems and simulation
 #+BEGIN_QUOTE
 *internship* - Researching the theoretical possibilities presented by stochastic resonance in non-linear systems for filter design for two months at Hitachi Ltd., Japan. Designing and running simulations in MATLAB using SIMULINK. (Note: due to an NDA, I can’t share the details of this work).
 #+END_QUOTE
-[[www.hitachi.com][Hitachi]] /Yokohama, Japan/
+[[https://www.hitachi.com][Hitachi]] /Yokohama, Japan/
 2010
 *** Research assistant
 #+BEGIN_QUOTE
 *internship* - Part of a team at the ITST in the Electron Pulse Resonance (EPR) lab setting up and upgrading Free Electron Laser (FEL)
 #+END_QUOTE
 
-[[www.itst.ucsb.edu][ITST]], UCSB
+[[https://www.itst.ucsb.edu][ITST]], UCSB
 2010
 *** Research in photonic crystals
 #+BEGIN_QUOTE
 *internship* - Electromagnetic simulations for quasioptical crystal patterns optimization
 #+END_QUOTE
 
-[[www.itst.ucsb.edu][ITST]], UCSB
+[[https://www.itst.ucsb.edu][ITST]], UCSB
 2009
 *** Data Analyst - Neuroscience
 #+BEGIN_QUOTE
 *internship* - Data analysis in R of the retinal neural activity of mice at the Institute of Neuroscience (ION) at the University of Newcastle, UK. Independent
 #+END_QUOTE
 
-[[www.ncl.ac.uk/ion][ION University of Newcastle]] /Newcastle, UK/
+[[https://www.ncl.ac.uk/ion][ION University of Newcastle]] /Newcastle, UK/
 2009
 *** Data Analyst – HTS cancer research
 #+BEGIN_QUOTE
 *internship* - Worked with a cancer research team on a large-scale statistical analysis of data on cancer inhibition using R and Bioconductor at the André Lwoff Institute (CNRS Villejuif, France)
 #+END_QUOTE
 
-[[www.institut-lwoff.fr][CNRS]] /Paris, France/
+[[https://www.institut-lwoff.fr][CNRS]] /Paris, France/
 2008
 ** Languages:
 

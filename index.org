@@ -9,6 +9,8 @@
 #+OPTIONS: num:nil
 #+OPTIONS: html-postamble:nil
 #+OPTIONS: toc:nil 
+#+OPTIONS: num:nil
+#+OPTIONS: html-scripts:nil
 
 - [[file:resume.html][=Resume=]] ::  \\
 - [[file:.emacs.d/][=.emacs.d=]] :: My emacs configuration and a short ELisp intro \\

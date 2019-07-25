@@ -1,178 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title></title>
-<!-- 2017-06-18 Sun 09:16 -->
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="George Kontsevich" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { color: green; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: visible;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline;}
-  pre.src-sh:before    { content: 'sh'; }
-  pre.src-bash:before  { content: 'sh'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-R:before     { content: 'R'; }
-  pre.src-perl:before  { content: 'Perl'; }
-  pre.src-java:before  { content: 'Java'; }
-  pre.src-sql:before   { content: 'SQL'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.right  { text-align: center;  }
-  th.left   { text-align: center;   }
-  th.center { text-align: center; }
-  td.right  { text-align: right;  }
-  td.left   { text-align: left;   }
-  td.center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara:nth-child(2) { display: inline; }
-  .footpara { display: block; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  /*]]>*/-->
-</style>
-<link rel="stylesheet" type="text/css" href="./static/worg.css" />
-<script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
-<!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
-</script>
+<!-- 2019-07-25 Thu 10:59 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>&lrm;</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<link rel="stylesheet" type="text/css" href="../web/worg.css" />
+<link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
 </head>
 <body>
 <div id="content">
-<h1 class="title"></h1>
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">George Kontsevich</a>
-<ul>
-<li>
-<ul>
-<li><a href="#sec-1-0-1">Radar control systems</a></li>
-<li><a href="#sec-1-0-2">Quasioptical research</a></li>
-<li><a href="#sec-1-0-3">Nonlinear systems and simulation</a></li>
-<li><a href="#sec-1-0-4">Research assistant</a></li>
-<li><a href="#sec-1-0-5">Research in photonic crystals</a></li>
-<li><a href="#sec-1-0-6">Data Analyst - Neuroscience</a></li>
-<li><a href="#sec-1-0-7">Data Analyst – HTS cancer research</a></li>
-</ul>
-</li>
-<li><a href="#sec-1-1">Languages:</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">George Kontsevich</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-org3770e22" class="outline-2">
+<h2 id="org3770e22">George Kontsevich</h2>
+<div class="outline-text-2" id="text-org3770e22">
 <p>
-<i>BA Physics UCSB</i> <br  />
+<i>BA Physics UCSB</i> <br>
 <i>BS Computer Science UCSB</i>
 </p>
 
 <p>
-<b>I'm currently living in Chengdu, China doing freelance C++ work</b> <br  />
+<b>I'm currently living in Chengdu, China doing freelance C++ work</b> <br>
 <i>Please feel free to get in touch at - georgek at gmx.us</i>
 </p>
 
@@ -182,63 +32,59 @@ I'm also available for limited R and MATLAB work.
 </p>
 </div>
 
-<div id="outline-container-sec-1-0-1" class="outline-4">
-<h4 id="sec-1-0-1">Radar control systems</h4>
-<div class="outline-text-4" id="text-1-0-1">
+<div id="outline-container-org47a5063" class="outline-4">
+<h4 id="org47a5063">Radar control systems</h4>
+<div class="outline-text-4" id="text-org47a5063">
 <blockquote>
 <p>
 Worked on a system of decentralized radar coordination for a small employee owned defense contractor - Toyon Research Corporation. The first half year I worked on a contract for a system coordinating shipborn radars for tracking aircraft. The remaining two years was on a system for tracking ballistic missiles through all stages of flight and to assist in anti-ballistic interception. Highlights:
 </p>
 
 <ul class="org-ul">
-<li>Working on and maintaining a large C++(11) codebase
-</li>
-<li>Designing a radar system for both physical accuracy as well as high performance (near real-time)
-</li>
-<li>Designing a (boosted) ballistic missile simulation including multi-stage separation.
-</li>
-<li>A full statistical evaluation of the mathematical correctness of the optimization algorithm.
-</li>
+<li>Working on and maintaining a large C++(11) codebase</li>
+<li>Designing a radar system for both physical accuracy as well as high performance (near real-time)</li>
+<li>Designing a (boosted) ballistic missile simulation including multi-stage separation.</li>
+<li>A full statistical evaluation of the mathematical correctness of the optimization algorithm.</li>
 </ul>
 </blockquote>
 
 <p>
-<i>Toyon Research Corporation</i>, <i>Santa Barbara CA</i>
+<a href="https://www.toyon.com">Toyon Research Corporation</a>, <i>Santa Barbara CA</i>
 2012-2015
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-0-2" class="outline-4">
-<h4 id="sec-1-0-2">Quasioptical research</h4>
-<div class="outline-text-4" id="text-1-0-2">
+<div id="outline-container-org4ad4b16" class="outline-4">
+<h4 id="org4ad4b16">Quasioptical research</h4>
+<div class="outline-text-4" id="text-org4ad4b16">
 <blockquote>
 <p>
 <b>internship</b> - Researching the transmission of terahertz radiation through ITOcoated touch screens for Synaptics Inc. on behalf of the ITST at the UCSB. 
 </p>
 </blockquote>
 <p>
-<i>Synaptics</i>, UCSB
+<a href="https://www.synaptics.com">Synaptics</a> UCSB
 2011
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-0-3" class="outline-4">
-<h4 id="sec-1-0-3">Nonlinear systems and simulation</h4>
-<div class="outline-text-4" id="text-1-0-3">
+<div id="outline-container-org471248c" class="outline-4">
+<h4 id="org471248c">Nonlinear systems and simulation</h4>
+<div class="outline-text-4" id="text-org471248c">
 <blockquote>
 <p>
 <b>internship</b> - Researching the theoretical possibilities presented by stochastic resonance in non-linear systems for filter design for two months at Hitachi Ltd., Japan. Designing and running simulations in MATLAB using SIMULINK. (Note: due to an NDA, I can’t share the details of this work).
 </p>
 </blockquote>
 <p>
-<i>Hitachi</i> <i>Yokohama, Japan</i>
+<a href="https://www.hitachi.com">Hitachi</a> <i>Yokohama, Japan</i>
 2010
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-0-4" class="outline-4">
-<h4 id="sec-1-0-4">Research assistant</h4>
-<div class="outline-text-4" id="text-1-0-4">
+<div id="outline-container-org4c35a0e" class="outline-4">
+<h4 id="org4c35a0e">Research assistant</h4>
+<div class="outline-text-4" id="text-org4c35a0e">
 <blockquote>
 <p>
 <b>internship</b> - Part of a team at the ITST in the Electron Pulse Resonance (EPR) lab setting up and upgrading Free Electron Laser (FEL)
@@ -246,14 +92,14 @@ Worked on a system of decentralized radar coordination for a small employee owne
 </blockquote>
 
 <p>
-<i>ITST</i>, UCSB
+<a href="https://www.itst.ucsb.edu">ITST</a>, UCSB
 2010
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-0-5" class="outline-4">
-<h4 id="sec-1-0-5">Research in photonic crystals</h4>
-<div class="outline-text-4" id="text-1-0-5">
+<div id="outline-container-orgd0d9a4c" class="outline-4">
+<h4 id="orgd0d9a4c">Research in photonic crystals</h4>
+<div class="outline-text-4" id="text-orgd0d9a4c">
 <blockquote>
 <p>
 <b>internship</b> - Electromagnetic simulations for quasioptical crystal patterns optimization
@@ -261,14 +107,14 @@ Worked on a system of decentralized radar coordination for a small employee owne
 </blockquote>
 
 <p>
-<i>ITST</i>, UCSB
+<a href="https://www.itst.ucsb.edu">ITST</a>, UCSB
 2009
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-0-6" class="outline-4">
-<h4 id="sec-1-0-6">Data Analyst - Neuroscience</h4>
-<div class="outline-text-4" id="text-1-0-6">
+<div id="outline-container-org5e39251" class="outline-4">
+<h4 id="org5e39251">Data Analyst - Neuroscience</h4>
+<div class="outline-text-4" id="text-org5e39251">
 <blockquote>
 <p>
 <b>internship</b> - Data analysis in R of the retinal neural activity of mice at the Institute of Neuroscience (ION) at the University of Newcastle, UK. Independent
@@ -276,14 +122,14 @@ Worked on a system of decentralized radar coordination for a small employee owne
 </blockquote>
 
 <p>
-<i>ION University of Newcastle</i> <i>Newcastle, UK</i>
+<a href="https://www.ncl.ac.uk/ion">ION University of Newcastle</a> <i>Newcastle, UK</i>
 2009
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-0-7" class="outline-4">
-<h4 id="sec-1-0-7">Data Analyst – HTS cancer research</h4>
-<div class="outline-text-4" id="text-1-0-7">
+<div id="outline-container-orgb612d72" class="outline-4">
+<h4 id="orgb612d72">Data Analyst – HTS cancer research</h4>
+<div class="outline-text-4" id="text-orgb612d72">
 <blockquote>
 <p>
 <b>internship</b> - Worked with a cancer research team on a large-scale statistical analysis of data on cancer inhibition using R and Bioconductor at the André Lwoff Institute (CNRS Villejuif, France)
@@ -291,14 +137,14 @@ Worked on a system of decentralized radar coordination for a small employee owne
 </blockquote>
 
 <p>
-<i>CNRS</i> <i>Paris, France</i>
+<a href="https://www.institut-lwoff.fr">CNRS</a> <i>Paris, France</i>
 2008
 </p>
 </div>
 </div>
-<div id="outline-container-sec-1-1" class="outline-3">
-<h3 id="sec-1-1">Languages:</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-org3250ea6" class="outline-3">
+<h3 id="org3250ea6">Languages:</h3>
+<div class="outline-text-3" id="text-org3250ea6">
 <p>
 <b>Fluent</b> English, French, Russian
 </p>
@@ -309,12 +155,6 @@ Worked on a system of decentralized radar coordination for a small employee owne
 </div>
 </div>
 </div>
-</div>
-<div id="postamble" class="status">
-<p class="author">Author: George Kontsevich</p>
-<p class="date">Created: 2017-06-18 Sun 09:16</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>
