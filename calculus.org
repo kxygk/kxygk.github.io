@@ -1,0 +1,108 @@
+#+TITLE: Calculus Notes
+#+DESCRIPTION: Notes from studying Clojure
+
+#+HTML_DOCTYPE: html5
+#+HTML_LINK_UP: ..
+#+HTML_LINK_HOME: ..
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../web/worg.css" />
+#+HTML_HEAD_EXTRA: <link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
+#+HTML_MATHJAX: path: "../MathJax/MathJax.js?config=TeX-AMS_CHTML"
+#+OPTIONS: html-style:nil
+#+OPTIONS: num:nil
+#+OPTIONS: html-scripts:nil
+
+Random notes..
+
+* 5 Functions
+
+| *Integral*    | *Function* | *Derivative* |                                 |
+| x^{n+1}/(n+1) | x^{n}      | nx^{n}       | ~<- Nonsense integral for n=-1~ |
+| -cos(x)       | sin(x)     | cos(x)       |                                 |
+| sin(x)        | cos(x)     | sin(x)       |                                 |
+| e^{cx}/c      | e^{cx}     | ce^{cx}      |                                 |
+| x ln(x)-x     | ln(x)      | 1/x          | ~<- The n=-1 case~              |
+
+
+
+* The step function
+
+#+BEGIN_SRC 
+Integral:
+Ramp Function:
+             /
+            /
+___________/
+-------------------------->x
+             ^slope=1
+Function:
+Step Function:
+            ___________
+___________|
+-------------------------->x
+           ^x=0
+Derivative:
+Delta Function:
+            |
+            |
+____________|___________
+-------------------------->x
+#+END_SRC
+The /area/ under the function should equal to the function above it.
+Therefore the area under the *delta function* is 1
+
+* Function composition
+
+| Function          | Derivative                          |                     |
+| a * f(x) + b g(x) | a * df/dx + b * df/dx               |                     |
+| f(x) * g(x)       | f(x) * dg/dx + g(x) * df/dx         | *Product Rule*      |
+| f(x) / g(x)       | [g(x) * df/dx - f(x) * dg/dx]/g^{2} | *Quotient Rule*     |
+| x = f(y)^{-1}     | dx/df = 1 / [dy/dx]                 |                     |
+| f(g(x))           | [df/dy] * [dy/dx]  /<- y = g(x)/    | *Chain Rule*        |
+
+* l'Hospital's Rule
+Where f(x) -> 0 and g(x) -> 0 as x -> /a/ (ie. both function go to zero at some point /a/)\\
+Then the fraction: \\
+ f(x) / g(x)   \\
+Goes to:\\
+ [df/dx] / [dg/dx]
+
+* Fundamental Theorem of Calculus
+Integral( Derivative( f(/x/) )) = f(/x/) \\
+Derivative( Integral( f(/x/) )) = f(/x/) \\
+
+As long as they're continuious... (has a =max= and =min= and reaches all values in between)
+
+* Mean Value Theorem
+If f(/x/) has a derivative between a and (ie. a <= x <= b)\\
+Then: (f(b) - f(a)) / (b-a) = [df/dx](c) will be true at some /c/ between /a/ and /b/ \\
+This is "average speed" equation
+
+* Taylor series
+When you know f(/a/) and want to find a value close by f(/x/): \\
+f(/x/) = f(/a/) + f'(/a/)(/x/-/a/)+ (1/2!)f''(a)(x-a)^{2} + ... [1/(n+1)!] * f^{n+1}(/a/)(x-a)^{n+1}
+
+In the traveling example:\\
+For some time /a/ you get the location f(/a/) \\
+Then you get the speed at that time /a/ and see how much further you'd go by time /x/ and add that to f(/a/) \\
+Then you add a correction due to the acceleration \\
+etc...
+
+* Binomial Theorem
+| *Function* | *Derivative*        |
+| (1+x)      | 1 + 1x              |
+| (1+x)^{2}  | 1 + 2x +1x^2        |
+| (1+x)^{3}  | ! + 3x + 3x^2 +1x^3 |
+| ..         | ..                  |
+Whole number powers give you Pascal's Triangle. And notice that each one can be differentiated /n/ times
+
+How about if powers aren't whole?:\\
+(1+x)^{p} --- /derivative/ ---> p(1+x)^{p-1}\\
+These can be differentiated indefinitely
+
+We can do the Taylor expansion:\\
+(1+x)^{p} = 1 + px + p(p-1)x^{2}/2!  + ..\\
+And the terms will go on forever
+
+* Euler's equation
+Doing the Taylor's Series for /a/ = 0: \\
+e^{x} = e^{0} + x + (1/2)x^{2} (1/6)x^{3} ...

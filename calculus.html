@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2019-09-07 Sat 11:49 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculus Notes</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Notes from studying Clojure"
+>
+<link rel="stylesheet" type="text/css" href="../web/worg.css" />
+<link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=".."> UP </a>
+ |
+ <a accesskey="H" href=".."> HOME </a>
+</div><div id="content">
+<h1 class="title">Calculus Notes</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5e73d9c">5 Functions</a></li>
+<li><a href="#org5846608">The step function</a></li>
+<li><a href="#org02f6b18">Function composition</a></li>
+<li><a href="#orgd711e10">l'Hospital's Rule</a></li>
+<li><a href="#org48a4298">Fundamental Theorem of Calculus</a></li>
+<li><a href="#orgfa50876">Mean Value Theorem</a></li>
+<li><a href="#org033b56b">Taylor series</a></li>
+<li><a href="#org5f41c80">Binomial Theorem</a></li>
+<li><a href="#orgc1202de">Euler's equation</a></li>
+</ul>
+</div>
+</div>
+<p>
+Random notes..
+</p>
+
+<div id="outline-container-org5e73d9c" class="outline-2">
+<h2 id="org5e73d9c">5 Functions</h2>
+<div class="outline-text-2" id="text-org5e73d9c">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><b>Integral</b></td>
+<td class="org-left"><b>Function</b></td>
+<td class="org-left"><b>Derivative</b></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">x<sup>n+1</sup>/(n+1)</td>
+<td class="org-left">x<sup>n</sup></td>
+<td class="org-left">nx<sup>n</sup></td>
+<td class="org-left"><code>&lt;- Nonsense integral for n=-1</code></td>
+</tr>
+
+<tr>
+<td class="org-left">-cos(x)</td>
+<td class="org-left">sin(x)</td>
+<td class="org-left">cos(x)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">sin(x)</td>
+<td class="org-left">cos(x)</td>
+<td class="org-left">sin(x)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">e<sup>cx</sup>/c</td>
+<td class="org-left">e<sup>cx</sup></td>
+<td class="org-left">ce<sup>cx</sup></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">x ln(x)-x</td>
+<td class="org-left">ln(x)</td>
+<td class="org-left">1/x</td>
+<td class="org-left"><code>&lt;- The n=-1 case</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+
+<div id="outline-container-org5846608" class="outline-2">
+<h2 id="org5846608">The step function</h2>
+<div class="outline-text-2" id="text-org5846608">
+<pre class="example">
+Integral:
+Ramp Function:
+	     /
+	    /
+___________/
+--------------------------&gt;x
+	     ^slope=1
+Function:
+Step Function:
+	    ___________
+___________|
+--------------------------&gt;x
+	   ^x=0
+Derivative:
+Delta Function:
+	    |
+	    |
+____________|___________
+--------------------------&gt;x
+</pre>
+<p>
+The <i>area</i> under the function should equal to the function above it.
+Therefore the area under the <b>delta function</b> is 1
+</p>
+</div>
+</div>
+
+<div id="outline-container-org02f6b18" class="outline-2">
+<h2 id="org02f6b18">Function composition</h2>
+<div class="outline-text-2" id="text-org02f6b18">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Function</td>
+<td class="org-left">Derivative</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">a * f(x) + b g(x)</td>
+<td class="org-left">a * df/dx + b * df/dx</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">f(x) * g(x)</td>
+<td class="org-left">f(x) * dg/dx + g(x) * df/dx</td>
+<td class="org-left"><b>Product Rule</b></td>
+</tr>
+
+<tr>
+<td class="org-left">f(x) / g(x)</td>
+<td class="org-left">[g(x) * df/dx - f(x) * dg/dx]/g<sup>2</sup></td>
+<td class="org-left"><b>Quotient Rule</b></td>
+</tr>
+
+<tr>
+<td class="org-left">x = f(y)<sup>-1</sup></td>
+<td class="org-left">dx/df = 1 / [dy/dx]</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">f(g(x))</td>
+<td class="org-left">[df/dy] * [dy/dx]  <i>&lt;- y = g(x)</i></td>
+<td class="org-left"><b>Chain Rule</b></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgd711e10" class="outline-2">
+<h2 id="orgd711e10">l'Hospital's Rule</h2>
+<div class="outline-text-2" id="text-orgd711e10">
+<p>
+Where f(x) -&gt; 0 and g(x) -&gt; 0 as x -&gt; <i>a</i> (ie. both function go to zero at some point <i>a</i>)<br>
+Then the fraction: <br>
+ f(x) / g(x)   <br>
+Goes to:<br>
+ [df/dx] / [dg/dx]
+</p>
+</div>
+</div>
+
+<div id="outline-container-org48a4298" class="outline-2">
+<h2 id="org48a4298">Fundamental Theorem of Calculus</h2>
+<div class="outline-text-2" id="text-org48a4298">
+<p>
+Integral( Derivative( f(<i>x</i>) )) = f(<i>x</i>) <br>
+Derivative( Integral( f(<i>x</i>) )) = f(<i>x</i>) <br>
+</p>
+
+<p>
+As long as they're continuious&#x2026; (has a <code>max</code> and <code>min</code> and reaches all values in between)
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfa50876" class="outline-2">
+<h2 id="orgfa50876">Mean Value Theorem</h2>
+<div class="outline-text-2" id="text-orgfa50876">
+<p>
+If f(<i>x</i>) has a derivative between a and (ie. a &lt;= x &lt;= b)<br>
+Then: (f(b) - f(a)) / (b-a) = [df/dx](c) will be true at some <i>c</i> between <i>a</i> and <i>b</i> <br>
+This is "average speed" equation
+</p>
+</div>
+</div>
+
+<div id="outline-container-org033b56b" class="outline-2">
+<h2 id="org033b56b">Taylor series</h2>
+<div class="outline-text-2" id="text-org033b56b">
+<p>
+When you know f(<i>a</i>) and want to find a value close by f(<i>x</i>): <br>
+f(<i>x</i>) = f(<i>a</i>) + f'(<i>a</i>)(<i>x</i>-<i>a</i>)+ (1/2!)f''(a)(x-a)<sup>2</sup> + &#x2026; [1/(n+1)!] * f<sup>n+1</sup>(<i>a</i>)(x-a)<sup>n+1</sup>
+</p>
+
+<p>
+In the traveling example:<br>
+For some time <i>a</i> you get the location f(<i>a</i>) <br>
+Then you get the speed at that time <i>a</i> and see how much further you'd go by time <i>x</i> and add that to f(<i>a</i>) <br>
+Then you add a correction due to the acceleration <br>
+etc&#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5f41c80" class="outline-2">
+<h2 id="org5f41c80">Binomial Theorem</h2>
+<div class="outline-text-2" id="text-org5f41c80">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><b>Function</b></td>
+<td class="org-left"><b>Derivative</b></td>
+</tr>
+
+<tr>
+<td class="org-left">(1+x)</td>
+<td class="org-left">1 + 1x</td>
+</tr>
+
+<tr>
+<td class="org-left">(1+x)<sup>2</sup></td>
+<td class="org-left">1 + 2x +1x<sup>2</sup></td>
+</tr>
+
+<tr>
+<td class="org-left">(1+x)<sup>3</sup></td>
+<td class="org-left">! + 3x + 3x<sup>2</sup> +1x<sup>3</sup></td>
+</tr>
+
+<tr>
+<td class="org-left">..</td>
+<td class="org-left">..</td>
+</tr>
+</tbody>
+</table>
+<p>
+Whole number powers give you Pascal's Triangle. And notice that each one can be differentiated <i>n</i> times
+</p>
+
+<p>
+How about if powers aren't whole?:<br>
+(1+x)<sup>p</sup> &#x2014; <i>derivative</i> &#x2014;&gt; p(1+x)<sup>p-1</sup><br>
+These can be differentiated indefinitely
+</p>
+
+<p>
+We can do the Taylor expansion:<br>
+(1+x)<sup>p</sup> = 1 + px + p(p-1)x<sup>2</sup>/2!  + ..<br>
+And the terms will go on forever
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc1202de" class="outline-2">
+<h2 id="orgc1202de">Euler's equation</h2>
+<div class="outline-text-2" id="text-orgc1202de">
+<p>
+Doing the Taylor's Series for <i>a</i> = 0: <br>
+e<sup>x</sup> = e<sup>0</sup> + x + (1/2)x<sup>2</sup> (1/6)x<sup>3</sup> &#x2026;
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: George Kontsevich</p>
+<p class="date">Created: 2019-09-07 Sat 11:49</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
