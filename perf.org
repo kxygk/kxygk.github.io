@@ -1,0 +1,117 @@
+#+TITLE: Perf
+#+DESCRIPTION: Notes from studying Clojure
+
+#+INCLUDE: "../web/config.org"
+
+* setup
+There are just some personal notes on using perf. Notes are influx, maybe never finished, and not authoritative:
+
+More info is available at:\\
+http://www.brendangregg.com/perf.html \\
+http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/ (3-part series) \\
+http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/
+https://perf.wiki.kernel.org/
+
+To get started you need to install (on Ubuntu) =linux-tools-common=, =linux-tools-generic= and =linux-cloud-tools-generic=. Then you need to *reboot*
+
+To confirm everything works run ~sudo perf test~ and make sure everything passes. Note that all commands need to be run with ~sudo~. It will work without it, but you will be missing features and things will act up (just try running ~perf test~ without ~sudo~
+
+* list
+#+BEGIN_SRC 
+sudo perf list
+#+END_SRC
+Will return a huge list of events that you can monitor on your particular CPU. This list is not exhaustive. You can open up your CPU data sheet and find additional event and reference them by hex number
+
+* stat
+#+BEGIN_SRC 
+sudo perf stat my-command my-args
+#+END_SRC
+This will give you a general overview of your program's performance.
+
+- =CPUs utilized= should be close to the number of threads you have
+- =insn per cycle= is instructions per cycle. This should be higher than 1 and closer to 2
+
+#+BEGIN_SRC 
+sudo perf stat -d my-command my-args
+#+END_SRC
+With the ~-d~ flag you will get a bit more info about cache misses
+
+#+BEGIN_SRC 
+sudo perf stat -e event-name1 event-name2 .. my-command my-args
+#+END_SRC
+With the ~-e~ flag you can track specific event (see: ~perf list~) and how often they occur.
+
+For examample to get a runtime you could do:
+#+BEGIN_SRC 
+perf stat -e cpu-clock my-command
+#+END_SRC
+This is called the *counting mode* and it's just counting how many times the event happened. It's very low overhead and simple. It's accurate, but it's only giving you info about the program as a whole
+* record
+#+BEGIN_SRC 
+sudo perf record -F 99 my-command my-args
+#+END_SRC
+This is generating an actual performance profile. Here it interrupts the process at a given frequency ~-F freq~ (her at 99Hz) and saves statistics on the stack it gets. The result is saved to a =perf.data= file.
+
+To have useful stack frame information the program should be compiled with debug information - however this seems to often not be sufficient. Two methods exist for adding back the symbols to get useful results
+#+BEGIN_SRC 
+sudo perf record -F 99 --call-graph lbr my-command my-args
+#+END_SRC
+This method didn't work for me (or only worked partially)
+
+#+BEGIN_SRC 
+sudo perf record -F 99 --call-graph dwarf my-command my-args
+#+END_SRC
+here: https://stackoverflow.com/questions/10933408/how-can-i-get-perf-to-find-symbols-in-my-program
+they run
+#+BEGIN_SRC 
+record -g dwarf -F 97 /path/to/my/program
+#+END_SRC
+
+We can also collect samples on events
+#+BEGIN_SRC 
+sudo perf record -e some-event1,some-event2 my-command my-args
+#+END_SRC
+Again these are listed in ~perf list~
+
+This is the *sampling mode* an it's triggering a handler function every X number of events. This will be slower than the counting-mode, but you will get granularity when it comes to where perf issues are coming up
+
+Here we have two choices of how to sample:\\
+- sampling frequency :: sampling the event X times per second. This is like before and uses the =-F= frequency flag
+- fixed sampling :: sampling at every X number of events. This uses the =-c= flag
+
+
+You want more samples for the statistic, but you don't want too many that it interferes with the caches and normal executation of the program. One of the linked articles suggests aiming for a 5% overhead at most.
+
+If you have too many samples, as you may have with the default sampling period, then you will get a warning like
+#+BEGIN_SRC 
+Processed 77354 events and lost 47 chunks!
+
+Check IO/CPU overload!
+
+[ perf record: Captured and wrote 537.245 MB perf.data (66655 samples) ]
+#+END_SRC
+
+The =perf.data= file can be examined with a special perf tool
+* report
+#+BEGIN_SRC 
+sudo perf report
+#+END_SRC
+Will open a TUI application to examine the results stored in =perf.data=. It takes a while to read the data
+#+BEGIN_SRC 
+sudo perf report --gtk
+#+END_SRC
+will launch a GTK application.. theoretically. On Ubuntu the requisite library doesn't exist
+
+If you record at a certain frequency then you will get a list of functions  where the program spends the most time. If you recorded multiple events then the first thing you will select is the event you want to examine.
+
+If you select a function and hit enter then choose to see an Annotated version of the code that will show you exactly where the code is running "hot"
+
+* evlist
+#+BEGIN_SRC 
+sudo perf evlist
+#+END_SRC
+Is a helper to see what configuration was used to generate the =perf.data= - in case you forgot or want to double check
+#+BEGIN_SRC 
+sudo perf evlist -F
+#+END_SRC
+Is handy b/c it will display the sample frequency - which sometimes is running at some default (if not specified by the user)

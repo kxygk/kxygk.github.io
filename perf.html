@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2019-09-11 Wed 15:19 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perf</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Notes from studying Clojure"
+>
+<link rel="stylesheet" type="text/css" href="../web/worg.css" />
+<link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href=".."> HOME </a>
+</div><div id="content">
+<h1 class="title">Perf</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb42ed5d">setup</a></li>
+<li><a href="#org2cc29de">list</a></li>
+<li><a href="#orga934915">stat</a></li>
+<li><a href="#orgdfa0e78">record</a></li>
+<li><a href="#org1cc7f9f">report</a></li>
+<li><a href="#org4f6e09c">evlist</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb42ed5d" class="outline-2">
+<h2 id="orgb42ed5d">setup</h2>
+<div class="outline-text-2" id="text-orgb42ed5d">
+<p>
+There are just some personal notes on using perf. Notes are influx, maybe never finished, and not authoritative:
+</p>
+
+<p>
+More info is available at:<br>
+<a href="http://www.brendangregg.com/perf.html">http://www.brendangregg.com/perf.html</a> <br>
+<a href="http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/">http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/</a> (3-part series) <br>
+<a href="http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/">http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/</a>
+<a href="https://perf.wiki.kernel.org/">https://perf.wiki.kernel.org/</a>
+</p>
+
+<p>
+To get started you need to install (on Ubuntu) <code>linux-tools-common</code>, <code>linux-tools-generic</code> and <code>linux-cloud-tools-generic</code>. Then you need to <b>reboot</b>
+</p>
+
+<p>
+To confirm everything works run <code>sudo perf test</code> and make sure everything passes. Note that all commands need to be run with <code>sudo</code>. It will work without it, but you will be missing features and things will act up (just try running <code>perf test</code> without <code>sudo</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2cc29de" class="outline-2">
+<h2 id="org2cc29de">list</h2>
+<div class="outline-text-2" id="text-org2cc29de">
+<pre class="example">
+sudo perf list
+</pre>
+<p>
+Will return a huge list of events that you can monitor on your particular CPU. This list is not exhaustive. You can open up your CPU data sheet and find additional event and reference them by hex number
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga934915" class="outline-2">
+<h2 id="orga934915">stat</h2>
+<div class="outline-text-2" id="text-orga934915">
+<pre class="example">
+sudo perf stat my-command my-args
+</pre>
+<p>
+This will give you a general overview of your program's performance.
+</p>
+
+<ul class="org-ul">
+<li><code>CPUs utilized</code> should be close to the number of threads you have</li>
+<li><code>insn per cycle</code> is instructions per cycle. This should be higher than 1 and closer to 2</li>
+</ul>
+
+<pre class="example">
+sudo perf stat -d my-command my-args
+</pre>
+<p>
+With the <code>-d</code> flag you will get a bit more info about cache misses
+</p>
+
+<pre class="example">
+sudo perf stat -e event-name1 event-name2 .. my-command my-args
+</pre>
+<p>
+With the <code>-e</code> flag you can track specific event (see: <code>perf list</code>) and how often they occur.
+</p>
+
+<p>
+For examample to get a runtime you could do:
+</p>
+<pre class="example">
+perf stat -e cpu-clock my-command
+</pre>
+<p>
+This is called the <b>counting mode</b> and it's just counting how many times the event happened. It's very low overhead and simple. It's accurate, but it's only giving you info about the program as a whole
+</p>
+</div>
+</div>
+<div id="outline-container-orgdfa0e78" class="outline-2">
+<h2 id="orgdfa0e78">record</h2>
+<div class="outline-text-2" id="text-orgdfa0e78">
+<pre class="example">
+sudo perf record -F 99 my-command my-args
+</pre>
+<p>
+This is generating an actual performance profile. Here it interrupts the process at a given frequency <code>-F freq</code> (her at 99Hz) and saves statistics on the stack it gets. The result is saved to a <code>perf.data</code> file.
+</p>
+
+<p>
+To have useful stack frame information the program should be compiled with debug information - however this seems to often not be sufficient. Two methods exist for adding back the symbols to get useful results
+</p>
+<pre class="example">
+sudo perf record -F 99 --call-graph lbr my-command my-args
+</pre>
+<p>
+This method didn't work for me (or only worked partially)
+</p>
+
+<pre class="example">
+sudo perf record -F 99 --call-graph dwarf my-command my-args
+</pre>
+
+<p>
+We can also collect samples on events
+</p>
+<pre class="example">
+sudo perf record -e some-event1,some-event2 my-command my-args
+</pre>
+<p>
+Again these are listed in <code>perf list</code>
+</p>
+
+<p>
+This is the <b>sampling mode</b> an it's triggering a handler function every X number of events. This will be slower than the counting-mode, but you will get granularity when it comes to where perf issues are coming up
+</p>
+
+<p>
+Here we have two choices of how to sample:<br>
+</p>
+<dl class="org-dl">
+<dt>fixed sampling</dt><dd>sampling at every X number of events</dd>
+<dt>sampling frequency</dt><dd>sampling the event X times per second</dd>
+</dl>
+
+<p>
+You want more samples for the statistic, but you don't want too many that it interferes with the caches and normal executation of the program. One of the linked articles suggests aiming for a 5% overhead at most
+</p>
+
+<p>
+The <code>perf.data</code> file can be examined with a special perf tool
+</p>
+</div>
+</div>
+<div id="outline-container-org1cc7f9f" class="outline-2">
+<h2 id="org1cc7f9f">report</h2>
+<div class="outline-text-2" id="text-org1cc7f9f">
+<pre class="example">
+sudo perf report
+</pre>
+<p>
+Will open a TUI application to examine the results stored in <code>perf.data</code>. It takes a while to read the data
+</p>
+<pre class="example">
+sudo perf report --gtk
+</pre>
+<p>
+will launch a GTK application.. theoretically. On Ubuntu the requisite library doesn't exist
+</p>
+
+<p>
+If you record at a certain frequency then you will get a list of functions  where the program spends the most time. If you recorded multiple events then the first thing you will select is the event you want to examine.
+</p>
+
+<p>
+If you select a function and hit enter then choose to see an Annotated version of the code that will show you exactly where the code is running "hot"
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4f6e09c" class="outline-2">
+<h2 id="org4f6e09c">evlist</h2>
+<div class="outline-text-2" id="text-org4f6e09c">
+<pre class="example">
+sudo perf evlist
+</pre>
+<p>
+Is a helper to see what configuration was used to generate the <code>perf.data</code> - in case you forgot or want to double check
+</p>
+<pre class="example">
+sudo perf evlist -F
+</pre>
+<p>
+Is handy b/c it will display the sample frequency - which sometimes is running at some default (if not specified by the user)
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>
