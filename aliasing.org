@@ -1,0 +1,58 @@
+#+TITLE: Aliasing
+#+DESCRIPTION: Notes on aliasing
+
+#+INCLUDE: "../web/config.org"
+
+* Frequency replication
+
+If you have a sinewave of frequency /f_{0}/ which is sampled at a frequency /f_{s}/, you can always find other sine waves that will pass through the same samples. So if you are given a set of sample points you can not know for certain which sine wave creates them (unless you have some additional information)
+
+For instance if we start with a continuous input signal:
+ - x(t) = sin(2\pi f_{0}t)
+When sampling this waves at /f_{s}/ samples per second the time between samples will be /1/f_{s}/ (ie. seconds per sample). So the first sample will be at /t=0/ the second at /t=1/f_{s}/ the third at /t=2/f_{s}/ .. etc. and the sample values will be described by the following equation with /n/ equal to /0..(n-1)/
+ - x(n) = sin(2\pi f_{0}n/f_{s})
+We now need to describe what other sine waves go through the same points. Because of periodicity of the /sin/ function /sin(x) = sin(x+k2\pi)/ for all integer values of /k/ - so we can extension the previous equation
+ - x(n) = sin(2\pi f_{0}n/f_{s}) = sin(2\pi f_{0}n/f_{s}+ k2\pi))
+ - x(n) = sin(2\pi f_{0}n/f_{s}) = sin(2\pi (f_{0}+ kf_{s})n/f_{s})
+Given a large negative /k/ value the resulting frequency-value /f_{0}+ kf_{s}/ will also be negative. A negative frequency at face value doesn't make much sense, but b/c of the identity /sin(x) = -sin(-x)/ we can just think of it as flipped sine wave (or a sine way that's \pi out of phase). So a -5Hz wave is just a shifted 5Hz wave. These too are sine waves that pass through our sample points. (and no other phase-shifted sinusoids will go through the points)
+
+The end result is that if we're sampling some input at frequency /f_{s}/ then every input sine wave of frequency /f_{0}/ will look identical to all sine waves of frequency /\pm f_{0} \pm kf_{s}/ (for all integer values of /k/). After sampling we literally have no way to tell them apart. They look identical
+
+* Aliasing
+
+*TODO*: Explain why /-f_{0}+kf_{s}/ is also in the aliasing onto our solutions
+
+In the case of one sine wave coming in to your sampler you may be able to infer from your system or some context which frequency orginally came in, which frequency is "real" and which is a replication. However once you start to have multiple frequencies if the sample rate is set too low then you will have replicated frequencies intermixing with real signals and you will not be able to disentangle what it real and what isn't. When you have these ambiguities we call it /aliasing/. To avoid aliasing we need to take our frequency range of interest, called the /bandwidth/, and select for it to an appropriate sampling rate so that frequencies in the bandwidth don't ever replicate onto the bandwidth itself.
+
+If the sample rate is lower than the signal then the problem is obvious:
+ - If we are looking at frequencies 0-11Hz then a 11Hz input sampled at 10Hz will show up at a 1Hz signal
+However this is not a sufficient criteria b/c of the issue of the flipped sinewaves that also fit the points
+ - If we look at the 0-7Hz range and sampled at 10Hz a 7Hz signal will look the same as a -3Hz signal (a 3Hz signal \pi out of phase)
+
+So even if we are interested in some bandwidth /B/ (ie. /0/ to /B/ Hertz) we need to still concern ourselves with the /0/ to /-B/ Hertz. To have no ambigiuity within the bandwidth you are looking at the sampling frequency needs to be twice the bandwidth, .ie /2B/. That way both /f_{0} \pm kf_{s}/ and /-f_{0} \pm kf_{s}/ lie outside the bandwidth
+
+Inputs and noise outside the range should be filtered out b/c it will alias onto the range we are looking at.
+
+* Sampling translation
+While we now know how to choose a sampling rate to mitigate the effects of frequency replication, you can also use replication to your advantage by using it to observe very high frequencies. If we limit ourselves to looking at a band of frequencies /B/ around some value /f_{c}/ (known as the /carrier frequency/) we can carefully select a sampling frequency /f_{s}/ which will make signals around /f_{c}/ come out looking identical to lower frequencies around 0Hz
+
+We start again with our original equation for frequency replication:
+- x(n) = sin(2\pi f_{0}n/f_{s}) = sin(2\pi (f_{0}+ kf_{s})n/f_{s})
+Now we need to select an appropriate /f_{0}/ and make it look identical to /0Hz/
+- f_{0}+kf_{s} = 0
+Our frequency range of interest goes from /f_{c}-(B/2)/ to /f_{c}+(B/2)/ and we can either move the lowest frequency /f_{c}-(B/2)/ to /0Hz/
+ - f_{c}-(B/2) + kf_{s} = 0
+ - f_{s} = [2f_{c}-B]/k
+Or move the highest frequency /f_{c}+(B/2)/ to /0Hz/
+ - f_{c}+(B/2) + kf_{s} = 0
+ - f_{s} = [2f_{c}+B]/k
+(/k/ is a freely selected integer at this point, hence it can be scaled and incremented freely)
+This second case is a bit peculiar b/c the bottom on the frequency range is now looking like /-B Hz/. This will have a negative equivalent at /B Hz/ and so the original frequency will look inverted in the /0 to B Hz/ range
+
+The only additional requirement is that /f_{s}>2B/ as before to prevent aliasing. So as long as /k/ is not too large the following give you possible sampling rates
+ - f_{s} = [2f_{c}-B]/k_{0} > 2B
+ - f_{s} = [2f_{c}+B]/k_{1} > 2B
+
+Note that these are not the only possible sampling rates, nor actually the smallest, but these are the ones that bring the band down to around 0Hz. The above equations will necessarily have some largest possible value for /k/ that keeps the sample rate below the Nyquist criterion (/2B/) and this will be the typically chosen sampling rate
+
+Any noise between /0Hz/ and the carrier frequency /f_{c}/ will be aliased onto this range so filtering on the band of interest is crucial
