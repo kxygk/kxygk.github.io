@@ -31,9 +31,33 @@ BROKEN: As of right now the AOT compilation doesn't work with =cljfx=.
 
 SEE: https://github.com/cljfx/cljfx/issues/63
 
+UPDATE: workaround -> https://github.com/cljfx/cljfx/issues/63#issuecomment-611971477
+
 However if you're not using =cljfx= then this library is a good options!
 
-At this point you will likely find the resutling JAR is huge. I was getting a ~200MB monster
+** Cambada
+
+Since Depstar doesn't work right off the bat I switched to Cambada - which also supposidly supports GraalVM output. The only issue is that it's seemingly no longer maintained. Issues go unanswered and there are no updates. That said, it seems to work great
+
+#+BEGIN_SRC clojure
+ :aliases {;; call 'clj -A:uberjar' to run
+           :uberjar {:extra-deps {luchiniatwork/cambada {:mvn/version "1.0.2"}}
+                     :main-opts ["-m" "cambada.uberjar"
+                                 "--aot" "all"
+                                 "-m" "sausage.core"]}
+           :native-image {:extra-deps
+                          {luchiniatwork/cambada {:mvn/version "1.0.0"}}
+                          :main-opts ["-m" "cambada.native-image"
+                                      "-m" "sausage.core"]}
+#+END_SRC
+Just run
+#+BEGIN_SRC shell
+clj -A:uberjar
+#+END_SRC
+
+And the uberjar gets assembled in a =target/= folder
+
+At this point you will likely find the resutling JAR is huge. I was a ~200MB monster for me
 
 * Minimizing binaries/dependencies
 A moderately size project will start to drag in huge amounts of libraries through its dependencies. To minimize dependencies and included binaries you need to first check your dependency tree

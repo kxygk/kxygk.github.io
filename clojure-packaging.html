@@ -18,42 +18,43 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgca40968">Intro</a></li>
-<li><a href="#org9333f04">Building an Uberjar</a>
+<li><a href="#org838ba57">Intro</a></li>
+<li><a href="#org15f2b2b">Building an Uberjar</a>
 <ul>
-<li><a href="#org5cc4060">Depstar (BROKEN)</a></li>
+<li><a href="#org2f0cd15">Depstar (BROKEN)</a></li>
+<li><a href="#orge58b86d">Cambada</a></li>
 </ul>
 </li>
-<li><a href="#org1e95051">Minimizing binaries/dependencies</a></li>
-<li><a href="#org57dd5c5">Making sure you get crossplatform binaries</a></li>
-<li><a href="#org77cc655">Proguard (WIP)</a></li>
-<li><a href="#orgbedd997">JPackage</a></li>
-<li><a href="#org7d21ba7">JLink</a></li>
-<li><a href="#orgc2dd6f5">GraalVM</a></li>
+<li><a href="#orgcd2132e">Minimizing binaries/dependencies</a></li>
+<li><a href="#org9aefd6e">Making sure you get crossplatform binaries</a></li>
+<li><a href="#org56d4be1">Proguard (WIP)</a></li>
+<li><a href="#orga55d12e">JPackage</a></li>
+<li><a href="#org068e53c">JLink</a></li>
+<li><a href="#org3ccd978">GraalVM</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgca40968" class="outline-2">
-<h2 id="orgca40968">Intro</h2>
-<div class="outline-text-2" id="text-orgca40968">
+<div id="outline-container-org838ba57" class="outline-2">
+<h2 id="org838ba57">Intro</h2>
+<div class="outline-text-2" id="text-org838ba57">
 <p>
 This is a how-to and my personal notes on how to package a Clojure project to minimize the size. The following steps are semi-independent of each other
 </p>
 </div>
 </div>
 
-<div id="outline-container-org9333f04" class="outline-2">
-<h2 id="org9333f04">Building an Uberjar</h2>
-<div class="outline-text-2" id="text-org9333f04">
+<div id="outline-container-org15f2b2b" class="outline-2">
+<h2 id="org15f2b2b">Building an Uberjar</h2>
+<div class="outline-text-2" id="text-org15f2b2b">
 <p>
 For this you need to get a <code>deps.edn</code> extension and plug it into your project. There are multiple options that all seem to do something similar. For some of the coming steps it's best to get AOT compilation working - but it's not strictly necessary.
 </p>
 </div>
 
-<div id="outline-container-org5cc4060" class="outline-3">
-<h3 id="org5cc4060">Depstar (BROKEN)</h3>
-<div class="outline-text-3" id="text-org5cc4060">
+<div id="outline-container-org2f0cd15" class="outline-3">
+<h3 id="org2f0cd15">Depstar (BROKEN)</h3>
+<div class="outline-text-3" id="text-org2f0cd15">
 <p>
 This project is currently maintained (as of 2020)
 </p>
@@ -90,19 +91,56 @@ SEE: <a href="https://github.com/cljfx/cljfx/issues/63">https://github.com/cljfx
 </p>
 
 <p>
-However if you're not using <code>cljfx</code> then this library is a good options!
+UPDATE: workaround -&gt; <a href="https://github.com/cljfx/cljfx/issues/63#issuecomment-611971477">https://github.com/cljfx/cljfx/issues/63#issuecomment-611971477</a>
 </p>
 
 <p>
-At this point you will likely find the resutling JAR is huge. I was getting a ~200MB monster
+However if you're not using <code>cljfx</code> then this library is a good options!
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge58b86d" class="outline-3">
+<h3 id="orge58b86d">Cambada</h3>
+<div class="outline-text-3" id="text-orge58b86d">
+<p>
+Since Depstar doesn't work right off the bat I switched to Cambada - which also supposidly supports GraalVM output. The only issue is that it's seemingly no longer maintained. Issues go unanswered and there are no updates. That said, it seems to work great
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #008b8b;">:aliases</span> {<span style="color: #b22222;">;; </span><span style="color: #b22222;">call 'clj -A:uberjar' to run</span>
+          <span style="color: #008b8b;">:uberjar</span> {<span style="color: #008b8b;">:extra-deps</span> {<span style="color: #228b22;">luchiniatwork</span>/cambada {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"1.0.2"</span>}}
+                    <span style="color: #008b8b;">:main-opts</span> [<span style="color: #8b2252;">"-m"</span> <span style="color: #8b2252;">"cambada.uberjar"</span>
+                                <span style="color: #8b2252;">"--aot"</span> <span style="color: #8b2252;">"all"</span>
+                                <span style="color: #8b2252;">"-m"</span> <span style="color: #8b2252;">"sausage.core"</span>]}
+          <span style="color: #008b8b;">:native-image</span> {<span style="color: #008b8b;">:extra-deps</span>
+                         {<span style="color: #228b22;">luchiniatwork</span>/cambada {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"1.0.0"</span>}}
+                         <span style="color: #008b8b;">:main-opts</span> [<span style="color: #8b2252;">"-m"</span> <span style="color: #8b2252;">"cambada.native-image"</span>
+                                     <span style="color: #8b2252;">"-m"</span> <span style="color: #8b2252;">"sausage.core"</span>]}
+</pre>
+</div>
+<p>
+Just run
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">clj -A:uberjar
+</pre>
+</div>
+
+<p>
+And the uberjar gets assembled in a <code>target/</code> folder
+</p>
+
+<p>
+At this point you will likely find the resutling JAR is huge. I was a ~200MB monster for me
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1e95051" class="outline-2">
-<h2 id="org1e95051">Minimizing binaries/dependencies</h2>
-<div class="outline-text-2" id="text-org1e95051">
+<div id="outline-container-orgcd2132e" class="outline-2">
+<h2 id="orgcd2132e">Minimizing binaries/dependencies</h2>
+<div class="outline-text-2" id="text-orgcd2132e">
 <p>
 A moderately size project will start to drag in huge amounts of libraries through its dependencies. To minimize dependencies and included binaries you need to first check your dependency tree
 </p>
@@ -145,9 +183,9 @@ Source: <a href="https://clojure.org/reference/deps_and_cli#_dependencies">https
 </div>
 </div>
 
-<div id="outline-container-org57dd5c5" class="outline-2">
-<h2 id="org57dd5c5">Making sure you get crossplatform binaries</h2>
-<div class="outline-text-2" id="text-org57dd5c5">
+<div id="outline-container-org9aefd6e" class="outline-2">
+<h2 id="org9aefd6e">Making sure you get crossplatform binaries</h2>
+<div class="outline-text-2" id="text-org9aefd6e">
 <p>
 Some libraries reply on native binaries that you simply unavoidably will need. These binaries will get bundled with your code in the <code>.jar</code>. 
 </p>
@@ -188,9 +226,9 @@ Credit: <b>vlaaad</b> <a href="https://old.reddit.com/r/Clojure/comments/fw93gc/
 </div>
 </div>
 
-<div id="outline-container-org77cc655" class="outline-2">
-<h2 id="org77cc655">Proguard (WIP)</h2>
-<div class="outline-text-2" id="text-org77cc655">
+<div id="outline-container-org56d4be1" class="outline-2">
+<h2 id="org56d4be1">Proguard (WIP)</h2>
+<div class="outline-text-2" id="text-org56d4be1">
 <p>
 The next step is using the automated tool Proguard to minimize the JAR further. This tool is supposed to traverse the your application and explore all possible execution paths to identify dead code, and untouched dependencies. This isn't looking at calls out to native libraries and such - so this is confined purely to the JVM code. Proguard is driven by a config file typically called <code>proguard.pro</code> which can very complicated and confusing.
 </p>
@@ -374,14 +412,14 @@ Done with the help of <b>goldenfolding</b>: <a href="https://old.reddit.com/r/Cl
 </div>
 </div>
 
-<div id="outline-container-orgbedd997" class="outline-2">
-<h2 id="orgbedd997">JPackage</h2>
+<div id="outline-container-orga55d12e" class="outline-2">
+<h2 id="orga55d12e">JPackage</h2>
 </div>
-<div id="outline-container-org7d21ba7" class="outline-2">
-<h2 id="org7d21ba7">JLink</h2>
+<div id="outline-container-org068e53c" class="outline-2">
+<h2 id="org068e53c">JLink</h2>
 </div>
-<div id="outline-container-orgc2dd6f5" class="outline-2">
-<h2 id="orgc2dd6f5">GraalVM</h2>
+<div id="outline-container-org3ccd978" class="outline-2">
+<h2 id="org3ccd978">GraalVM</h2>
 </div>
 </div>
 </body>
