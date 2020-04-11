@@ -1,0 +1,230 @@
+#+TITLE: Clojure: Packaging
+#+DESCRIPTION: Notes from studying Clojure
+
+#+INCLUDE: "../web/config.org"
+
+* Intro
+This is a how-to and my personal notes on how to package a Clojure project to minimize the size. The following steps are semi-independent of each other
+
+* Building an Uberjar
+For this you need to get a =deps.edn= extension and plug it into your project. There are multiple options that all seem to do something similar. For some of the coming steps it's best to get AOT compilation working - but it's not strictly necessary.
+
+** Depstar (BROKEN)
+This project is currently maintained (as of 2020)
+
+You add the following alias at the end of your =deps.edn= file
+#+BEGIN_SRC clojure
+  :aliases {:depstar {:extra-deps
+		      {seancorfield/depstar {:mvn/version "0.5.2"}}
+		      :main-opts ["-m" "hf.depstar.uberjar"
+				  "sausage.jar" "--compile"
+				  "-m" "sausage.core"]}}
+#+END_SRC
+And then call it from the command line
+#+BEGIN_SRC shell
+clj -A:depstar
+#+END_SRC
+
+If you have issues with AOT compilation, you can also build a JIT version by removing ~"--compile"~ from the alias above.
+
+BROKEN: As of right now the AOT compilation doesn't work with =cljfx=.
+
+SEE: https://github.com/cljfx/cljfx/issues/63
+
+However if you're not using =cljfx= then this library is a good options!
+
+At this point you will likely find the resutling JAR is huge. I was getting a ~200MB monster
+
+* Minimizing binaries/dependencies
+A moderately size project will start to drag in huge amounts of libraries through its dependencies. To minimize dependencies and included binaries you need to first check your dependency tree
+#+BEGIN_SRC shell
+$ clj -Stree
+# huge indented tree
+# ...
+# ...
+#+END_SRC
+Through this you should generally be able to visually identify whole subtrees that will clearly never being used by your program. You then need to modify your =deps.edn= file to explicitely exclude these from the dependency tree using the ~:exclusions~ keyword. Ex:
+#+BEGIN_SRC clojure
+{:deps
+ {org.clojure/clojure {:mvn/version "1.10.0"}
+  org.boofcv/boofcv-core {:mvn/version "0.35"
+                          :exclusions [org.boofcv/boofcv-recognition]}
+  cljfx {:mvn/version "1.6.7"
+         :exclusions [org.openjfx/javafx-web
+                      org.openjfx/javafx-media]}
+;; ... etc.
+#+END_SRC
+Be conservative and only remove parts that you will definitely not touch. The goal here is /not/ to be exhaustive b/c this will be an added maintenance burden. If you later start to use new sections of an included libraries, you don't want to get confusing errors and then have to go back to your =deps.edn= file to hunt for what exclusions neeeds to be removed.
+
+Note that we later will use Proguard to remove unused JVM code more aggressively. So focus on nuking native binaries and things like CLJS/Javascript/HTML. These, non JVM piece will not be removed with Proguard, so you need to do this manually.
+
+In my case I needed to remove some large webview/media binaries that I will not be using with =javafx=, a complex CV section of =boofcv= and a clojurescript tie-in for =thi.ng/geom=
+
+Source: https://clojure.org/reference/deps_and_cli#_dependencies
+
+* Making sure you get crossplatform binaries
+Some libraries reply on native binaries that you simply unavoidably will need. These binaries will get bundled with your code in the =.jar=. 
+
+The issue is that dependencies will sometimes decide on what binaries you get based on the system you're building on. For instance if you build on Linux, the Windows/MacOS binaries are missing and the =.jar= won't run when you drag it over to a different machine. So you will need to explicitely add the crossplatform dependencies using a =deps.end= [[https://clojure.org/reference/deps_and_cli#_dependencies][classifier]]. This is an extra param of the form ~$blahblah~ that comes after your dependency name. In my project I include the library =cljfx= which then included =javafx= and its associated binaries. When I build on my Ubuntu machine the Windows/MacOS binaries were left out so I need to explicitely add them back in
+#+BEGIN_SRC clojure
+{:deps
+ {org.clojure/clojure {:mvn/version "1.10.0"}
+  org.boofcv/boofcv-core {:mvn/version "0.35"
+                          :exclusions [org.boofcv/boofcv-recognition]}
+  cljfx {:mvn/version "1.6.7"
+         :exclusions [org.openjfx/javafx-web
+                      org.openjfx/javafx-media]}
+  org.openjfx/javafx-base {:mvn/version "14"}
+  org.openjfx/javafx-base$linux {:mvn/version "14"}
+  org.openjfx/javafx-base$mac {:mvn/version "14"}
+  org.openjfx/javafx-base$win {:mvn/version "14"}
+  org.openjfx/javafx-controls {:mvn/version "14"}
+  org.openjfx/javafx-controls$linux {:mvn/version "14"}
+  org.openjfx/javafx-controls$mac {:mvn/version "14"}
+  org.openjfx/javafx-controls$win {:mvn/version "14"}
+  org.openjfx/javafx-graphics {:mvn/version "14"}
+  org.openjfx/javafx-graphics$linux {:mvn/version "14"}
+  org.openjfx/javafx-graphics$mac {:mvn/version "14"}
+  org.openjfx/javafx-graphics$win {:mvn/version "14"}
+  org.openjfx/javafx-swing {:mvn/version "14"}
+  org.openjfx/javafx-swing$linux {:mvn/version "14"}
+  org.openjfx/javafx-swing$mac {:mvn/version "14"}
+  org.openjfx/javafx-swing$win {:mvn/version "14"}
+#+END_SRC
+
+Credit: *vlaaad* https://old.reddit.com/r/Clojure/comments/fw93gc/new_clojurians_ask_anything/fmspx8m/
+
+* Proguard (WIP)
+The next step is using the automated tool Proguard to minimize the JAR further. This tool is supposed to traverse the your application and explore all possible execution paths to identify dead code, and untouched dependencies. This isn't looking at calls out to native libraries and such - so this is confined purely to the JVM code. Proguard is driven by a config file typically called ~proguard.pro~ which can very complicated and confusing.
+
+We start off by telling proguard the input =.jar= file name and then output minimized =.jar= name
+#+BEGIN_SRC shell
+-injars  sausage.jar
+-outjars small-sausage.jar
+#+END_SRC
+
+We also want to disable features of Proguard we don't care about - particularly optimization and obfuscation
+
+#+BEGIN_SRC shell
+-dontoptimize
+-dontobfuscate
+#+END_SRC
+
+We also want to tell it to save all clojure classes - just wholesale
+#+BEGIN_SRC shell
+# Tell proguard to leave the clojure runtime alone
+# You would need to add any other classes that you wish to preserve here.
+-keep class clojure.** { *; }
+-keep class java.** { *; }
+-keep class javax.** { *; }
+#+END_SRC
+
+Next we tell Proguard where our JVM classes are. First I tried:
+#+BEGIN_SRC shell
+-libraryjars /usr/lib/jvm/java-11-openjdk-amd64/lib/
+#+END_SRC
+When I ran things I got a crash:
+#+BEGIN_SRC shell
+ProGuard, version 6.2.2
+Reading input...
+Reading program jar [/home/geokon/Junk/proguardtest/sausage.jar] (filtered)
+Reading library directory [/usr/lib/jvm/java-11-openjdk-amd64/lib] (filtered)
+java.io.IOException: Can't read [/usr/lib/jvm/java-11-openjdk-amd64/lib] (Can't read [src.zip] (/usr/lib/jvm/java-11-openjdk-amd64/lib/src.zip (No such file or directory)))
+#+END_SRC
+
+Since I'm running with OpenJDK 11 it turns out I need to update things to use =jmodules= (these "modules" are a newer Java feature)
+#+BEGIN_SRC shell
+-libraryjars <java.home>/jmods/java.base.jmod(!**.jar;!module-info.class)
+#+END_SRC
+This snippet is straight from the Proguard example.The example even says
+#+BEGIN_SRC shell
+# As of Java 9, the runtime classes are packaged in modular jmod files.
+#+END_SRC
+ However if I go into =/usr/lib/jvm/java-11-openjdk-amd64= there was no =jmods= folder there. While I've been doing everything so far just using the Java runtime (from Ubuntu package =openjdk-11-jre=), it turns out this =jmods= folder comes with the JDK and I neeed to additionally install =openjdk-11-jdk=. Then the folder appears finally.
+
+Rerunning things again the output now gives thousands of lines of garbage that look like this
+#+BEGIN_SRC shell
+Warning: org.apache.batik.gvt.event.AWTEventDispatcher: can't find superclass or interface java.awt.event.MouseListener
+Warning: org.yaml.snakeyaml.introspector.PropertySubstitute: can't find referenced class java.util.logging.Level
+Warning: org.yaml.snakeyaml.introspector.PropertySubstitute: can't find referenced class java.util.logging.Logger
+Warning: org.mozilla.javascript.tools.shell.JSConsole: can't find referenced class javax.swing.SwingUtilities
+Warning: org.mozilla.javascript.tools.shell.JSConsole: can't find referenced class javax.swing.JOptionPane
+Warning: org.mozilla.javascript.tools.shell.JSConsole: can't find referenced class javax.swing.JFileChooser
+Warning: org.apache.xmlgraphics.java2d.GraphicContext: can't find referenced class java.awt.Font
+Warning: org.apache.xmlgraphics.java2d.GraphicContext: can't find referenced class java.awt.Font
+Warning: org.apache.logging.log4j.core.jackson.ListOfMapEntrySerializer: can't find referenced class com.fasterxml.jackson.databind.SerializerProvider
+Warning: org.apache.logging.log4j.core.jackson.ListOfMapEntrySerializer: can't find referenced class com.fasterxml.jackson.databind.SerializerProvider
+Warning: org.apache.logging.log4j.core.jackson.ListOfMapEntrySerializer: can't find referenced class com.fasterxml.jackson.databind.SerializerProvider
+#+END_SRC
+
+It turns out that the default it just loading the "core" Java libraries. A whole bunch of these libraries are in other modules. You go look up the *Java 11* javadoc for something like [[https://docs.oracle.com/en/java/javase/11/docs/api/java.logging/java/util/logging/Level.html][for instance ~java.util.logging.Level~]]  
+
+At the top it says =Module java.logging=. You go through all the missing classes and repeat this. There are a few quirks.. And some thing you will simply not find in Java 11 (because it's been removed). 
+
+#+BEGIN_SRC shell
+-libraryjars <java.home>/jmods/java.base.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.desktop.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.logging.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.xml.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.datatransfer.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.sql.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.compiler.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.management.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.naming.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.scripting.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/java.net.http.jmod(!**.jar;!module-info.class)
+#+END_SRC
+
+A few links were expecting the JDK - this is probably erronious, but can be added
+
+#+BEGIN_SRC shell
+-libraryjars <java.home>/jmods/jdk.jdi.jmod(!**.jar;!module-info.class)
+-libraryjars <java.home>/jmods/jdk.jfr.jmod(!**.jar;!module-info.class)
+#+END_SRC
+
+At this point you will probably still have thousands of warnings. Things linking to old runtimes, things linking to libraries you've never used.. etc.
+
+Getting all these to dissappear seems to be impossible. To force proguard to still give you a minimized JAR you need to then tell it to ignore the warning and keep going
+
+#+BEGIN_SRC shell
+-ignorewarnings
+#+END_SRC
+
+However at this point you try to run the executable and most likely it'll crash b/c some class was erased even though it shouldn't have been. It's unclear what evil forces are at hand here and why some stuff is removed while others are not. But at this point you need to go into the config and add ~-keep~ rules to make sure ciritcal classes don't get removed
+
+Here the configuration gets torturous. You run proguard, run the minimized JAR, it crashed due to a missing class, you add a ~-keep~ rule. Rinse and repeat over and over. You can use wildcards to at least save whole name spaces and save your sanity
+
+My final file looked something like this:
+#+BEGIN_SRC shell
+-keep class clojure.** { *; }
+-keep class java.** { *; }
+-keep class javax.** { *; }
+-keep class cljfx.** { *; }
+-keep class sausage.** { *; }
+-keep class afester.** { *; }
+-keep class javafx.** { *; }
+-keep class com.sun.** { *; }
+-keep class jogamp.** { *; }
+-keep class com.jogamp.** { *; }
+-keep class java.awt.** { *; }
+-keep class module-info
+
+-keep class org.apache.logging.log4j.** { *; }
+-keep class boofcv.io.image.UtilImageIO{ *; }
+-keep class boofcv.core.image.ConvertImage{ *; }
+-keep class boofcv.io.image.ConvertBufferedImage { *; }
+-keep class boofcv.alg.misc.ImageMiscOps{ *; }
+-keep class javafx.embed.swing.SwingFXUtils{ *; }
+-keep class boofcv.io.image.UtilImageIO{ *; }
+-keep class javafx.embed.swing.SwingFXUtils{ *; }
+-keep class boofcv.alg.misc.ImageMiscOps { *; }
+#+END_SRC
+
+This is by no means minimized. My JAR went from 37MB to 23MB. With enough monkeys hitting the keyboard you could probably get this under 20MB. The issue is ofcourse that this is a whole headache to manage in parallel to your code. So as your codebase evolves and you start to touch new pieces of your dependencies, this file will need to be updated as well. But because there is no rhyme of reason to why classes get removed - the process ends up rather haphazard and you can never be quite sure if the finaly JAR is working unless you have very exhaustive tests
+
+Done with the help of *goldenfolding*: https://old.reddit.com/r/Clojure/comments/fw93gc/new_clojurians_ask_anything/fmvnq4q/
+
+* JPackage
+* JLink
+* GraalVM
+

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clojure: Packaging</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Notes from studying Clojure"
+>
+<link rel="stylesheet" type="text/css" href="../web/worg.css" />
+<link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Clojure: Packaging</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgca40968">Intro</a></li>
+<li><a href="#org9333f04">Building an Uberjar</a>
+<ul>
+<li><a href="#org5cc4060">Depstar (BROKEN)</a></li>
+</ul>
+</li>
+<li><a href="#org1e95051">Minimizing binaries/dependencies</a></li>
+<li><a href="#org57dd5c5">Making sure you get crossplatform binaries</a></li>
+<li><a href="#org77cc655">Proguard (WIP)</a></li>
+<li><a href="#orgbedd997">JPackage</a></li>
+<li><a href="#org7d21ba7">JLink</a></li>
+<li><a href="#orgc2dd6f5">GraalVM</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgca40968" class="outline-2">
+<h2 id="orgca40968">Intro</h2>
+<div class="outline-text-2" id="text-orgca40968">
+<p>
+This is a how-to and my personal notes on how to package a Clojure project to minimize the size. The following steps are semi-independent of each other
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9333f04" class="outline-2">
+<h2 id="org9333f04">Building an Uberjar</h2>
+<div class="outline-text-2" id="text-org9333f04">
+<p>
+For this you need to get a <code>deps.edn</code> extension and plug it into your project. There are multiple options that all seem to do something similar. For some of the coming steps it's best to get AOT compilation working - but it's not strictly necessary.
+</p>
+</div>
+
+<div id="outline-container-org5cc4060" class="outline-3">
+<h3 id="org5cc4060">Depstar (BROKEN)</h3>
+<div class="outline-text-3" id="text-org5cc4060">
+<p>
+This project is currently maintained (as of 2020)
+</p>
+
+<p>
+You add the following alias at the end of your <code>deps.edn</code> file
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #008b8b;">:aliases</span> {<span style="color: #008b8b;">:depstar</span> {<span style="color: #008b8b;">:extra-deps</span>
+                    {<span style="color: #228b22;">seancorfield</span>/depstar {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"0.5.2"</span>}}
+                    <span style="color: #008b8b;">:main-opts</span> [<span style="color: #8b2252;">"-m"</span> <span style="color: #8b2252;">"hf.depstar.uberjar"</span>
+                                <span style="color: #8b2252;">"sausage.jar"</span> <span style="color: #8b2252;">"--compile"</span>
+                                <span style="color: #8b2252;">"-m"</span> <span style="color: #8b2252;">"sausage.core"</span>]}}
+</pre>
+</div>
+<p>
+And then call it from the command line
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">clj -A:depstar
+</pre>
+</div>
+
+<p>
+If you have issues with AOT compilation, you can also build a JIT version by removing <code>"--compile"</code> from the alias above.
+</p>
+
+<p>
+BROKEN: As of right now the AOT compilation doesn't work with <code>cljfx</code>.
+</p>
+
+<p>
+SEE: <a href="https://github.com/cljfx/cljfx/issues/63">https://github.com/cljfx/cljfx/issues/63</a>
+</p>
+
+<p>
+However if you're not using <code>cljfx</code> then this library is a good options!
+</p>
+
+<p>
+At this point you will likely find the resutling JAR is huge. I was getting a ~200MB monster
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1e95051" class="outline-2">
+<h2 id="org1e95051">Minimizing binaries/dependencies</h2>
+<div class="outline-text-2" id="text-org1e95051">
+<p>
+A moderately size project will start to drag in huge amounts of libraries through its dependencies. To minimize dependencies and included binaries you need to first check your dependency tree
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">$ clj -Stree
+<span style="color: #b22222;"># </span><span style="color: #b22222;">huge indented tree</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">...</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">...</span>
+</pre>
+</div>
+<p>
+Through this you should generally be able to visually identify whole subtrees that will clearly never being used by your program. You then need to modify your <code>deps.edn</code> file to explicitely exclude these from the dependency tree using the <code>:exclusions</code> keyword. Ex:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #008b8b;">:deps</span>
+ {<span style="color: #228b22;">org.clojure</span>/clojure {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"1.10.0"</span>}
+  <span style="color: #228b22;">org.boofcv</span>/boofcv-core {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"0.35"</span>
+                          <span style="color: #008b8b;">:exclusions</span> [<span style="color: #228b22;">org.boofcv</span>/boofcv-recognition]}
+  cljfx {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"1.6.7"</span>
+         <span style="color: #008b8b;">:exclusions</span> [<span style="color: #228b22;">org.openjfx</span>/javafx-web
+                      <span style="color: #228b22;">org.openjfx</span>/javafx-media]}
+<span style="color: #b22222;">;; </span><span style="color: #b22222;">... etc.</span>
+</pre>
+</div>
+<p>
+Be conservative and only remove parts that you will definitely not touch. The goal here is <i>not</i> to be exhaustive b/c this will be an added maintenance burden. If you later start to use new sections of an included libraries, you don't want to get confusing errors and then have to go back to your <code>deps.edn</code> file to hunt for what exclusions neeeds to be removed.
+</p>
+
+<p>
+Note that we later will use Proguard to remove unused JVM code more aggressively. So focus on nuking native binaries and things like CLJS/Javascript/HTML. These, non JVM piece will not be removed with Proguard, so you need to do this manually.
+</p>
+
+<p>
+In my case I needed to remove some large webview/media binaries that I will not be using with <code>javafx</code>, a complex CV section of <code>boofcv</code> and a clojurescript tie-in for <code>thi.ng/geom</code>
+</p>
+
+<p>
+Source: <a href="https://clojure.org/reference/deps_and_cli#_dependencies">https://clojure.org/reference/deps_and_cli#_dependencies</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org57dd5c5" class="outline-2">
+<h2 id="org57dd5c5">Making sure you get crossplatform binaries</h2>
+<div class="outline-text-2" id="text-org57dd5c5">
+<p>
+Some libraries reply on native binaries that you simply unavoidably will need. These binaries will get bundled with your code in the <code>.jar</code>. 
+</p>
+
+<p>
+The issue is that dependencies will sometimes decide on what binaries you get based on the system you're building on. For instance if you build on Linux, the Windows/MacOS binaries are missing and the <code>.jar</code> won't run when you drag it over to a different machine. So you will need to explicitely add the crossplatform dependencies using a <code>deps.end</code> <a href="https://clojure.org/reference/deps_and_cli#_dependencies">classifier</a>. This is an extra param of the form <code>$blahblah</code> that comes after your dependency name. In my project I include the library <code>cljfx</code> which then included <code>javafx</code> and its associated binaries. When I build on my Ubuntu machine the Windows/MacOS binaries were left out so I need to explicitely add them back in
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #008b8b;">:deps</span>
+ {<span style="color: #228b22;">org.clojure</span>/clojure {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"1.10.0"</span>}
+  <span style="color: #228b22;">org.boofcv</span>/boofcv-core {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"0.35"</span>
+                          <span style="color: #008b8b;">:exclusions</span> [<span style="color: #228b22;">org.boofcv</span>/boofcv-recognition]}
+  cljfx {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"1.6.7"</span>
+         <span style="color: #008b8b;">:exclusions</span> [<span style="color: #228b22;">org.openjfx</span>/javafx-web
+                      <span style="color: #228b22;">org.openjfx</span>/javafx-media]}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-base {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-base$linux {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-base$mac {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-base$win {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-controls {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-controls$linux {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-controls$mac {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-controls$win {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-graphics {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-graphics$linux {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-graphics$mac {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-graphics$win {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-swing {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-swing$linux {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-swing$mac {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+  <span style="color: #228b22;">org.openjfx</span>/javafx-swing$win {<span style="color: #008b8b;">:</span><span style="color: #228b22;">mvn</span><span style="color: #181612; background-color: #fcfcfc;">/</span><span style="color: #008b8b;">version</span> <span style="color: #8b2252;">"14"</span>}
+</pre>
+</div>
+
+<p>
+Credit: <b>vlaaad</b> <a href="https://old.reddit.com/r/Clojure/comments/fw93gc/new_clojurians_ask_anything/fmspx8m/">https://old.reddit.com/r/Clojure/comments/fw93gc/new_clojurians_ask_anything/fmspx8m/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org77cc655" class="outline-2">
+<h2 id="org77cc655">Proguard (WIP)</h2>
+<div class="outline-text-2" id="text-org77cc655">
+<p>
+The next step is using the automated tool Proguard to minimize the JAR further. This tool is supposed to traverse the your application and explore all possible execution paths to identify dead code, and untouched dependencies. This isn't looking at calls out to native libraries and such - so this is confined purely to the JVM code. Proguard is driven by a config file typically called <code>proguard.pro</code> which can very complicated and confusing.
+</p>
+
+<p>
+We start off by telling proguard the input <code>.jar</code> file name and then output minimized <code>.jar</code> name
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">-injars  sausage.jar
+-outjars small-sausage.jar
+</pre>
+</div>
+
+<p>
+We also want to disable features of Proguard we don't care about - particularly optimization and obfuscation
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">-dontoptimize
+-dontobfuscate
+</pre>
+</div>
+
+<p>
+We also want to tell it to save all clojure classes - just wholesale
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #b22222;"># </span><span style="color: #b22222;">Tell proguard to leave the clojure runtime alone</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">You would need to add any other classes that you wish to preserve here.</span>
+-keep class clojure.** { *; }
+-keep class java.** { *; }
+-keep class javax.** { *; }
+</pre>
+</div>
+
+<p>
+Next we tell Proguard where our JVM classes are. First I tried:
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">-libraryjars /usr/lib/jvm/java-11-openjdk-amd64/lib/
+</pre>
+</div>
+<p>
+When I ran things I got a crash:
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">ProGuard, version 6.2.2
+Reading input...
+Reading program jar [/home/geokon/Junk/proguardtest/sausage.jar] (filtered)
+Reading library directory [/usr/lib/jvm/java-11-openjdk-amd64/lib] (filtered)
+java.io.IOException: Can<span style="color: #8b2252;">'t read [/usr/lib/jvm/java-11-openjdk-amd64/lib] (Can'</span>t read [src.zip] (/usr/lib/jvm/java-11-openjdk-amd64/lib/src.zip (No such file or directory)))
+</pre>
+</div>
+
+<p>
+Since I'm running with OpenJDK 11 it turns out I need to update things to use <code>jmodules</code> (these "modules" are a newer Java feature)
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">-libraryjars &lt;java.home&gt;/jmods/java.base.jmod(!**.jar;!module-info.class)
+</pre>
+</div>
+<p>
+This snippet is straight from the Proguard example.The example even says
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #b22222;"># </span><span style="color: #b22222;">As of Java 9, the runtime classes are packaged in modular jmod files.</span>
+</pre>
+</div>
+<p>
+However if I go into <code>/usr/lib/jvm/java-11-openjdk-amd64</code> there was no <code>jmods</code> folder there. While I've been doing everything so far just using the Java runtime (from Ubuntu package <code>openjdk-11-jre</code>), it turns out this <code>jmods</code> folder comes with the JDK and I neeed to additionally install <code>openjdk-11-jdk</code>. Then the folder appears finally.
+</p>
+
+<p>
+Rerunning things again the output now gives thousands of lines of garbage that look like this
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">Warning: org.apache.batik.gvt.event.AWTEventDispatcher: can<span style="color: #8b2252;">'t find superclass or interface java.awt.event.MouseListener</span>
+<span style="color: #8b2252;">Warning: org.yaml.snakeyaml.introspector.PropertySubstitute: can'</span>t find referenced class java.util.logging.Level
+Warning: org.yaml.snakeyaml.introspector.PropertySubstitute: can<span style="color: #8b2252;">'t find referenced class java.util.logging.Logger</span>
+<span style="color: #8b2252;">Warning: org.mozilla.javascript.tools.shell.JSConsole: can'</span>t find referenced class javax.swing.SwingUtilities
+Warning: org.mozilla.javascript.tools.shell.JSConsole: can<span style="color: #8b2252;">'t find referenced class javax.swing.JOptionPane</span>
+<span style="color: #8b2252;">Warning: org.mozilla.javascript.tools.shell.JSConsole: can'</span>t find referenced class javax.swing.JFileChooser
+Warning: org.apache.xmlgraphics.java2d.GraphicContext: can<span style="color: #8b2252;">'t find referenced class java.awt.Font</span>
+<span style="color: #8b2252;">Warning: org.apache.xmlgraphics.java2d.GraphicContext: can'</span>t find referenced class java.awt.Font
+Warning: org.apache.logging.log4j.core.jackson.ListOfMapEntrySerializer: can<span style="color: #8b2252;">'t find referenced class com.fasterxml.jackson.databind.SerializerProvider</span>
+<span style="color: #8b2252;">Warning: org.apache.logging.log4j.core.jackson.ListOfMapEntrySerializer: can'</span>t find referenced class com.fasterxml.jackson.databind.SerializerProvider
+Warning: org.apache.logging.log4j.core.jackson.ListOfMapEntrySerializer: can<span style="color: #8b2252;">'t find referenced class com.fasterxml.jackson.databind.SerializerProvider</span>
+</pre>
+</div>
+
+<p>
+It turns out that the default it just loading the "core" Java libraries. A whole bunch of these libraries are in other modules. You go look up the <b>Java 11</b> javadoc for something like <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.logging/java/util/logging/Level.html">for instance <code>java.util.logging.Level</code></a>  
+</p>
+
+<p>
+At the top it says <code>Module java.logging</code>. You go through all the missing classes and repeat this. There are a few quirks.. And some thing you will simply not find in Java 11 (because it's been removed). 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">-libraryjars &lt;java.home&gt;/jmods/java.base.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.desktop.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.logging.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.xml.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.datatransfer.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.sql.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.compiler.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.management.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.naming.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.scripting.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/java.net.http.jmod(!**.jar;!module-info.class)
+</pre>
+</div>
+
+<p>
+A few links were expecting the JDK - this is probably erronious, but can be added
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">-libraryjars &lt;java.home&gt;/jmods/jdk.jdi.jmod(!**.jar;!module-info.class)
+-libraryjars &lt;java.home&gt;/jmods/jdk.jfr.jmod(!**.jar;!module-info.class)
+</pre>
+</div>
+
+<p>
+At this point you will probably still have thousands of warnings. Things linking to old runtimes, things linking to libraries you've never used.. etc.
+</p>
+
+<p>
+Getting all these to dissappear seems to be impossible. To force proguard to still give you a minimized JAR you need to then tell it to ignore the warning and keep going
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">-ignorewarnings
+</pre>
+</div>
+
+<p>
+However at this point you try to run the executable and most likely it'll crash b/c some class was erased even though it shouldn't have been. It's unclear what evil forces are at hand here and why some stuff is removed while others are not. But at this point you need to go into the config and add <code>-keep</code> rules to make sure ciritcal classes don't get removed
+</p>
+
+<p>
+Here the configuration gets torturous. You run proguard, run the minimized JAR, it crashed due to a missing class, you add a <code>-keep</code> rule. Rinse and repeat over and over. You can use wildcards to at least save whole name spaces and save your sanity
+</p>
+
+<p>
+My final file looked something like this:
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">-keep class clojure.** { *; }
+-keep class java.** { *; }
+-keep class javax.** { *; }
+-keep class cljfx.** { *; }
+-keep class sausage.** { *; }
+-keep class afester.** { *; }
+-keep class javafx.** { *; }
+-keep class com.sun.** { *; }
+-keep class jogamp.** { *; }
+-keep class com.jogamp.** { *; }
+-keep class java.awt.** { *; }
+-keep class module-info
+
+-keep class org.apache.logging.log4j.** { *; }
+-keep class boofcv.io.image.UtilImageIO{ *; }
+-keep class boofcv.core.image.ConvertImage{ *; }
+-keep class boofcv.io.image.ConvertBufferedImage { *; }
+-keep class boofcv.alg.misc.ImageMiscOps{ *; }
+-keep class javafx.embed.swing.SwingFXUtils{ *; }
+-keep class boofcv.io.image.UtilImageIO{ *; }
+-keep class javafx.embed.swing.SwingFXUtils{ *; }
+-keep class boofcv.alg.misc.ImageMiscOps { *; }
+</pre>
+</div>
+
+<p>
+This is by no means minimized. My JAR went from 37MB to 23MB. With enough monkeys hitting the keyboard you could probably get this under 20MB. The issue is ofcourse that this is a whole headache to manage in parallel to your code. So as your codebase evolves and you start to touch new pieces of your dependencies, this file will need to be updated as well. But because there is no rhyme of reason to why classes get removed - the process ends up rather haphazard and you can never be quite sure if the finaly JAR is working unless you have very exhaustive tests
+</p>
+
+<p>
+Done with the help of <b>goldenfolding</b>: <a href="https://old.reddit.com/r/Clojure/comments/fw93gc/new_clojurians_ask_anything/fmvnq4q/">https://old.reddit.com/r/Clojure/comments/fw93gc/new_clojurians_ask_anything/fmvnq4q/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbedd997" class="outline-2">
+<h2 id="orgbedd997">JPackage</h2>
+</div>
+<div id="outline-container-org7d21ba7" class="outline-2">
+<h2 id="org7d21ba7">JLink</h2>
+</div>
+<div id="outline-container-orgc2dd6f5" class="outline-2">
+<h2 id="orgc2dd6f5">GraalVM</h2>
+</div>
+</div>
+</body>
+</html>
