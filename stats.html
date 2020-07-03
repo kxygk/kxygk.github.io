@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basics</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Basics in Stats using Octave/MATLAB"
+>
+<link rel="stylesheet" type="text/css" href="../web/worg.css" />
+<link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Basics</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgf884f8f">Intro</a></li>
+<li><a href="#org4df5c04">Probability density functions (PDFs)</a>
+<ul>
+<li><a href="#orga49ec5e">Example: Normal distribution</a></li>
+<li><a href="#org7934a01">Probability densities</a></li>
+</ul>
+</li>
+<li><a href="#orgaf442e8">Derived values</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org09e4d2c">Expected Value</a></li>
+<li><a href="#orge034ffc">Variance</a></li>
+<li><a href="#org7d64e40">Standard deviation</a></li>
+</ul>
+</li>
+<li><a href="#org579e921">SigFigs</a></li>
+<li><a href="#orgf3d8346">Adding two random variables</a>
+<ul>
+<li><a href="#org3790d12">Expected Value</a></li>
+<li><a href="#orgc8013d2">Variance</a></li>
+<li><a href="#org1893e8a">Standard Deviation</a></li>
+</ul>
+</li>
+<li><a href="#org85897be">Multiplying two random variables</a>
+<ul>
+<li><a href="#orgc725fd6">Expected Value</a></li>
+<li><a href="#orgc69886d">Variance</a></li>
+<li><a href="#org04d0f96">Standard Deviation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org6bc51b6">Estimating the Probability distribution</a>
+<ul>
+<li><a href="#orgdfad07e">Estimating the Normal</a>
+<ul>
+<li><a href="#org0222f61">Mean of the Normal</a></li>
+<li><a href="#org1702ad1">Standard deviation of the normal</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org8876e16">Uncertain values</a>
+<ul>
+<li><a href="#orgdbc68b6">Sig Figs</a></li>
+<li><a href="#org77e6823">Additional approximations</a>
+<ul>
+<li><a href="#org090db29">Functions of uncertain values</a></li>
+<li><a href="#org4f1c6d7">Powers of uncertain values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfed06ff">Combining general uncertain values</a></li>
+<li><a href="#orge23dc02">Counting experiments</a></li>
+<li><a href="#org58c66bf">Mean and standard deviation</a>
+<ul>
+<li><a href="#org2820aea">Mean</a></li>
+<li><a href="#org35756eb">Standard Deviation</a></li>
+<li><a href="#orga653dac">Standard deviation of the mean SDOM</a></li>
+<li><a href="#org6bbd580">Systematic error</a></li>
+</ul>
+</li>
+<li><a href="#org0cd10b3">End</a></li>
+<li><a href="#org30451bc">LEFT OVER</a>
+<ul>
+<li><a href="#orgf5404a8">two normally distributed variables</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf884f8f" class="outline-2">
+<h2 id="orgf884f8f">Intro</h2>
+<div class="outline-text-2" id="text-orgf884f8f">
+<p>
+A digest of basic statistics from reading John Taylor's <i>An Introduction to Error Analysis: The Study of Uncertainties in Physical Measurements</i>
+</p>
+
+<p>
+The book generally works "backwards": Starting from useful principles of working with uncertain values and then working through the justification and proofs. Since this is a quick digest and personal referesher/reference, the order is opposite of that presented in the book. When it makes sense I had inserted some MATLAB/Octave code to demonstrate things
+</p>
+</div>
+</div>
+<div id="outline-container-org4df5c04" class="outline-2">
+<h2 id="org4df5c04">Probability density functions (PDFs)</h2>
+<div class="outline-text-2" id="text-org4df5c04">
+<p>
+Probability density functions (PDFs) are the basic functions that describe a random variable. The basic property of a PDF is that it can be integrated between two values to get a probability that your random variable will generate a value between those two integration bounds. B/c the random variable will have <i>some</i> value, if you integrate between -&infin; and &infin; the probability necessarily must be 1 (ie. 100%) - so this places a constraint on which functions are valid PDFs.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-octave">plot_range <span style="color: #483d8b;">=</span> 5
+sigma <span style="color: #483d8b;">=</span> 1
+center <span style="color: #483d8b;">=</span> 3
+tau <span style="color: #483d8b;">=</span> 3.5
+t <span style="color: #483d8b;">=</span> [<span style="color: #483d8b;">-</span>10<span style="color: #483d8b;">*</span>plot_range<span style="color: #483d8b;">:</span>plot_range<span style="color: #483d8b;">/</span>100<span style="color: #483d8b;">:</span>plot_range]
+plot(t<span style="color: #483d8b;">,</span>(1<span style="color: #483d8b;">/</span>tau)<span style="color: #483d8b;">*</span>exp(<span style="color: #483d8b;">-</span>t<span style="color: #483d8b;">/</span>tau))
+<span style="color: #b22222;">%</span><span style="color: #b22222;">axis "off"</span>
+hold on<span style="color: #483d8b;">;</span>
+<span style="color: #b22222;">%</span><span style="color: #b22222;">integration_xs = [a:(plot_range/50):b]</span>
+<span style="color: #b22222;">%</span><span style="color: #b22222;">area(integration_xs,normal_dist(integration_xs,center,sigma), "facecolor",[0.74 0.9 1.0])</span>
+print <span style="color: #8b2252;">"-S720,160"</span> <span style="color: #8b2252;">"exponential.svg"</span>
+hold off<span style="color: #483d8b;">;</span>
+</pre>
+</div>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./exponential.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga49ec5e" class="outline-3">
+<h3 id="orga49ec5e">Example: Normal distribution</h3>
+<div class="outline-text-3" id="text-orga49ec5e">
+<p>
+The most common PDF is the <i>normal distribution</i> and it'll serve as a frequent example
+</p>
+
+<blockquote>
+<p>
+[1/(&sigma;&radic;2&pi;)] * e<sup>([x-X<sub>center</sub>]<sup>2</sup>)/(2&sigma;<sup>2</sup>)</sup>
+</p>
+</blockquote>
+
+<p>
+It has two parameters, <b>&sigma;</b> and <b>X<sub>center</sub></b>. Other functions may have different parameters. As we will see later, in this case these two happen to correspond to the <i>mean</i> and <i>standard deviation</i>. This is not always the case for all PDFs.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [points] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">normal_dist</span>(xs<span style="color: #483d8b;">,</span> center<span style="color: #483d8b;">,</span> sigma)
+  normalization_factor <span style="color: #483d8b;">=</span> 1<span style="color: #483d8b;">/</span>(sigma<span style="color: #483d8b;">*</span>sqrt(2<span style="color: #483d8b;">*</span>pi))
+  points <span style="color: #483d8b;">=</span> normalization_factor <span style="color: #483d8b;">*</span> e<span style="color: #483d8b;">.^</span>(<span style="color: #483d8b;">-</span>((xs<span style="color: #483d8b;">-</span>center)<span style="color: #483d8b;">.^</span>2)<span style="color: #483d8b;">/</span>(2<span style="color: #483d8b;">*</span>sigma<span style="color: #483d8b;">^</span>2))
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<p>
+We can plot it to see how it looks
+</p>
+
+<div class="org-src-container">
+<pre class="src src-octave">plot_range <span style="color: #483d8b;">=</span> 5
+sigma <span style="color: #483d8b;">=</span> 1
+center <span style="color: #483d8b;">=</span> 3
+xs <span style="color: #483d8b;">=</span> [(center<span style="color: #483d8b;">-</span>plot_range)<span style="color: #483d8b;">:</span>(plot_range<span style="color: #483d8b;">/</span>50)<span style="color: #483d8b;">:</span>(center<span style="color: #483d8b;">+</span>plot_range)]
+plot(xs<span style="color: #483d8b;">,</span>normal_dist(xs<span style="color: #483d8b;">,</span> center<span style="color: #483d8b;">,</span> sigma))
+axis <span style="color: #8b2252;">"off"</span>
+print <span style="color: #8b2252;">"-S720,160"</span> <span style="color: #8b2252;">"normal.svg"</span>
+hold off<span style="color: #483d8b;">;</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./normal.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7934a01" class="outline-3">
+<h3 id="org7934a01">Probability densities</h3>
+<div class="outline-text-3" id="text-org7934a01">
+<p>
+It's important to note that a probability density function <i>f()</i> evaluated at a particular point <i>x<sub>0</sub></i> will <i>not</i> give you the probability of getting the value <i>x<sub>0</sub></i>
+</p>
+
+<p>
+A truely continious random variable will never generate the same value twice b/c you need to picture each <i>x<sub>i</sub></i> as having an infinite number of digits after the decimal. Any specific value <i>x<sub>0</sub></i> has a <i>zero</i> probability of occuring. Any value you've gotten will never reoccur (assuming infinite precision). Therefore the probability of <i>x<sub>0</sub></i> is not a meaingful value nor does <i>f(x<sub>0</sub>)</i> represent it. None the less, given some measured values <i>x<sub>0</sub></i> <i>x<sub>1</sub></i> <i>x<sub>2</sub></i> .. we still want to be able to have some way to think about how they relate to their associated probability distribution. Saying the probability is just zero for all <i>x<sub>i</sub></i> is not particularly useful.
+</p>
+
+<p>
+We sidestep the issue by leveraging the definition of the integral of the PDF. The integrating the PDF gives us a probability. If we take a <i>f(x<sub>i</sub></i> and multiply it times a very small value <i>dx</i> then it will give us the immediate area under the function at <i>f(x<sub>i</sub></i> which will be equivalent to the integral from <i>x_[0}-dx/2</i> to <i>x_[0}+dx/2</i> given a small enough <i>dx</i>. Ofcourse as this <i>dx</i> goes to zero this area/probability will also go to zero as well. However as long as the <i>dx</i> is a fixed tiny value then when we compare the tiny probability <i>f(x<sub>0</sub>)dx</i> wih the tiny probability <i>f(x<sub>1</sub>)dx</i> and say something useful like which one is likely. In practive b/c all the <i>dx</i> values are the same we can in effect ignore/drop them and just looking at the factors  <i>f(x<sub>0</sub>)</i>, <i>f(x<sub>1</sub>)</i> etc.. to gauge the relative likelihood or different points
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaf442e8" class="outline-2">
+<h2 id="orgaf442e8">Derived values</h2>
+<div class="outline-text-2" id="text-orgaf442e8">
+<p>
+The unusal thing aboutrandom variables is that we can often skip their probability distributions entirely and summerizing the with just the <i>mean</i> and <i>variance</i>. Sometimes, like in the case of the normal distribution, these values directly match parameters of the underlying distribution (but this isn't necessarily true). What's surprising is that even after we've reduced the underlying probability distributions to a <i>mean</i> and <i>variance</i> we can still, in a limited way, safely manipulate and combine random variables without knowing their distributions at all.
+</p>
+</div>
+
+<div id="outline-container-org09e4d2c" class="outline-4">
+<h4 id="org09e4d2c">Expected Value</h4>
+<div class="outline-text-4" id="text-org09e4d2c">
+<p>
+The expected value of a random variable is the "average" of the probability distribution. Usually written as <b>E[x]</b>. For continious functions this translates to the integral <i>&int;f(x)&times;x</i> from  -&infin; to &infin;
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge034ffc" class="outline-4">
+<h4 id="orge034ffc">Variance</h4>
+<div class="outline-text-4" id="text-orge034ffc">
+<p>
+The variance is a value to describe how much the random variable differs from its <i>expected value</i>
+</p>
+
+<blockquote>
+<p>
+<b>Var[x]= E[(E[x]-x)<sup>2</sup>]</b>
+</p>
+</blockquote>
+<p>
+The power-of-2 ensures that the you are integrating over positive values and it's simply easier than dealing with the absolute value operator. However do bear in mind that squaring gives extra weight to larger deviations. Ofcourse note that if the expected value of the random variable is <b>0</b> then the variance is just <b>E[x<sup>2</sup>]</b> or <i>&int;(f(x))<sup>2</sup></i>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7d64e40" class="outline-4">
+<h4 id="org7d64e40">Standard deviation</h4>
+<div class="outline-text-4" id="text-org7d64e40">
+<p>
+The <i>standard deviation</i> is just the square root of the variance and denoted with <i>&sigma;</i>: 
+</p>
+<blockquote>
+<p>
+<b>Var[x] = &sigma;<sub>x</sub><sup>2</sup></b>
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org579e921" class="outline-3">
+<h3 id="org579e921">SigFigs</h3>
+<div class="outline-text-3" id="text-org579e921">
+<p>
+In many cases, like when taking a measurement with an instrument, we are given values in the form of an <i>expected value</i> plus/minus a <i>standard deviation</i>.  The underlying probability distribution will often either be infered from context or irrelevant. When you derive values from these numbers they will also be in the same form.
+</p>
+
+<p>
+Uncertainties/standard-deviation should typically be one digit. And they should be rounded to be on the order of the significant figure.
+</p>
+<blockquote>
+<p>
+2.45 &plusmn; 0.04
+</p>
+</blockquote>
+
+<p>
+In some cases you may want to leave more sigfigs in the uncertainty like if the number is two significant figures and the first digit is small
+</p>
+<blockquote>
+<p>
+1.3 &plusmn; 0.4<br>
+1.3 &plusmn; 0.37
+</p>
+</blockquote>
+<p>
+You can also express the uncertainty as a a fraction or a percentage. Given an uncertainty
+</p>
+<blockquote>
+<p>
+x<sub>0</sub> &plusmn; &delta;x<sub>0</sub>
+</p>
+</blockquote>
+<p>
+You would write is as
+</p>
+<blockquote>
+<p>
+x<sub>0</sub> with a  [100*&delta;x<sub>0</sub>/x<sub>0</sub>]  percent uncertainty<br>
+or<br>
+x<sub>0</sub> &plusmn; xx%
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [value<span style="color: #483d8b;">,</span> fractional] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainty2fractional</span>(x<span style="color: #483d8b;">,</span> dx)
+  value <span style="color: #483d8b;">=</span> x
+  fractional <span style="color: #483d8b;">=</span> (dx<span style="color: #483d8b;">/</span>x)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave">[x fx]  <span style="color: #483d8b;">=</span> uncertainty2fractional(50<span style="color: #483d8b;">,</span>25)
+ans <span style="color: #483d8b;">=</span> [x fx]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #0000ff;">| 50 | 0.5 |</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [value<span style="color: #483d8b;">,</span> uncertainty] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">fractional2uncertainty</span>(x<span style="color: #483d8b;">,</span> fx)
+  value <span style="color: #483d8b;">=</span> x
+  uncertainty <span style="color: #483d8b;">=</span> x<span style="color: #483d8b;">*</span>fx
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave">[x dx]  <span style="color: #483d8b;">=</span> fractional2uncertainty(50<span style="color: #483d8b;">,</span>0.5)
+ans <span style="color: #483d8b;">=</span> [x dx]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #0000ff;">| 50 | 25 |</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf3d8346" class="outline-3">
+<h3 id="orgf3d8346">Adding two random variables</h3>
+<div class="outline-text-3" id="text-orgf3d8346">
+</div>
+<div id="outline-container-org3790d12" class="outline-4">
+<h4 id="org3790d12">Expected Value</h4>
+<div class="outline-text-4" id="text-org3790d12">
+<p>
+If we add two random variables <b>z=x+y</b> then, regardless of their underlying probability distributions, their estimated values will add directly.
+</p>
+<blockquote>
+<p>
+<b>E[z] = E[x+y] = E[x] + E[y]</b>
+</p>
+</blockquote>
+<p>
+This is a consequence of integrals of sums <i>&int;(f(x)&times;x+g(x)&times;x) = &int;f(x)&times;x+&int;g(x)&times;x</i>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc8013d2" class="outline-4">
+<h4 id="orgc8013d2">Variance</h4>
+<div class="outline-text-4" id="text-orgc8013d2">
+<p>
+The variance will also add directly, irrespective of distribution, as long as <i>x</i> and <i>y</i> are not correlated. To see this, imagine for simplicity that you have two random variables <b>x</b> and <b>y</b> that have an expected value of <b>0</b>.  We will say the random variable <b>z</b> is their sum <b>z=x+y</b>
+</p>
+
+<blockquote>
+<p>
+E[x] = 0 <br>
+Var(x) = E[0 - x<sup>2</sup>] = E[x<sup>2</sup>] <br>
+E[y] = 0 <br>
+Var(y) = E[0 - y<sup>2</sup>] = E[y<sup>2</sup>] <br>
+E[z] = E[x] + E[y] = 0 <br>
+Var[z]= E[(E[z]-(z))<sup>2</sup>] = E[(0-(x+y))<sup>2</sup>] = E[(x+y)<sup>2</sup>] = E[x<sup>2</sup>+y<sup>2</sup>+xy] = E[x<sup>2</sup>] + E[y<sup>2</sup>] + E[xy]
+</p>
+</blockquote>
+
+<p>
+As long as <i>x</i> and <i>y</i> are uncorrelated, we can split the last term <b>E[xy]</b> into <b>E[x]*E[y]</b> to see that it is equal to <b>0</b>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1893e8a" class="outline-4">
+<h4 id="org1893e8a">Standard Deviation</h4>
+<div class="outline-text-4" id="text-org1893e8a">
+<p>
+This leave the standard deviation as the "quadrature sum" of the two random variables
+</p>
+
+<blockquote>
+<p>
+&sigma;<sub>z</sub> = &radic;[E[x<sup>2</sup>] + E[y<sup>2</sup>]] = &radic;(&sigma;<sub>x</sub><sup>2</sup> + &sigma;<sub>z</sub><sup>2</sup>)
+</p>
+</blockquote>
+
+<p>
+Combining the two:
+</p>
+
+<blockquote>
+<p>
+(x&plusmn;&delta;x) + (y&plusmn;&delta;y) = q&plusmn;&delta;q<br>
+q = x+y<br>
+&delta;q = &radic;{&delta;x<sup>2</sup>+&delta;y<sup>2</sup>}
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [z<span style="color: #483d8b;">,</span> dz] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainSum</span>(x<span style="color: #483d8b;">,</span> dx<span style="color: #483d8b;">,</span> y<span style="color: #483d8b;">,</span> dy)
+  z <span style="color: #483d8b;">=</span> x <span style="color: #483d8b;">+</span> y
+  dz <span style="color: #483d8b;">=</span> sqrt(dx<span style="color: #483d8b;">^</span>2<span style="color: #483d8b;">+</span>dy<span style="color: #483d8b;">^</span>2)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave">[z dz] <span style="color: #483d8b;">=</span> uncertainSum(10<span style="color: #483d8b;">,</span> 1<span style="color: #483d8b;">,</span> 20<span style="color: #483d8b;">,</span> 3)
+ans <span style="color: #483d8b;">=</span> [z dz]
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org85897be" class="outline-3">
+<h3 id="org85897be">Multiplying two random variables</h3>
+<div class="outline-text-3" id="text-org85897be">
+</div>
+<div id="outline-container-orgc725fd6" class="outline-4">
+<h4 id="orgc725fd6">Expected Value</h4>
+<div class="outline-text-4" id="text-orgc725fd6">
+<p>
+Working as before.. taking the product of two random variables <b>x</b> and <b>y</b>
+</p>
+<blockquote>
+<p>
+E[z] = E[x] &times; E[y]
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgc69886d" class="outline-4">
+<h4 id="orgc69886d">Variance</h4>
+<div class="outline-text-4" id="text-orgc69886d">
+<p>
+Again we choose <b>x</b> and <b>y</b> to have an expected value of <b>0</b>.  <b>z</b> will be their product <b>z=x&times;y</b>
+</p>
+
+<p>
+We start directly with our equation for the variance
+</p>
+<blockquote>
+<p>
+Var(xy) = E[(xy-XY)<sup>2</sup>]
+</p>
+</blockquote>
+<p>
+The inner term we can be factorize into a sum
+</p>
+<blockquote>
+<p>
+xy-XY = XY(xy/XY-1) <br>
+=XY&times;( ((x-X)/X+X/X)((y-Y)/Y+Y/Y)-1 )<br>
+=XY&times;( (x-X)&times;Y/XY + (y-Y)&times;X/XY + (x-X)(y-Y)/XY)<br>
+=XY&times;( (x-X)&times;/X + (y-Y)&times;/Y + (x-X)(y-Y)/XY)<br>
+</p>
+</blockquote>
+<p>
+The last term is very small so we drop it
+</p>
+<blockquote>
+<p>
+xy-XY &cong; XY&times;( (x-X)&times;/X + (y-Y)&times;/Y<br>
+</p>
+</blockquote>
+<p>
+But we need the expected value of the square of this value, so we look at its square
+</p>
+<blockquote>
+<p>
+(xy-XY)<sup>2</sup> &cong;  X<sup>2</sup>Y<sup>2</sup>&times;( (x-X)<sup>2</sup>/X<sup>2</sup> + (y-Y)<sup>2</sup>/Y<sup>2</sup> + 2(x-X)<sup>2</sup>(y-Y)<sup>2</sup>/X<sup>2</sup>Y<sup>2</sup> )
+</p>
+</blockquote>
+<p>
+The last term is again small and is dropped
+</p>
+<blockquote>
+<p>
+(xy-XY)<sup>2</sup> &cong;  X<sup>2</sup>Y<sup>2</sup>&times;( (x-X)<sup>2</sup>/X<sup>2</sup> + (y-Y)<sup>2</sup>/Y<sup>2</sup> )
+</p>
+</blockquote>
+<p>
+So finally the expected value of this (ie. the variance) will be:
+</p>
+<blockquote>
+<p>
+Var(xy) = E[(xy-XY)<sup>2</sup>] &cong; X<sup>2</sup>Y<sup>2</sup>&times; (Var(x)/X<sup>2</sup> + Var(y)/Y<sup>2</sup>)
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org04d0f96" class="outline-4">
+<h4 id="org04d0f96">Standard Deviation</h4>
+<div class="outline-text-4" id="text-org04d0f96">
+<p>
+The standard deviation is the square root of the variance.. 
+</p>
+<blockquote>
+<p>
+&sigma;<sub>xy</sub> &cong; &radic; [X<sup>2</sup>Y<sup>2</sup>&times; Var(x)/X<sup>2</sup> + Var(y)/Y<sup>2</sup>]
+</p>
+</blockquote>
+<p>
+but typically you will this written in terms of fractional standard deviations b/c it makes the equation look more symmetric
+</p>
+<blockquote>
+<p>
+&sigma;<sub>xy</sub>/XY &cong; &radic;[(&sigma;<sub>x</sub>/X)<sup>2</sup> + (&sigma;<sub>y</sub>/Y)<sup>2</sup>]
+</p>
+</blockquote>
+<p>
+Now it's just a straight quatrature sum as before, but instead of standard deviations it's fractional standard deviations
+</p>
+
+<blockquote>
+<p>
+(x&plusmn;&delta;x) &times; (y&plusmn;&delta;y) = q&plusmn;&delta;q<br>
+q = x&times;y<br>
+&delta;q/q = &radic;{(&delta;x/x)<sup>2</sup> + (&delta;y/y)<sup>2</sup>}
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [z<span style="color: #483d8b;">,</span> dz] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainProduct</span>(x<span style="color: #483d8b;">,</span> dx<span style="color: #483d8b;">,</span> y<span style="color: #483d8b;">,</span> dy)
+  [x fx] <span style="color: #483d8b;">=</span> uncertainty2fractional(x<span style="color: #483d8b;">,</span> dx)
+  [y fy] <span style="color: #483d8b;">=</span> uncertainty2fractional(y<span style="color: #483d8b;">,</span> dy)
+  z <span style="color: #483d8b;">=</span> x<span style="color: #483d8b;">*</span>y
+  dz <span style="color: #483d8b;">=</span> z<span style="color: #483d8b;">*</span>sqrt(fx<span style="color: #483d8b;">^</span>2<span style="color: #483d8b;">+</span>fy<span style="color: #483d8b;">^</span>2)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [z<span style="color: #483d8b;">,</span> dz] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainDivision</span>(x<span style="color: #483d8b;">,</span> dx<span style="color: #483d8b;">,</span> y<span style="color: #483d8b;">,</span> dy)
+  [x fx] <span style="color: #483d8b;">=</span> uncertainty2fractional(x<span style="color: #483d8b;">,</span> dx)
+  [y fy] <span style="color: #483d8b;">=</span> uncertainty2fractional(y<span style="color: #483d8b;">,</span> dy)
+  z <span style="color: #483d8b;">=</span> x<span style="color: #483d8b;">/</span>y
+  dz <span style="color: #483d8b;">=</span> z<span style="color: #483d8b;">*</span>sqrt(fx<span style="color: #483d8b;">^</span>2<span style="color: #483d8b;">+</span>fy<span style="color: #483d8b;">^</span>2)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6bc51b6" class="outline-2">
+<h2 id="org6bc51b6">Estimating the Probability distribution</h2>
+<div class="outline-text-2" id="text-org6bc51b6">
+<p>
+While we now know how to manipulate and combine independent random variables, in a typically experimental scenario you simply start with a series of measurements. They have some underlying probability distribution <i>f()</i> who's paramters are unknown to us. But there is typically some meta information about the process that generated the measurements which tells you the general formula for the underlying random variable's probability function. Knowing the formula and the measurements we can go as far as writing a function for the cumulative probability of getting all a value in the vicinity of <i>x<sub>0</sub></i> and the <i>x<sub>1</sub></i> and then <i>x<sub>2</sub></i> &#x2026;
+</p>
+<blockquote>
+<p>
+<i>f(x<sub>0</sub>) dx</i> &times; <i>f(x<sub>1</sub>) dx</i> &times; <i>f(x<sub>2</sub>) dx</i> &times; ..
+</p>
+</blockquote>
+<p>
+It will have baked in some unknown distribution parameters <i>p<sub>1</sub>,p<sub>2</sub>..</i> - but this will clearly generate very small numbers - and the more measurements you have the smaller they will be. Furthermore as <i>dx</i> gets samller this number will decrease further. As we'll see, the value we choose for <i>dx</i> doesn't actually matter and so we ommit it, but do remember that the unerlying random variable <i>x</i> is continious and the <i>f(x<sub>i</sub>)</i> values are <i>not</i> a probability of getting a value /x<sub>i</sub> 
+</p>
+<blockquote>
+<p>
+<i>f(x<sub>0</sub>)&times;f(x<sub>1</sub>)&times;f(x<sub>2</sub>)&times; ..</i>
+</p>
+</blockquote>
+<p>
+The last step is to "guess" those parameters <i>p<sub>1</sub>,p<sub>2</sub>..</i> that maximize this function b/c the best function we can guess is the one that makes these measurements the most likely. This will be our best estimate for the probability distribution. As is most often the case maximization is done by differentiation and setting the result to zero.
+</p>
+</div>
+
+<div id="outline-container-orgdfad07e" class="outline-3">
+<h3 id="orgdfad07e">Estimating the Normal</h3>
+<div class="outline-text-3" id="text-orgdfad07e">
+<p>
+As a motivating example, and one that is eminently useful, we will estimate the parameters of the normal distribution given some measurements <i>x<sub>0</sub></i> <i>x<sub>1</sub></i> <i>x<sub>2</sub></i>  .. 
+We start off by writing out the measurements' cumulative probability
+</p>
+<blockquote>
+<p>
+<i>f(x<sub>0</sub>) dx</i> &times; <i>f(x<sub>1</sub>) dx</i> &times; <i>f(x<sub>2</sub>) dx</i> &times; ..
+</p>
+</blockquote>
+<p>
+We know (somehow) that the random variable is normal, so that means:<br>
+<i>f(x)</i> = [1/(&sigma;&radic;2&pi;)]  e<sup>([x-X<sub>center</sub>]<sup>2</sup>)/(2&sigma;<sup>2</sup>)</sup><br>
+Plugging it in, we get a cumulative probability will be
+</p>
+<blockquote>
+<p>
+[1/(&sigma;&radic;2&pi;)]<sup>n</sup>  e<sup>&sum; ([x<sub>i</sub>-X<sub>center</sub>]<sup>2</sup>)/(2&sigma;<sup>2</sup>)</sup> dx<sup>n</sup>
+</p>
+</blockquote>
+<p>
+<i>X<sub>center</sub></i> and <i>&sigma;</i> are our two unknow parameters
+</p>
+</div>
+
+<div id="outline-container-org0222f61" class="outline-4">
+<h4 id="org0222f61">Mean of the Normal</h4>
+<div class="outline-text-4" id="text-org0222f61">
+<p>
+As stated before, the best estimate we can make is the one that will make the cumulative probability highest. It's the distribution that would have had the best chance of generating these measurements. 
+</p>
+
+<p>
+We now want to find which <i>mean</i>, <i>X<sub>center</sub></i>, would maximize the cumulative probability of our measurements. Fortunately here, even though the cumulative probability equation is a bit complicated, we only need to maximize the exponent part. Everything else is not simply not function of <i>X<sub>center</sub></i>.
+</p>
+<blockquote>
+<p>
+&sum; (x<sub>i</sub>-X<sub>center</sub>)<sup>2</sup>/(2&sigma;<sup>2</sup>)
+</p>
+</blockquote>
+<p>
+To find its maximum we differentiating and set equal to zero:
+</p>
+<blockquote>
+<p>
+&sum; (x<sub>i</sub>-X<sub>center</sub>) = 0
+</p>
+</blockquote>
+
+<p>
+Which gives us a 
+</p>
+<blockquote>
+<p>
+X<sub>center</sub> = &sum;x<sub>i</sub>/N
+</p>
+</blockquote>
+<p>
+An important thing to note at this point is that the final result is luckily completely independent of <i>&sigma;</i>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1702ad1" class="outline-4">
+<h4 id="org1702ad1">Standard deviation of the normal</h4>
+<div class="outline-text-4" id="text-org1702ad1">
+<p>
+To estimate an optimal standard deviation for the normal distribution we follow the same general pattern as with the mean. We differentiate with respect to the variable we're interested in, &sigma;, and then solve for when it's equal to zero to find the <i>&sigma;</i> that maximizes the likelyhood of generating the measurements
+</p>
+
+<p>
+The first complication is that unfortunately we can't just maximize the exponent in this case b/c there is a /sigma in the factor in front as well as in the exponent. So we need to differentiate the whole cumulative probability to find the maximum.
+</p>
+<blockquote>
+<p>
+d/d&sigma;  [1/(&sigma;&radic;2&pi;)]<sup>n</sup>  e<sup>&sum; ([x<sub>i</sub>-X<sub>center</sub>]<sup>2</sup>)/(2&sigma;<sup>2</sup>)</sup><br>
+</p>
+</blockquote>
+<p>
+this is a bit messy.. but is done by differentiating by-parts<br>
+(Note that I've dropped the <i>dx<sup>n</sup></i> factor at the end b/c it's superfluous and has no bearing on maximizing the function)
+</p>
+<blockquote>
+<p>
+&sigma;<sub>best-estimate</sub> = &radic; (1/N) &sum;(x<sub>i</sub>-X<sub>center</sub>)<sup>2</sup>
+</p>
+</blockquote>
+<p>
+The next issue we see is that the solution for parameter <i>&sigma;</i> is a function of parameter <i>X<sub>center</sub></i> which we also don't know. The best we can do here is to subsitute in the best estimate we'd just found in the previous section:  <i>&sum;x<sub>i</sub>/N</i>
+</p>
+
+<p>
+This unfortunately introducing a bias! The estimated mean is such that the measurments are situated "optimally" around it. The true mean, whatever it is, will be <i>guaranteed</i> to be worse relative to our measurements and so the measurements in actuality deviate more from the mean than estimated. The true  X<sub>center</sub> of the underlying random variable will not be perfectly centered and the true standard deviation will always be a bit higher. The more correct estimate for &sigma; will be:
+</p>
+<blockquote>
+<p>
+&sigma;<sub>best-estimate</sub> = &radic; (1/[N-1]) &sum;(x<sub>i</sub>-X<sub>center</sub>)<sup>2</sup>
+</p>
+</blockquote>
+<p>
+Proof of this is ommitted.. but do note that as N gets larger this bias get insignificant
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8876e16" class="outline-2">
+<h2 id="org8876e16">Uncertain values</h2>
+<div class="outline-text-2" id="text-org8876e16">
+<p>
+To "summarize" a random variable, we will often simply quote it as an <i>expected-value</i> plus/minus a <i>standard deviation</i> (or our best estimates of the two). The underlying probability distribution will often either be infered from context or irrelevant. Most typically the quoted value will be a mean of some normally distributed random variable and the standard deviation will be the standard deviation of the mean (SDOM):
+</p>
+<blockquote>
+<p>
+&sigma;<sub>mean</sub>=&sigma; /&radic;N
+</p>
+</blockquote>
+</div>
+<div id="outline-container-orgdbc68b6" class="outline-3">
+<h3 id="orgdbc68b6">Sig Figs</h3>
+<div class="outline-text-3" id="text-orgdbc68b6">
+<p>
+Uncertainties should typically be one digit. And they should be rounded to be on the order of the significant figure.
+</p>
+<blockquote>
+<p>
+2.45 &plusmn; 0.04
+</p>
+</blockquote>
+
+<p>
+In some cases you may want to leave more sigfigs in the uncertainty like if the number is two significant figures and the first digit is small
+</p>
+<blockquote>
+<p>
+1.3 &plusmn; 0.4<br>
+1.3 &plusmn; 0.37
+</p>
+</blockquote>
+<p>
+You can also express the uncertainty as a a fraction or a percentage. Given an uncertainty
+</p>
+<blockquote>
+<p>
+x<sub>0</sub> &plusmn; &delta;x<sub>0</sub>
+</p>
+</blockquote>
+<p>
+You would write is as
+</p>
+<blockquote>
+<p>
+x<sub>0</sub> with a  [100*&delta;x<sub>0</sub>/x<sub>0</sub>]  percent uncertainty<br>
+or<br>
+x<sub>0</sub> &plusmn; xx%
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [value<span style="color: #483d8b;">,</span> fractional] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainty2fractional</span>(x<span style="color: #483d8b;">,</span> dx)
+  value <span style="color: #483d8b;">=</span> x
+  fractional <span style="color: #483d8b;">=</span> (dx<span style="color: #483d8b;">/</span>x)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave">[x fx]  <span style="color: #483d8b;">=</span> uncertainty2fractional(50<span style="color: #483d8b;">,</span>25)
+ans <span style="color: #483d8b;">=</span> [x fx]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #0000ff;">| 50 | 0.5 |</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [value<span style="color: #483d8b;">,</span> uncertainty] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">fractional2uncertainty</span>(x<span style="color: #483d8b;">,</span> fx)
+  value <span style="color: #483d8b;">=</span> x
+  uncertainty <span style="color: #483d8b;">=</span> x<span style="color: #483d8b;">*</span>fx
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave">[x dx]  <span style="color: #483d8b;">=</span> fractional2uncertainty(50<span style="color: #483d8b;">,</span>0.5)
+ans <span style="color: #483d8b;">=</span> [x dx]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #0000ff;">| 50 | 25 |</span>
+</pre>
+</div>
+
+<p>
+As we saw before, means and standard deviations combine the same, irrespective of the underlying distribution
+</p>
+<blockquote>
+<p>
+(x&plusmn;&delta;x) + (y&plusmn;&delta;y) = q&plusmn;&delta;q<br>
+q = x+y<br>
+&delta;q = &radic;{&delta;x<sup>2</sup>+&delta;y<sup>2</sup>}
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [z<span style="color: #483d8b;">,</span> dz] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainSum</span>(x<span style="color: #483d8b;">,</span> dx<span style="color: #483d8b;">,</span> y<span style="color: #483d8b;">,</span> dy)
+  z <span style="color: #483d8b;">=</span> x <span style="color: #483d8b;">+</span> y
+  dz <span style="color: #483d8b;">=</span> sqrt(dx<span style="color: #483d8b;">^</span>2<span style="color: #483d8b;">+</span>dy<span style="color: #483d8b;">^</span>2)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave">[z dz] <span style="color: #483d8b;">=</span> uncertainSum(10<span style="color: #483d8b;">,</span> 1<span style="color: #483d8b;">,</span> 20<span style="color: #483d8b;">,</span> 3)
+ans <span style="color: #483d8b;">=</span> [z dz]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #0000ff;">| 30 | 3.16227766016838 |</span>
+</pre>
+</div>
+
+<blockquote>
+<p>
+(x&plusmn;&delta;x) &times; (y&plusmn;&delta;y) = q&plusmn;&delta;q<br>
+q = x&times;y<br>
+&delta;q/q = &radic;{(&delta;x/x)<sup>2</sup> + (&delta;y/y)<sup>2</sup>}
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [z<span style="color: #483d8b;">,</span> dz] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainProduct</span>(x<span style="color: #483d8b;">,</span> dx<span style="color: #483d8b;">,</span> y<span style="color: #483d8b;">,</span> dy)
+  [x fx] <span style="color: #483d8b;">=</span> uncertainty2fractional(x<span style="color: #483d8b;">,</span> dx)
+  [y fy] <span style="color: #483d8b;">=</span> uncertainty2fractional(y<span style="color: #483d8b;">,</span> dy)
+  z <span style="color: #483d8b;">=</span> x<span style="color: #483d8b;">*</span>y
+  dz <span style="color: #483d8b;">=</span> z<span style="color: #483d8b;">*</span>sqrt(fx<span style="color: #483d8b;">^</span>2<span style="color: #483d8b;">+</span>fy<span style="color: #483d8b;">^</span>2)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [z<span style="color: #483d8b;">,</span> dz] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainDivision</span>(x<span style="color: #483d8b;">,</span> dx<span style="color: #483d8b;">,</span> y<span style="color: #483d8b;">,</span> dy)
+  [x fx] <span style="color: #483d8b;">=</span> uncertainty2fractional(x<span style="color: #483d8b;">,</span> dx)
+  [y fy] <span style="color: #483d8b;">=</span> uncertainty2fractional(y<span style="color: #483d8b;">,</span> dy)
+  z <span style="color: #483d8b;">=</span> x<span style="color: #483d8b;">/</span>y
+  dz <span style="color: #483d8b;">=</span> z<span style="color: #483d8b;">*</span>sqrt(fx<span style="color: #483d8b;">^</span>2<span style="color: #483d8b;">+</span>fy<span style="color: #483d8b;">^</span>2)
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org77e6823" class="outline-3">
+<h3 id="org77e6823">Additional approximations</h3>
+<div class="outline-text-3" id="text-org77e6823">
+</div>
+<div id="outline-container-org090db29" class="outline-4">
+<h4 id="org090db29">Functions of uncertain values</h4>
+<div class="outline-text-4" id="text-org090db29">
+<p>
+When values go through a function, then the uncertainties of the value lead to uncertainties in the function result. Given a function that takes <i>x</i> to <i>q</i>, ie.  <i>q = f(x)</i>, and given a meaurement <i>x<sub>0</sub></i> with an uncertainty  <i>&delta;x<sub>0</sub></i> - we need to be able to propagate the uncertainty so that we can give the resulting <i>q<sub>0</sub></i> a <i>&delta;q<sub>0</sub></i>. 
+</p>
+
+<p>
+The trick is that if the uncertainty is relatively small then we can approximate the uncertainty as locally linear around <i>q<sub>0</sub></i>. If we determine the slope at <i>q<sub>0</sub></i> then we can see how a small change <i>&delta;x<sub>0</sub></i> would change the output <i>q<sub>0</sub></i>. Once we have this slope it's just a matter of multiplying the <i>&delta;x</i> by it to get the resulting small change would in <i>q<sub>0</sub></i> - which is our <i>&delta;q<sub>0</sub></i>.
+</p>
+
+<p>
+To get the local slope we take the derivative of our function
+</p>
+
+<blockquote>
+<p>
+&delta;q=(&part;f(x)  / &part;x ) &delta;x
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org4f1c6d7" class="outline-4">
+<h4 id="org4f1c6d7">Powers of uncertain values</h4>
+<div class="outline-text-4" id="text-org4f1c6d7">
+<p>
+Given an equation <i>x<sup>n</sup></i> we would like to know the uncertainty in the output for some input point <i>x<sub>0</sub></i> which has an uncertainty of its own of <i>&delta;x<sub>0</sub></i>.
+</p>
+
+<p>
+Using the previous section, we take the derivative and we know that the slope of the function is <i>nx<sub>0</sub><sup>n-1</sup></i> at <i>x<sub>0</sub></i>. So we can say that uncertainty in the output is <i>nx<sub>0</sub><sup>n-1</sup>&delta;x<sub>0</sub></i>.
+</p>
+
+<p>
+However, observe that the fractional uncertainty that comes out is much simpler. We dividing the output uncertainty by the output value  and get the simple equation
+</p>
+<blockquote>
+<p>
+[nx<sub>0</sub><sup>n-1</sup>&delta;x<sub>0</sub>] / [x<sub>0</sub><sup>n</sup>]
+</p>
+
+<p>
+=
+</p>
+
+<p>
+n[&delta;x<sub>0</sub>/x<sub>0</sub>]
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #a020f0;">function</span> [z<span style="color: #483d8b;">,</span> dz] <span style="color: #483d8b;">=</span> <span style="color: #0000ff;">uncertainPower</span>(x<span style="color: #483d8b;">,</span> dx<span style="color: #483d8b;">,</span> n)
+  [x fx] <span style="color: #483d8b;">=</span> uncertainty2fractional(x<span style="color: #483d8b;">,</span> dx)
+  z <span style="color: #483d8b;">=</span> x<span style="color: #483d8b;">^</span>n
+  dz <span style="color: #483d8b;">=</span> z<span style="color: #483d8b;">*</span>n<span style="color: #483d8b;">*</span>fx
+<span style="color: #a020f0;">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfed06ff" class="outline-2">
+<h2 id="orgfed06ff">Combining general uncertain values</h2>
+<div class="outline-text-2" id="text-orgfed06ff">
+<p>
+Differentiation of a function with respect to a variable gives us the slope at every point. A slope tell us how severly any small change in that variable at any given point will affects the output. 
+</p>
+
+<p>
+In our case the uncertainty of a variable represents the range the value can "change". 
+</p>
+
+<p>
+Writing it out mathematically, given a a function <i>q</i> that takes an input variable <i>x</i>, the partial-differentiation <i>(&part;q / &part;x)</i> gives us this slope for all <i>x</i>, ie the rate of change of <i>q</i> for every at every value of <i>x</i>. We then evaluate it at a given measurement point <i>x<sub>0</sub></i> and this give us an instantaneous slop which represents the sensitivity of the function to change at the point. Once we multiply this slope/sensitivity times that's point's uncertainty we get out how much the output will be uncertain.
+</p>
+
+<p>
+When we have multiple variables affecting the output then we repeat these calculations and add them in quadriture. 
+</p>
+
+<blockquote>
+<p>
+&delta;q = &radic;[(&part;q/&part;x)&delta;x)<sup>2</sup> + &#x2026; + (&part;q/&part;z)&delta;z)<sup>2</sup>]
+</p>
+</blockquote>
+
+<p>
+Each term is the uncertainty of that one variable's effect on the output of the overall function
+</p>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-orge23dc02" class="outline-2">
+<h2 id="orge23dc02">Counting experiments</h2>
+<div class="outline-text-2" id="text-orge23dc02">
+<p>
+If we measure the occurance of an event <i>N</i> times, then the uncertainty is <i>&radic;N</i>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org58c66bf" class="outline-2">
+<h2 id="org58c66bf">Mean and standard deviation</h2>
+<div class="outline-text-2" id="text-org58c66bf">
+</div>
+<div id="outline-container-org2820aea" class="outline-3">
+<h3 id="org2820aea">Mean</h3>
+<div class="outline-text-3" id="text-org2820aea">
+<blockquote>
+<p>
+[1/N] &sum;  x<sub>i</sub>
+</p>
+</blockquote>
+</div>
+</div>
+<div id="outline-container-org35756eb" class="outline-3">
+<h3 id="org35756eb">Standard Deviation</h3>
+<div class="outline-text-3" id="text-org35756eb">
+<p>
+<i>Sample</i> standard deviation
+</p>
+<blockquote>
+<p>
+&sigma;<sub>x</sub>=&radic; [1/(N-1)] &sum; (x<sub>i</sub>-x<sub>mean</sub>)<sup>2</sup>
+</p>
+</blockquote>
+<p>
+<i>Population</i> standard deviation
+</p>
+<blockquote>
+<p>
+&sigma;<sub>x</sub>=&radic; [1/N] &sum; (x<sub>i</sub>-x<sub>mean</sub>)<sup>2</sup>
+</p>
+</blockquote>
+<p>
+These values can be used as an uncertainty &delta;x - and should represent a 68% confidence interval
+</p>
+</div>
+</div>
+<div id="outline-container-orga653dac" class="outline-3">
+<h3 id="orga653dac">Standard deviation of the mean SDOM</h3>
+<div class="outline-text-3" id="text-orga653dac">
+<blockquote>
+<p>
+&sigma;<sub>mean</sub> = &sigma;<sub>x</sub>/[&radic;N]
+</p>
+</blockquote>
+<p>
+This represents the best estimate for <i>x</i>
+</p>
+</div>
+</div>
+<div id="outline-container-org6bbd580" class="outline-3">
+<h3 id="org6bbd580">Systematic error</h3>
+<div class="outline-text-3" id="text-org6bbd580">
+<p>
+Can not be reduced by additional measurements (denominator in SDOM)
+</p>
+<blockquote>
+<p>
+&delta;x<sub>total</sub>=&radic;(&delta;x<sub>random</sub>)<sup>2</sup>+(&delta;x<sub>systematic</sub>)<sup>2</sup>
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org0cd10b3" class="outline-2">
+<h2 id="org0cd10b3">End</h2>
+</div>
+<div id="outline-container-org30451bc" class="outline-2">
+<h2 id="org30451bc">LEFT OVER</h2>
+<div class="outline-text-2" id="text-org30451bc">
+<p>
+Coming back to the basics: we know that the probability of two events occuring is simply their product. We can apply this to our measurements and say that the probability of getting a value <i>x</i> and <i>y</i> is <i>f(x) &times; g(y)</i> where <i>f{}</i> and <i>g()</i> are the probability distributions of each variable
+</p>
+</div>
+<div id="outline-container-orgf5404a8" class="outline-3">
+<h3 id="orgf5404a8">two normally distributed variables</h3>
+<div class="outline-text-3" id="text-orgf5404a8">
+<p>
+If they're normally distributed (and for simplicity, with X<sub>center</sub>, Y<sub>center</sub> = 0)
+</p>
+
+<p>
+f(x) = [1/(&sigma;<sub>x</sub>&radic;2&pi;)] * e<sup>([x]<sup>2</sup>)/(2&sigma;<sub>x</sub><sup>2</sup>)</sup>
+</p>
+
+<p>
+g(y) = [1/(&sigma;<sub>y</sub>&radic;2&pi;)] * e<sup>([y]<sup>2</sup>)/(2&sigma;<sub>y</sub><sup>2</sup>)</sup>
+</p>
+
+<p>
+f(x) &times; g(y) = [1/(&sigma;<sub>x</sub>&radic;2&pi;)] * e<sup>([x]<sup>2</sup>)/(2&sigma;<sub>x</sub><sup>2</sup>)</sup> &times; [1/(&sigma;<sub>y</sub>&radic;2&pi;)] * e<sup>([y)/(2&sigma;<sub>y</sub><sup>2</sup>)</sup> <br>
+= [1/(&sigma;<sub>x</sub>&sigma;<sub>y</sub>2&pi;)]  &times;  e<sup>([x]<sup>2</sup>)/(2&sigma;<sub>x</sub><sup>2</sup> ) + ([y]<sup>2</sup>)/(2&sigma;<sub>y</sub><sup>2</sup>)</sup>
+</p>
+
+<p>
+This however only gets us 
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-octave"><span style="color: #b22222;">## </span><span style="color: #b22222;">plot_range = 5</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">sigma = 1</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">center = 3</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">a = 3.5</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">b = 5</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">xs = [(center-plot_range):(plot_range/50):(center+plot_range)]</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">plot(xs,normal_dist(xs, center, sigma))</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">axis "off"</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">hold on;</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">integration_xs = [a:(plot_range/50):b]</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">area(integration_xs,normal_dist(integration_xs,center,sigma), "facecolor",[0.74 0.9 1.0])</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">print "-S720,160" "normal-with-shade.svg"</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">hold off;</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
