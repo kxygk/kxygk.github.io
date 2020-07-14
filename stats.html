@@ -18,59 +18,68 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2aa4000">Intro</a></li>
-<li><a href="#orgaa264e8">Continious random variables</a></li>
-<li><a href="#org2bf5807">Probability density functions (PDFs)</a>
+<li><a href="#org954ea87">Intro</a></li>
+<li><a href="#org0f4098b">Continious random variables</a></li>
+<li><a href="#orge661ddd">Probability density functions (PDFs)</a>
 <ul>
-<li><a href="#orgfb3ce55">Example: Normal distribution</a></li>
-<li><a href="#org2b2c588">Probability densities</a></li>
-<li><a href="#org3e8da49">Estimating a PDF</a></li>
-<li><a href="#orgd6b4bcb">Example: Estimating the Normal</a></li>
+<li><a href="#org92e3b59">Example: Normal distribution</a></li>
+<li><a href="#org4ec7a6c">Probability densities</a></li>
+<li><a href="#org3ed2d21">Estimating a PDF</a></li>
+<li><a href="#org38398f9">Example: Estimating the Normal</a></li>
 </ul>
 </li>
-<li><a href="#org2a1ecc3">Descriptive statistics</a>
+<li><a href="#orgec90a3c">Descriptive statistics</a>
 <ul>
 <li>
 <ul>
-<li><a href="#org816ee4f">Expected Value/Mean</a></li>
-<li><a href="#org9524848">Variance</a></li>
-<li><a href="#org66c4c65">Standard deviation</a></li>
+<li><a href="#orgc95510e">Expected Value/Mean</a></li>
+<li><a href="#orgba40b00">Variance</a></li>
+<li><a href="#org5f96c8a">Standard deviation</a></li>
 </ul>
 </li>
-<li><a href="#org8352ab3">Estimating the Normal's descriptive statistics</a>
+<li><a href="#orgbea3163">Estimating the Normal's descriptive statistics</a>
 <ul>
-<li><a href="#org0238f8d">Mean of the Normal</a></li>
-<li><a href="#org7f0c03b">Standard deviation of the normal</a></li>
+<li><a href="#orgdf3143f">Mean of the Normal</a></li>
+<li><a href="#orga0bb2ca">Standard deviation of the normal</a></li>
 </ul>
 </li>
-<li><a href="#orgef6a3d6">SigFigs</a></li>
-<li><a href="#org96d1c6b">Adding two random variables</a>
+<li><a href="#org7077234">SigFigs</a></li>
+<li><a href="#orgd6fe588">Adding two random variables</a>
 <ul>
-<li><a href="#org54827d7">Expected Value</a></li>
-<li><a href="#org1f741e5">Variance</a></li>
-<li><a href="#org1bbe5a7">Standard Deviation</a></li>
-<li><a href="#orgc8030c9">SigFigs</a></li>
-<li><a href="#org0d09cb7">Example: Standard deviation of the mean (SDOM)</a></li>
+<li><a href="#org92b21a9">Expected Value</a></li>
+<li><a href="#org5d92335">Variance</a></li>
+<li><a href="#org88861cd">Standard Deviation</a></li>
+<li><a href="#org9451e3d">SigFigs</a></li>
+<li><a href="#orgeced457">Example: Standard deviation of the mean (SDOM)</a></li>
 </ul>
 </li>
-<li><a href="#orga4e65ec">Multiplying two random variables</a>
+<li><a href="#org0bde11c">Multiplying two random variables</a>
 <ul>
-<li><a href="#orgd5f051c">Expected Value</a></li>
-<li><a href="#org9f987f9">Variance</a></li>
-<li><a href="#org4679ced">Standard Deviation</a></li>
-<li><a href="#orgf320c7c">SigFigs</a></li>
+<li><a href="#org6b7fef5">Expected Value</a></li>
+<li><a href="#org5b7492a">Variance</a></li>
+<li><a href="#org8473506">Standard Deviation</a></li>
+<li><a href="#orgd12fe12">SigFigs</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgbc3a9f1">End</a></li>
+<li><a href="#orgef15972">Other Topics</a>
+<ul>
+<li><a href="#org7bbee3f">Data Rejection</a>
+<ul>
+<li><a href="#orgba50ad7">Chauvenet's Criterion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgee2fc31">End</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2aa4000" class="outline-2">
-<h2 id="org2aa4000">Intro</h2>
-<div class="outline-text-2" id="text-org2aa4000">
+<div id="outline-container-org954ea87" class="outline-2">
+<h2 id="org954ea87">Intro</h2>
+<div class="outline-text-2" id="text-org954ea87">
 <p>
 A digest of basic statistics from reading John Taylor's <i>An Introduction to Error Analysis: The Study of Uncertainties in Physical Measurements</i>
 </p>
@@ -80,18 +89,18 @@ The book generally works "backwards": Starting from useful principles of working
 </p>
 </div>
 </div>
-<div id="outline-container-orgaa264e8" class="outline-2">
-<h2 id="orgaa264e8">Continious random variables</h2>
-<div class="outline-text-2" id="text-orgaa264e8">
+<div id="outline-container-org0f4098b" class="outline-2">
+<h2 id="org0f4098b">Continious random variables</h2>
+<div class="outline-text-2" id="text-org0f4098b">
 <p>
 Are variables that when measured give a value of infinite precision. So no number can be measured twice
 </p>
 </div>
 </div>
 
-<div id="outline-container-org2bf5807" class="outline-2">
-<h2 id="org2bf5807">Probability density functions (PDFs)</h2>
-<div class="outline-text-2" id="text-org2bf5807">
+<div id="outline-container-orge661ddd" class="outline-2">
+<h2 id="orge661ddd">Probability density functions (PDFs)</h2>
+<div class="outline-text-2" id="text-orge661ddd">
 <p>
 Probability density functions (PDFs) are the basic functions that describe a continious random variable. The basic property of a PDF is that it can be integrated between any two value. The resulting value is the probability that your measurement will appear between the two values. Since each measurements yields <i>some</i> value, integrate between -&infin; and &infin; must be equal to 1 (ie. 100%). The condition places a constraint on which functions are valid PDFs.
 </p>
@@ -119,9 +128,9 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-orgfb3ce55" class="outline-3">
-<h3 id="orgfb3ce55">Example: Normal distribution</h3>
-<div class="outline-text-3" id="text-orgfb3ce55">
+<div id="outline-container-org92e3b59" class="outline-3">
+<h3 id="org92e3b59">Example: Normal distribution</h3>
+<div class="outline-text-3" id="text-org92e3b59">
 <p>
 The most common PDF is the <i>normal distribution</i> and it'll serve as a frequent example
 </p>
@@ -157,9 +166,9 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org2b2c588" class="outline-3">
-<h3 id="org2b2c588">Probability densities</h3>
-<div class="outline-text-3" id="text-org2b2c588">
+<div id="outline-container-org4ec7a6c" class="outline-3">
+<h3 id="org4ec7a6c">Probability densities</h3>
+<div class="outline-text-3" id="text-org4ec7a6c">
 <p>
 Again, because the random variable is continious, no value can be measured twice. We can see this in the PDF as well. If we integrate around some point x<sub>0</sub>. The integral from <i>x<sub>0</sub></i> to <i>x<sub>0</sub>+&delta;x</i> will go to zero as <i>&delta;x</i> goes to zero. We know that for very small integrals we can approximate them with the area of the immediate rectangle
 </p>
@@ -178,9 +187,9 @@ The size of the <i>&delta;x</i> isn't really important, but we can see that give
 </div>
 </div>
 
-<div id="outline-container-org3e8da49" class="outline-3">
-<h3 id="org3e8da49">Estimating a PDF</h3>
-<div class="outline-text-3" id="text-org3e8da49">
+<div id="outline-container-org3ed2d21" class="outline-3">
+<h3 id="org3ed2d21">Estimating a PDF</h3>
+<div class="outline-text-3" id="text-org3ed2d21">
 <p>
 Often in an experimental scenario we will get a series of measurements from which we woujld like to estimate a PDF. There is typically some meta information about the process that generated the values which tells you the general formula for the PDF.
 </p>
@@ -211,9 +220,9 @@ As is most often the case, maximization is done by differentiation and setting t
 </div>
 </div>
 
-<div id="outline-container-orgd6b4bcb" class="outline-3">
-<h3 id="orgd6b4bcb">Example: Estimating the Normal</h3>
-<div class="outline-text-3" id="text-orgd6b4bcb">
+<div id="outline-container-org38398f9" class="outline-3">
+<h3 id="org38398f9">Example: Estimating the Normal</h3>
+<div class="outline-text-3" id="text-org38398f9">
 <p>
 As an example, we can plug in the previously introduced <i>normal distribution</i> for the PDF <i>f(x)</i> and then assume some measurements <i>x<sub>0</sub></i> <i>x<sub>1</sub></i> <i>x<sub>2</sub></i>  .. 
 We know the PDF equation:
@@ -239,17 +248,17 @@ f(x<sub>0</sub>)&times;f(x<sub>1</sub>)&times;f(x<sub>2</sub>)&times; .. <br>
 </div>
 </div>
 
-<div id="outline-container-org2a1ecc3" class="outline-2">
-<h2 id="org2a1ecc3">Descriptive statistics</h2>
-<div class="outline-text-2" id="text-org2a1ecc3">
+<div id="outline-container-orgec90a3c" class="outline-2">
+<h2 id="orgec90a3c">Descriptive statistics</h2>
+<div class="outline-text-2" id="text-orgec90a3c">
 <p>
 A very unusual effect of continious random variables is that we can often skip their probability distributions entirely and summerizing them with just the <i>mean</i> and <i>variance</i>
 </p>
 </div>
 
-<div id="outline-container-org816ee4f" class="outline-4">
-<h4 id="org816ee4f">Expected Value/Mean</h4>
-<div class="outline-text-4" id="text-org816ee4f">
+<div id="outline-container-orgc95510e" class="outline-4">
+<h4 id="orgc95510e">Expected Value/Mean</h4>
+<div class="outline-text-4" id="text-orgc95510e">
 <p>
 The expected value of a random variable is the "average" of the probability distribution. Usually written as <b>E[x]</b>. For continious functions this translates to the integral 
 </p>
@@ -264,9 +273,9 @@ E[x] = &int;f(u)&times;u   &hellip; <i>(from  -&infin; to &infin;)</i>
 </div>
 </div>
 
-<div id="outline-container-org9524848" class="outline-4">
-<h4 id="org9524848">Variance</h4>
-<div class="outline-text-4" id="text-org9524848">
+<div id="outline-container-orgba40b00" class="outline-4">
+<h4 id="orgba40b00">Variance</h4>
+<div class="outline-text-4" id="text-orgba40b00">
 <p>
 The variance is a value to describe how much the random variable differs from its <i>expected value</i>
 </p>
@@ -284,9 +293,9 @@ The power-of-2 ensures that the you are integrating over positive values. If the
 </div>
 </div>
 
-<div id="outline-container-org66c4c65" class="outline-4">
-<h4 id="org66c4c65">Standard deviation</h4>
-<div class="outline-text-4" id="text-org66c4c65">
+<div id="outline-container-org5f96c8a" class="outline-4">
+<h4 id="org5f96c8a">Standard deviation</h4>
+<div class="outline-text-4" id="text-org5f96c8a">
 <p>
 The <i>standard deviation</i> is just the square root of the variance and denoted with <i>&sigma;</i>: 
 </p>
@@ -297,16 +306,16 @@ Var[x] = &sigma;<sub>x</sub><sup>2</sup>
 </blockquote>
 </div>
 </div>
-<div id="outline-container-org8352ab3" class="outline-3">
-<h3 id="org8352ab3">Estimating the Normal's descriptive statistics</h3>
-<div class="outline-text-3" id="text-org8352ab3">
+<div id="outline-container-orgbea3163" class="outline-3">
+<h3 id="orgbea3163">Estimating the Normal's descriptive statistics</h3>
+<div class="outline-text-3" id="text-orgbea3163">
 <p>
 The Normal Distributions is a bit unusual in that the mean and standard deviation are parameters of the PDF. So when we differentiate and solve for the PDF that fits our measurements we automatically end up with the best estimates for the mean and variance
 </p>
 </div>
-<div id="outline-container-org0238f8d" class="outline-4">
-<h4 id="org0238f8d">Mean of the Normal</h4>
-<div class="outline-text-4" id="text-org0238f8d">
+<div id="outline-container-orgdf3143f" class="outline-4">
+<h4 id="orgdf3143f">Mean of the Normal</h4>
+<div class="outline-text-4" id="text-orgdf3143f">
 <p>
 Finishing what we started before, we want to pick a <b>X<sub>center</sub></b> to maximize the cumulative probability of our measurements, which  was
 </p>
@@ -343,9 +352,9 @@ X<sub>center</sub> = &sum;x<sub>i</sub>/N
 </div>
 </div>
 
-<div id="outline-container-org7f0c03b" class="outline-4">
-<h4 id="org7f0c03b">Standard deviation of the normal</h4>
-<div class="outline-text-4" id="text-org7f0c03b">
+<div id="outline-container-orga0bb2ca" class="outline-4">
+<h4 id="orga0bb2ca">Standard deviation of the normal</h4>
+<div class="outline-text-4" id="text-orga0bb2ca">
 <p>
 To estimate an optimal standard deviation <b>&sigma;</b> we follow the procedure as with the mean <b>X<sub>center</sub></b>. We differentiate with respect to <b>&sigma;</b> and then solve for when it's equal to zero. Unlike before, we can't just maximize the exponent part b/c in this case there is a <b>/sigma{}</b> in the factor in front as well as in the exponent. So we need to differentiate <i>by-parts</i>
 </p>
@@ -378,9 +387,9 @@ Proof of this is ommitted.. but do note that as N gets larger this bias becomes 
 </div>
 </div>
 
-<div id="outline-container-orgef6a3d6" class="outline-3">
-<h3 id="orgef6a3d6">SigFigs</h3>
-<div class="outline-text-3" id="text-orgef6a3d6">
+<div id="outline-container-org7077234" class="outline-3">
+<h3 id="org7077234">SigFigs</h3>
+<div class="outline-text-3" id="text-org7077234">
 <p>
 We can then use these two descriptive statistics to write out a random variable as a <i>value</i> + <i>standard deviation</i> pair. This is often what you will see on an instrument or quoted in a scientific publication. The underlying probability distribution will often either be infered or, as we'll soon see, will be irrelevant
 </p>
@@ -461,16 +470,16 @@ ans <span style="color: #483d8b;">=</span> [x dx]
 </div>
 </div>
 
-<div id="outline-container-org96d1c6b" class="outline-3">
-<h3 id="org96d1c6b">Adding two random variables</h3>
-<div class="outline-text-3" id="text-org96d1c6b">
+<div id="outline-container-orgd6fe588" class="outline-3">
+<h3 id="orgd6fe588">Adding two random variables</h3>
+<div class="outline-text-3" id="text-orgd6fe588">
 <p>
 Here we begin to see the utility of <i>descriptive statistics</i>. They don't just serve as a quick summary of the random variable, but are something that can be manipulated directly.
 </p>
 </div>
-<div id="outline-container-org54827d7" class="outline-4">
-<h4 id="org54827d7">Expected Value</h4>
-<div class="outline-text-4" id="text-org54827d7">
+<div id="outline-container-org92b21a9" class="outline-4">
+<h4 id="org92b21a9">Expected Value</h4>
+<div class="outline-text-4" id="text-org92b21a9">
 <p>
 If we add two random variables <b>z=x+y</b> then, regardless of their underlying probability distributions, their estimated values will add directly.
 </p>
@@ -485,9 +494,9 @@ This is a consequence of integrals of sums <i>&int;(f(u)&times;u+g(u)&times;u) =
 </div>
 </div>
 
-<div id="outline-container-org1f741e5" class="outline-4">
-<h4 id="org1f741e5">Variance</h4>
-<div class="outline-text-4" id="text-org1f741e5">
+<div id="outline-container-org5d92335" class="outline-4">
+<h4 id="org5d92335">Variance</h4>
+<div class="outline-text-4" id="text-org5d92335">
 <p>
 The variance will also add directly, irrespective of distribution, as long as <i>a</i> and <i>b</i> are not correlated. To see this, imagine for simplicity that you have two random variables <b>x</b> and <b>y</b> that have an expected value of <b>0</b>.  We will say the random variable <b>z</b> is their sum <b>z=x+y</b>
 </p>
@@ -509,9 +518,9 @@ As long as <i>a</i> and <i>b</i> are uncorrelated, we can split the last term <b
 </div>
 </div>
 
-<div id="outline-container-org1bbe5a7" class="outline-4">
-<h4 id="org1bbe5a7">Standard Deviation</h4>
-<div class="outline-text-4" id="text-org1bbe5a7">
+<div id="outline-container-org88861cd" class="outline-4">
+<h4 id="org88861cd">Standard Deviation</h4>
+<div class="outline-text-4" id="text-org88861cd">
 <p>
 This makes the standard deviation the <i>quadrature sum</i> of the two random variables
 </p>
@@ -524,9 +533,9 @@ This makes the standard deviation the <i>quadrature sum</i> of the two random va
 </div>
 </div>
 
-<div id="outline-container-orgc8030c9" class="outline-4">
-<h4 id="orgc8030c9">SigFigs</h4>
-<div class="outline-text-4" id="text-orgc8030c9">
+<div id="outline-container-org9451e3d" class="outline-4">
+<h4 id="org9451e3d">SigFigs</h4>
+<div class="outline-text-4" id="text-org9451e3d">
 <p>
 Combining the two, we can now write out the sum of two random variables as:
 </p>
@@ -560,9 +569,9 @@ ans <span style="color: #483d8b;">=</span> [z dz]
 </div>
 </div>
 
-<div id="outline-container-org0d09cb7" class="outline-4">
-<h4 id="org0d09cb7">Example: Standard deviation of the mean (SDOM)</h4>
-<div class="outline-text-4" id="text-org0d09cb7">
+<div id="outline-container-orgeced457" class="outline-4">
+<h4 id="orgeced457">Example: Standard deviation of the mean (SDOM)</h4>
+<div class="outline-text-4" id="text-orgeced457">
 <p>
 Using these new properties we can now calculate how accurate our previous estimate for the mean was. The estimate was to add up the measurements and then divide by the total number of them:
 </p>
@@ -596,19 +605,27 @@ So now we just need to do a quadrature sum of these deviations to get a total de
 = &sigma;<sub>x</sub>/&radic;N
 </p>
 </blockquote>
+
+<blockquote>
+<p>
+<b>Side note..</b> : the uncertainty in <b>&sigma;<sub>x</sub></b> is: <b>1 /&radic;[2(N-1)] <br>
+</b>
+<i>Proof omitted for now..</i>
+</p>
+</blockquote>
 </div>
 </div>
 </div>
-<div id="outline-container-orga4e65ec" class="outline-3">
-<h3 id="orga4e65ec">Multiplying two random variables</h3>
-<div class="outline-text-3" id="text-orga4e65ec">
+<div id="outline-container-org0bde11c" class="outline-3">
+<h3 id="org0bde11c">Multiplying two random variables</h3>
+<div class="outline-text-3" id="text-org0bde11c">
 <p>
 Again, we work directly with the descriptive statistics without even looking at the variables' PDFs
 </p>
 </div>
-<div id="outline-container-orgd5f051c" class="outline-4">
-<h4 id="orgd5f051c">Expected Value</h4>
-<div class="outline-text-4" id="text-orgd5f051c">
+<div id="outline-container-org6b7fef5" class="outline-4">
+<h4 id="org6b7fef5">Expected Value</h4>
+<div class="outline-text-4" id="text-org6b7fef5">
 <blockquote>
 <p>
 E[z] = E[x] &times; E[y]
@@ -616,9 +633,9 @@ E[z] = E[x] &times; E[y]
 </blockquote>
 </div>
 </div>
-<div id="outline-container-org9f987f9" class="outline-4">
-<h4 id="org9f987f9">Variance</h4>
-<div class="outline-text-4" id="text-org9f987f9">
+<div id="outline-container-org5b7492a" class="outline-4">
+<h4 id="org5b7492a">Variance</h4>
+<div class="outline-text-4" id="text-org5b7492a">
 <p>
 We start directly with directly applying the equation for the variance
 </p>
@@ -686,9 +703,9 @@ The final trick is to notice that <b>&delta;x</b> and <b>&delta;y</b> have an ex
 </blockquote>
 </div>
 </div>
-<div id="outline-container-org4679ced" class="outline-4">
-<h4 id="org4679ced">Standard Deviation</h4>
-<div class="outline-text-4" id="text-org4679ced">
+<div id="outline-container-org8473506" class="outline-4">
+<h4 id="org8473506">Standard Deviation</h4>
+<div class="outline-text-4" id="text-org8473506">
 <p>
 The standard deviation is the square root of the variance.. 
 </p>
@@ -699,9 +716,9 @@ The standard deviation is the square root of the variance..
 </blockquote>
 </div>
 </div>
-<div id="outline-container-orgf320c7c" class="outline-4">
-<h4 id="orgf320c7c">SigFigs</h4>
-<div class="outline-text-4" id="text-orgf320c7c">
+<div id="outline-container-orgd12fe12" class="outline-4">
+<h4 id="orgd12fe12">SigFigs</h4>
+<div class="outline-text-4" id="text-orgd12fe12">
 <p>
 Again, summarizing in our standard notation we get
 </p>
@@ -725,9 +742,46 @@ q = x&times;y<br>
 </div>
 </div>
 
-
-<div id="outline-container-orgbc3a9f1" class="outline-2">
-<h2 id="orgbc3a9f1">End</h2>
+<div id="outline-container-orgef15972" class="outline-2">
+<h2 id="orgef15972">Other Topics</h2>
+<div class="outline-text-2" id="text-orgef15972">
+</div>
+<div id="outline-container-org7bbee3f" class="outline-3">
+<h3 id="org7bbee3f">Data Rejection</h3>
+<div class="outline-text-3" id="text-org7bbee3f">
+<p>
+Sometimes things go wrong and data is just way out there
+</p>
+</div>
+<div id="outline-container-orgba50ad7" class="outline-4">
+<h4 id="orgba50ad7">Chauvenet's Criterion</h4>
+<div class="outline-text-4" id="text-orgba50ad7">
+<p>
+This is a scheme for rejecting data - but it only makes sense if your data is normally distributed
+You first find how many standard deviation this measurement is away from your estimated mean
+</p>
+<blockquote>
+<p>
+t<sub>sus</sub> = |x<sub>sus</sub> - X<sub>center</sub>|/&sigma;<sub>x</sub>
+</p>
+</blockquote>
+<p>
+Then you look up the probability a measurement is that far off in a table. This probability represents the fraction of points that will lie either at the point in question or further out. Multiply it times the amount of measurements you've done, <b>N</b>,  and you get the amount of points you'd expect to lie at the point-or-further after <b>N</b> measurements.
+</p>
+<blockquote>
+<p>
+N &times; Prob(outside t<sub>sus</sub>&sigma;)
+</p>
+</blockquote>
+<p>
+If the value is smaller than <b>1/2</b> then we expect less tan half a point out as far as the point in question - so you can reject the point and recalculate your mean/sigma.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgee2fc31" class="outline-2">
+<h2 id="orgee2fc31">End</h2>
 </div>
 </div>
 </body>
