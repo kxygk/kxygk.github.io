@@ -4,7 +4,7 @@
 #+HTML_DOCTYPE: html5
 #+HTML_LINK_UP: ./index.html
 #+HTML_LINK_HOME: ./index.html
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./static/worg.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../web/worg.css" />
 #+HTML_MATHJAX: path: "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"
 #+OPTIONS: html-style:nil
 #+OPTIONS: num:nil toc:nil
@@ -337,3 +337,366 @@ Are additional blocks that can be written in CSS. The most common are /at-rules/
   }
 }
 #+END_SRC
+
+** Cascade
+How are HTML elements styled?
+- Each of the element's `properties` are looked up
+- There will be a default `user-agent` value that can be overriden
+
+Overriding is done using a *declaration*
+ex:
+#+BEGIN_SRC css
+color: black;
+#+END_SRC
+
+If the declaration is *in-line* with HTML then that is used directly.
+
+Else, it uses the style sheet and finds the most specific *selector*
+*** Selector Specificity
+The more specific a selector is, the higher it's precedence.
+Its properites override less specific selectors' properties.
+Precedence is determines based on the following (in decreasing importance)
+- Based on type
+IDs -> Classes -> Tags
+- Based on the number of specifiers
+Two specified classes is more specific than one specified class
+- Based on source code order
+(in the `.css` file)
+
+The first two rules can be summarized with 3 numbers
+#+BEGIN_QUOTE
+1 ID, 2 classes and 3 tags -> ~1,2,3~
+#+END_QUOTE
+
+*** Source Order
+Sometimes you are forced to have multiple selectors of equal value
+In this case the order in the source code file will matter
+#+BEGIN_SRC css
+a:link {..}
+a:visited {..}
+a:hover {..}
+a:active {..}
+#+END_SRC
+#+BEGIN_QUOTE
+One HTML <a> can match to multiple of these
+And the last 3 should situationally override `a:link`'s declarations
+#+END_QUOTE
+
+#+BEGIN_QUOTE
+*Notes*:\\
+We try to use as little specificity as possible.
+This allows us to easily style a particular element when needed
+#+END_QUOTE
+
+*** ~important!~
+This "cascade", overriding with more specific selectors, can be blocked.
+A less specific selector can mark a property as ~!important~
+#+BEGIN_SRC css
+color: red !important;
+#+END_SRC
+#+BEGIN_QUOTE
+This will also make it higher priority than any inline declarations
+Unless they too are marked ~!important~ ..
+#+END_QUOTE
+
+** Inheritance
+Some elements will pass down properties to their children
+These are used if the child has no style set with a selector
+#+BEGIN_QUOTE
+*Note*:\\
+This is a process parallel to the cascade..
+and some properties are passed down and others are not ..
+#+END_QUOTE
+Example
+#+BEGIN_QUOTE
+If a <body> is styled with a `font-family`
+All child elements will inherit and use this `font-family`
+Unless they have a different `font-family` set by a declaration
+#+END_QUOTE
+
+*** ~inherit~
+Cascade selectors will take precedence and override any inherited property
+However a more specific selector can revert it back using ~inherit~
+The element will then go start inheriting the value of its parent
+#+BEGIN_SRC css
+a.link {color: blue;}
+.footer {color: gray;}
+.footer a {color: inherit;}
+#+END_SRC
+#+BEGIN_QUOTE
+- This makes links blue
+- Then makes the `footer` gray
+- Then makes links in the footer go back to following the footer `color`
+#+END_QUOTE
+
+~inherit~ can also make normally un-inherited properties inherited ..
+
+~initial~ will reset the value to the "default" (browser's stylesheet..)
+
+*** ~initial~
+*Shorthands* like ~font~ and ~background~ set multiple properties at once.
+If values are omitted then they are silently set to their ~initial~ value
+And they will override any less-specific values you'd set
+#+BEGIN_SRC
+h1 { font-weight: bold; }
+.title { font: 32px Helvetica, Arial, sans-serif; }
+#+END_SRC
+#+BEGIN_QUOTE
+- The second property is more specific (b/c it's a class based selector)
+- A ~font-weight~ was implicit in the ~font~
+- B/c it was omitted it was reset to default ~normal~
+And the less specific ~font-weight~ in ~h1~ was overriden
+#+END_QUOTE
+
+Sometimes values are magically inferred - like with padding
+#+BEGIN_SRC css
+padding: 5px 15px;
+#+END_SRC
+Normally you'd have =[top right bottom left]= padding
+But with just two values it will set the vertical and horizontal padding
+
+Further confusing things
+padding: 1em 2am
+1em Vertical (top/bottom)
+2em Horizontal (right/left)
+But...
+background-position: 25% 75%
+25% Horizontal (right/left)
+75% Vertival (top/bottom)
+
+** Lengths
+*** Absolute Lengths
+#+BEGIN_QUOTE
+1in = 25.4mm = 2.54cm = 6pc = 72pt = 96px
+#+END_QUOTE
+Note: pixels aren't pixels
+
+*** Relative Lengths
+~1.0em~ = font-size of the current element
+#+BEGIN_SRC css
+padding: 1em;
+#+END_SRC
+Padding will be the size of the font
+
+The ~font-size~ can be set later/separately.
+And properties sized in ~em~ will adjust
+#+BEGIN_SRC css
+.box { padding: 1em; }
+.box .small { font-size: 12px;}
+.box .large { font-size: 16px;}
+#+END_SRC
+And then all ~.box~ elements will have ~1em~ padding..
+
+If you set a ~font-size~ using ~em~ then it uses the parent's ~font-size~
+This makes ~em~ have a slighting different meaning in one css rule
+#+BEGIN_SRC css
+  body { font-size: 16px; }
+  .thing { font-size: 1.2em;
+	   padding: 1.2em: }
+#+END_SRC
+#+BEGIN_QUOTE
+- The first 1.2em will be relative to 16px (so 19.2px)
+- While the second 1.2em is relative to the new local `font-size` 19.2px
+So the `padding` will actually be 23.04px
+#+END_QUOTE
+
+~1.0rem~ = font-size of the root
+#+BEGIN_SRC css
+:root { font-size: 1em: }
+ul { font-size: 0.8rem; }
+#+END_SRC
+#+BEGIN_QUOTE
+- The first will use the browser default ~font-size~ of
+- `:root` is equivalent to `html`
+- The recond will be relative to that 16px (12.8px)
+#+END_QUOTE
+
+Generally you will want to have the root have a sensible font-size
+Most elements won't need adjustment and will just inherit the default
+Those that do can be adjusted can then be tuned with `rem` units
+
+You can then adjust the root font-size and everything will adjust
+#+BEGIN_SRC css
+:root { font-size: 0.75em; }
+@media (min-width: 800px) {
+:root { font-size: 0.875em; } }
+@media (min-width: 1200px) {
+:root { font-size: 1em; } }
+#+END_SRC
+Here the root ~font-size~ is adjusted in a "responsive design" style..
+
+*** Selector Combinator
+#+BEGIN_SRC css
+  .panel { padding: 1em;}
+  .panel > h2 { margin-top: 0;
+		font-size:0.8rem; }
+#+END_SRC
+The second selector is the /direct descendant combinator/
+It selects an ~h2~ that's a child element of a ~.panel~ element
+
+*** Viewport
+- 1.0vh 1/100th of the viewport height
+- 1.0vw 1/100th of the viewport width
+- 1.0vmin 1/100th of the smaller of the two
+- 1.0vmax 1/100th of the larger of the two
+The *viewport* is the visible area of the webpage in the browser
+#+BEGIN_SRC css
+.square{ width: 90vmin;
+height: 90vmin; }
+#+END_SRC
+#+BEGIN_QUOTE
+The square always fits in the visible area
+#+END_QUOTE
+#+BEGIN_SRC css
+font-size: 2vw;
+#+END_SRC
+Scales the font relative to the screen-size
+.. but you may want to adjust with ~calc~
+#+BEGIN_SRC css
+:root { font-size: calc(0.5em + 1vw);
+#+END_SRC
+
+** CSS Variables
+#+BEGIN_SRC css
+  :root {
+      --main-font: Helvetica, Arial, sans-serif;
+      --brand-color: #369;
+  }
+  p {
+      font-family: var(--main-font);
+      color: var(--brand-color, blue);
+  }
+#+END_SRC
+A second value can be added to the ~var~ call
+This functions as a fallback value.
+For an old browser an explicit fallback is better
+#+BEGIN_SRC css
+color: black;
+color: var(--main-color);
+#+END_SRC
+Values can also be modified by containers and it will affect all children
+
+** Box Model
+*** ~box-sizing~
+The default ~box-sizing~ is ~content-box~.
+ie. the size of the box is the size of the contents.
+Hence:
+#+BEGIN_SRC css
+  .main { float: left;
+	  width: 70%;}
+  .sidebar {float: left;
+	    width: 30%;
+	    padding: 1.5em;}
+#+END_SRC
+This will create problems b/c the ~padding~ is added on-top of the ~width~.
+This creates a wrap-around effect
+*** ~border-box~
+This will set the size to include the border (but not the margin)
+So this solves the wrap-around issue
+#+BEGIN_SRC css
+  .main { boxing-size: border-box;
+	  float: left;
+	  width: 70%;}
+  .sidebar {float: left;
+	    width: 30%;
+	    padding: 1.5em;}
+#+END_SRC
+But setting the ~boxing-size~ to not be dumb for ever element is annoying
+So we can set it universally
+#+BEGIN_SRC css
+*,
+::before
+::after { box-sizing: border-box;}
+#+END_SRC
+But if we use external CSS elements then this will mess things up.
+So another way to do is to use inheritance (so it's easily overwridden)
+#+BEGIN_SRC css
+:root { box-sizing: border-box; }
+*,
+::before
+::after { box-sizing: inherit;}
+#+END_SRC
+Adding this to the top of every CSS creates a nice baseline!
+
+*** Overflow
+If you constrain things vertically (setting a ~height~) then things will overflow
+That means they render outside the parent element
+- ~visible~ :: (default)
+- ~hidden~ :: overflowing stuff is clipped and not visible
+- ~scroll~ :: adds scrollbars
+- ~auto~ :: scrollbars only added when overflowingp
+*** Table
+The easiest way to make two equal size columns is using ~display: table~
+#+BEGIN_SRC css
+  .container{
+      display: table;
+      width: 100% /* widths need to be set explicitely */
+  }
+  .main{
+      display: table-cell;
+      width: 70%;
+  }
+  .sidebar{
+      display: table-cell;
+      width: 30%;
+      margin-left: 1.5em; /* this will no longer work though.. */
+#+END_SRC
+The main drawback is that now /margins/ in ~table-cell~'s are disables and you have to use the ~border-spacing~ in the ~table~ element instead (ex: ~border-spacing: 1.5em 0~) but they will apply on the outer edge as well. This can be fixed in turn with the use of a negative margin on an outer wrapper element.. (page 68)
+*** Flexbox
+We can avoid the extra wrapper with the negative margin and use a ~display: flexbox~ instead.
+#+BEGIN_SRC css
+  .container{
+      display: flexbox;
+      width: 100% /* widths need to be set explicitely */
+  }
+  .main{
+      width: 70%;
+  }
+  .sidebar{
+      width: 30%;
+      margin-left: 1.5em; /* this will no longer work though.. */
+#+END_SRC
+The contained elements don't need to specify anything special and all child elements of the ~flexbox~ element will have the same height as the parent. Widths and margins no longer need to carefully add up to 100% either as the container-parent will adjust things.
+
+Limits can still be imposed using things like ~min-height~ and ~max-height~
+
+*** Simple vertical centering
+can be done by adding padding
+#+BEGIN_SRC css
+  header{ padding-top: 4em;
+	  padding-bottom: 4em;}
+#+END_SRC
+As long as you don't set a height, this will center the content
+
+If you need to set a height then you can use ~display: table-cell~ and ~vertical-align: middle~ (page 72). Also see http://howtocenterincss.com
+
+*** Margin Collapse
+When different element's top/bottom margins' meet, then they collapse to the largest value between them. So a parent and child's bottom margins will collapse and two neighbouring elements' margins will collapse as well into on margin area
+
+Ways to stop collapse:
+- using ~overflow: auto~
+- adding padding
+- use a ~flexbox~ (elements in the ~flexbox~ don't collapse with each other)
+- ~table-cell~ elements don't even have margins, so they can't collapse
+
+*** Margins on second children
+Often it's convenient to have a top margin only starting with the second child. So that the first child is aligned to the container. This can be done explicitely with the *sibling combinator*
+
+#+BEGIN_SRC css
+  .button-link {
+      display: block;
+      padding: 0.5em;
+  }
+  .button-link + .button-link {
+      margin-top: 1.5em;
+  }
+#+END_SRC
+The second selector is more specific and adds a ~margin-top~ to a ~.button-link~ only when it follows another ~.button-link~
+
+However we can also do this for the whole webpage all at once using the /lobotomized owl selector/
+
+#+BEGIN_SRC css
+  body * + * { margin-top: 1.5em' }
+#+END_SRC
+
+And this will add a margin to *all* second children. You can of course override this when you want to disable it (this should always be pretty easy b/c this selector isn't very specific).
