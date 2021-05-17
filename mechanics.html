@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classical Mechanics: Notes</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="George Kontsevich">
+<meta name="description" content="Projectors"
+>
+<link rel="stylesheet" type="text/css" href="../web/worg.css" />
+<link rel="shortcut icon" href="../web/panda.svg" type="image/x-icon">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Classical Mechanics: Notes</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org4e11192">Newton's Laws</a>
+<ul>
+<li><a href="#org3d05b66">First Law</a></li>
+<li><a href="#org8e69e61">Second Law</a>
+<ul>
+<li><a href="#org09d5bba">Solve for velocity and position</a></li>
+</ul>
+</li>
+<li><a href="#org39e76d9">Third Law</a>
+<ul>
+<li><a href="#org3d86fc0">Conservation of momentum</a></li>
+<li><a href="#org07cd5a9">leveraging cartesian coordinates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orge9f688e">Projectiles</a>
+<ul>
+<li><a href="#org06a8122">Linear Drag</a>
+<ul>
+<li><a href="#org16bcd41">Dropping a weight</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4e11192" class="outline-2">
+<h2 id="org4e11192">Newton's Laws</h2>
+<div class="outline-text-2" id="text-org4e11192">
+<dl class="org-dl">
+<dt>Mass</dt><dd>resistance to being accelerated</dd>
+<dt>Weight</dt><dd>gravitation force of an object</dd>
+<dt>Momentum</dt><dd>mass * velocity</dd>
+<dt>1 Newton</dt><dd>force to accelerate <i>1 kg</i> by <i>1 m/s<sup>2</sup></i></dd>
+</dl>
+</div>
+
+<div id="outline-container-org3d05b66" class="outline-3">
+<h3 id="org3d05b66">First Law</h3>
+<div class="outline-text-3" id="text-org3d05b66">
+<blockquote>
+<p>
+In the absense of forces - a point mass moves with constant velocity <b>v</b> (= zero acceleration)
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org8e69e61" class="outline-3">
+<h3 id="org8e69e61">Second Law</h3>
+<div class="outline-text-3" id="text-org8e69e61">
+<blockquote>
+<p>
+The net force on a particle is <b>F=ma</b> <br>
+Where <b>a = dv/dt = d<sup>2</sup>r/dt<sup>2</sup></b> <br>
+In other words, force is a change in momentum <b>p</b>. ie. <b>F= dp/dt</b>
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org09d5bba" class="outline-4">
+<h4 id="org09d5bba">Solve for velocity and position</h4>
+<div class="outline-text-4" id="text-org09d5bba">
+<p>
+Ex: Accelerting a particle with force <b>F<sub>0</sub></b> we can write out the equation for the second law
+</p>
+<blockquote>
+<p>
+F<sub>0</sub> = m &sdot; a(t) = m &sdot; d<sup>2</sup>x(t)/dt<sup>2</sup>
+</p>
+</blockquote>
+<p>
+Then by integration we can solve
+</p>
+<blockquote>
+<p>
+&int;F<sub>0</sub> = &int;m&sdot;d<sup>2</sup>x(t)/dt<sup>2</sup> <br>
+&int;F<sub>0</sub>/m = &int;d<sup>2</sup>x(t)/dt<sup>2</sup> <br>
+[F<sub>0</sub>/m] t = v<sub>0</sub> + dx(t)/dt <br>
+</p>
+</blockquote>
+<p>
+With this, given a starting velocity <b>v<sub>0</sub></b> and a time <b>t</b> we can solve for the velocity <b>dx/dt</b>
+</p>
+<blockquote>
+<p>
+&int;[F<sub>0</sub>/m] t = &int;v<sub>0</sub> + dx(t)/dt <br>
+[F<sub>0</sub>/2m] t<sup>2</sup> = v<sub>0</sub>t + x<sub>0</sub> + x(t) <br>
+</p>
+</blockquote>
+<p>
+Integrating once more we get an equation for the position. We just need a starting position <b>x<sub>0</sub></b> to solve
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org39e76d9" class="outline-3">
+<h3 id="org39e76d9">Third Law</h3>
+<div class="outline-text-3" id="text-org39e76d9">
+<blockquote>
+<p>
+If <code>Object1</code> exerts a force <b>F<sub>21</sub></b> on <code>Object2</code><br>
+Then <code>Object2</code> always exerts an opposite force <b>F<sub>12</sub></b> <br>
+Such that <b>F<sub>12</sub> = -F<sub>21</sub></b>
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org3d86fc0" class="outline-4">
+<h4 id="org3d86fc0">Conservation of momentum</h4>
+<div class="outline-text-4" id="text-org3d86fc0">
+<p>
+Givens:
+</p>
+<ul class="org-ul">
+<li>If you have a system with many particles <b>&alpha; = [1,2 &#x2026; N]</b></li>
+<li>They extert an influence on each other particle <b>F<sub>&alpha; &beta;</sub></b></li>
+<li>They are under some external force <b>F<sup>ext</sup><sub>&alpha;</sub></b></li>
+</ul>
+
+<p>
+The total force on each particle will be:
+</p>
+<blockquote>
+<p>
+F<sub>&alpha;</sub> = &sum;<sub>&beta;&ne;&alpha;</sub> F<sub>&alpha;&beta;</sub> + F<sup>ext</sup><sub>&alpha;</sub>
+</p>
+</blockquote>
+<p>
+This will equal the change in momentum for that particle -  <b>dp<sub>&alpha;</sub>/dt</b> (b/c Force = change in momentum)
+</p>
+<blockquote>
+<p>
+dp<sub>&alpha;</sub>/dt = &sum;<sub>&beta;&ne;&alpha;</sub> F<sub>&alpha;&beta;</sub> + F<sup>ext</sup><sub>&alpha;</sub>
+</p>
+</blockquote>
+<p>
+The total momentum of the system will be
+</p>
+<blockquote>
+<p>
+P = &sum;p<sub>&alpha;</sub>
+</p>
+</blockquote>
+<p>
+The corresponding change in momentum of the system will be
+</p>
+<blockquote>
+<p>
+dP/dt = &sum;dp<sub>&alpha;</sub>/dt
+</p>
+</blockquote>
+<p>
+(the derivative of a sum is the sum of derivatives) <br>
+And then we just plug in..
+</p>
+<blockquote>
+<p>
+dP/dt = &sum;<sub>&alpha;</sub>&sum;<sub>&beta;&ne;&alpha;</sub> F<sub>&alpha;&beta;</sub> + &sum;<sub>&alpha;</sub>F<sup>ext</sup><sub>&alpha;</sub>
+</p>
+</blockquote>
+<p>
+But for every term F<sub>ab</sub> = -F<sub>ba</sub>, so all the terms cancel out in the first sum
+</p>
+<blockquote>
+<p>
+dP/dt = 0 + &sum;<sub>&alpha;</sub>F<sup>ext</sup><sub>&alpha;</sub> <br>
+dP/dt = F<sup>ext</sup>
+</p>
+</blockquote>
+<p>
+And the total change in momentum is just the sum all the external forces. The forces internal to the system can't change the momentum of the system as a whole!
+</p>
+</div>
+</div>
+
+<div id="outline-container-org07cd5a9" class="outline-4">
+<h4 id="org07cd5a9">leveraging cartesian coordinates</h4>
+<div class="outline-text-4" id="text-org07cd5a9">
+<p>
+We can also break up forces along coordinates to make our lives easier by using unit vectors ex: <i>x<sup>^</sup></i>, <i>y<sup>^</sup></i>
+</p>
+<blockquote>
+<p>
+F = F<sub>x</sub>x<sup>^</sup> + F<sub>y</sub>y<sup>^</sup>
+</p>
+</blockquote>
+<p>
+And these components can be treated separately b/c they differentiate independently
+</p>
+<blockquote>
+<p>
+r = x &sdot; x<sup>^</sup> + y &sdot; y<sup>^</sup> <br>
+dr/dt = dx/dt &sdot; x<sup>^</sup> + dy/dt &sdot; y<sup>^</sup> <br>
+d<sup>2</sup>r/dt<sup>2</sup> = d<sup>2</sup>x/dt<sup>2</sup> &sdot; x<sup>^</sup> + d<sup>2</sup>y/dt<sup>2</sup> &sdot; y<sup>^</sup>
+</p>
+</blockquote>
+<p>
+So our <i>F=ma</i> can be rewritten
+</p>
+<blockquote>
+<p>
+F = F<sub>x</sub>x<sup>^</sup> + F<sub>y</sub>y<sup>^</sup> = m &sdot; d<sup>2</sup>x/dt<sup>2</sup> &sdot; x<sup>^</sup> + m &sdot; d<sup>2</sup>y/dt<sup>2</sup> &sdot; y<sup>^</sup>
+</p>
+</blockquote>
+<p>
+And each force can be looked at explicitely
+</p>
+<blockquote>
+<p>
+F<sub>x</sub> = m &sdot; d<sup>2</sup>x/dt<sup>2</sup> <br>
+F<sub>y</sub> = m &sdot; d<sup>2</sup>y/dt<sup>2</sup>
+</p>
+</blockquote>
+<p>
+So if you have a sliding block on a plane.. you set your coordinate system so that <i>x<sup>^</sup></i> is along the plane and <i>y<sup>^</sup></i> is orthogonal to the plane and then you can look at the forces separately.
+</p>
+
+<p>
+In the <i>y</i> direction there is no movement so the normal force cancels out with the force of gravity
+</p>
+<blockquote>
+<p>
+F<sub>y</sub> = N - mg cos(&theta;) = 0 <br>
+<i>so we can solve for the normal force</i> N <br>
+N = mg cos(&theta;)
+</p>
+</blockquote>
+<p>
+In the <i>x</i> direction there is gravity and friction - where friction is a function of the <i>normal force N</i>
+</p>
+<blockquote>
+<p>
+f = &mu;N <br>
+f = &mu;mg cos(&theta;)
+</p>
+</blockquote>
+<p>
+And gravity we already know how to calculate
+</p>
+<blockquote>
+<p>
+<i>gravitation force in the direction of</i> x<sup>^</sup> = mg sin(&theta;)
+</p>
+</blockquote>
+<p>
+So the total force in <i>x<sup>^</sup></i>
+</p>
+<blockquote>
+<p>
+F<sub>x</sub> = m &sdot; d<sup>2</sup>x/dt<sup>2</sup> = mg sin(&theta;) + f <br>
+m &sdot; d<sup>2</sup>x/dt<sup>2</sup> =  mg sin(&theta;) + &mu;mg cos(&theta;)
+</p>
+</blockquote>
+<p>
+And we can solve for <i>d<sup>2</sup>x/dt<sup>2</sup></i>, <i>dx/dt</i>, <i>x</i>
+</p>
+<blockquote>
+<p>
+d<sup>2</sup>x/dt<sup>2</sup> =  g sin(&theta;) + &mu;g cos(&theta;) <br>
+dx/dt =  [g sin(&theta;) + &mu;g cos(&theta;)]t <br>
+x(t) =  (1/2)[g sin(&theta;) + &mu;g cos(&theta;)]t<sup>2</sup>
+</p>
+</blockquote>
+<p>
+(these assume the initial velocity and position are <i>0</i>)
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge9f688e" class="outline-2">
+<h2 id="orge9f688e">Projectiles</h2>
+<div class="outline-text-2" id="text-orge9f688e">
+<p>
+A class of problems involve projectiles traveling through air. These undergo two forms of drag - quadratic and linear grad - with the former dominating for large object and the latter dominating for small things (like small oil drops and mist)
+</p>
+</div>
+
+<div id="outline-container-org06a8122" class="outline-3">
+<h3 id="org06a8122">Linear Drag</h3>
+<div class="outline-text-3" id="text-org06a8122">
+<p>
+This kind of drag decreases the speed of an object proportional to the current speed
+</p>
+
+<blockquote>
+<p>
+dv/dt = -kv
+</p>
+</blockquote>
+<p>
+When you have a variable that changes as a function of itself then you should think of the exponential <i>e<sup>-kt</sup></i>. It has the property that its derivative is equal to itself
+</p>
+
+<blockquote>
+<p>
+v = Ae<sup>-kt</sup>
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org16bcd41" class="outline-4">
+<h4 id="org16bcd41">Dropping a weight</h4>
+<div class="outline-text-4" id="text-org16bcd41">
+<blockquote>
+<p>
+F<sub>falling</sub> = F<sub>gravity</sub> + F<sub>drag</sub> <br>
+m&sdot;dv(t)/dt = mg - bv(t)
+</p>
+</blockquote>
+<p>
+Solving this is a bit more difficult. You proceed by subsitution.. 
+</p>
+<blockquote>
+<p>
+u=(v(t)-mg/b) <br>
+du/dt = dv(t)/dt <br>
+&there4; <br>
+m&sdot;dv(t)/dt = mg - bv(t) <br>
+m (dv(t)/dt) = -b ((v(t)-mg/b) <br>
+m du/dt = -b u <br>
+</p>
+</blockquote>
+<p>
+We have gotten it into the same form as the simpler problem and therefore
+</p>
+<blockquote>
+<p>
+u = Ae<sup>-tb/m</sup> = (v(t)-mg/b) <br>
+&there4; <br>
+v(t) = Ae<sup>-tb/m</sup>+mg/b <br>
+<i>and</i> <br>
+dv(t)/dt = -A(b/m)e<sup>-tb/m</sup>
+</p>
+</blockquote>
+<p>
+<i>A</i> is still a free variable, which we constrain by adding a starting velocity so that at <i>t=0</i> -&gt; <i>v(0) = v<sub>0</sub></i>
+</p>
+<blockquote>
+<p>
+v<sub>0</sub> = Ae<sup>0</sup>+mg/b<br>
+A = v<sub>0</sub> - mg/b
+</p>
+</blockquote>
+<p>
+So the final velocity is
+</p>
+<blockquote>
+<p>
+v(t) = (v<sub>0</sub> - mg/b)e<sup>-tb/m</sup>+mg/b <br>
+</p>
+</blockquote>
+<p>
+..<br>
+Pluggin back into the original equation to double check
+</p>
+<blockquote>
+<p>
+m&sdot;dv(t)/dt = mg - bv(t) <br>
+-mAe<sup>-tb/m</sup> = mg - b(Ae<sup>-tb/m</sup>+mg/b) <br>
+&check;
+</p>
+</blockquote>
+<p>
+<b>Note:</b> When the net force is zero and acceleration stops (the terminal velocity)
+</p>
+<blockquote>
+<p>
+m&sdot;dv(t)/dt = mg - bv(t) <br>
+0 = mg - bv<sub>terminal</sub> <br>
+v<sub>terminal</sub> = mg/b
+</p>
+</blockquote>
+<p>
+Alternately you can put in <i>t=&infin;</i> into our equation for <i>v(t)</i>
+</p>
+<blockquote>
+<p>
+v(t) = (v<sub>0</sub> - mg/b)e<sup>-tb/m</sup>+mg/b <br>
+v(&infin;) = (v<sub>0</sub> - mg/b)e<sup>-&infin;b/m</sup>+mg/b <br>
+v(&infin;) = mg/b
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

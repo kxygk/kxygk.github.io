@@ -1,0 +1,247 @@
+#+TITLE: Classical Mechanics: Notes
+#+DESCRIPTION: Projectors
+
+#+INCLUDE: "../web/config.org"
+
+#+PROPERTY: session *Inferior Octave*
+#+PROPERTY: eval never-export
+#+PROPERTY: exports both
+#+PROPERTY: results org
+
+#+BEGIN_SRC octave :results silent :exports none
+  graphics_toolkit qt
+  figure( 1, "visible", "on" );
+#+END_SRC
+
+#+BEGIN_SRC octave :exports none
+1+5i + 3+2j
+#+END_SRC
+
+
+
+* Newton's Laws
+- Mass :: resistance to being accelerated
+- Weight :: gravitation force of an object
+- Momentum :: mass * velocity
+- 1 Newton :: force to accelerate /1 kg/ by /1 m/s^2/
+
+** First Law
+#+BEGIN_QUOTE
+In the absense of forces - a point mass moves with constant velocity *v* (= zero acceleration)
+#+END_QUOTE
+
+** Second Law
+#+BEGIN_QUOTE
+The net force on a particle is *F=ma* \\
+Where *a = dv/dt = d^{2}r/dt^{2}* \\
+In other words, force is a change in momentum *p*. ie. *F= dp/dt*
+#+END_QUOTE
+
+*** Solve for velocity and position
+Ex: Accelerting a particle with force *F_{0}* we can write out the equation for the second law
+#+BEGIN_QUOTE
+F_{0} = m \cdot a(t) = m \cdot d^{2}x(t)/dt^{2}
+#+END_QUOTE
+Then by integration we can solve
+#+BEGIN_QUOTE
+\int{}F_{0} = \int{}m\cdot{}d^{2}x(t)/dt^{2} \\
+\int{}F_{0}/m = \int{}d^{2}x(t)/dt^{2} \\
+[F_{0}/m] t = v_{0} + dx(t)/dt \\
+#+END_QUOTE
+With this, given a starting velocity *v_{0}* and a time *t* we can solve for the velocity *dx/dt*
+#+BEGIN_QUOTE
+\int{}[F_{0}/m] t = \int{}v_{0} + dx(t)/dt \\
+[F_{0}/2m] t^{2} = v_{0}t + x_{0} + x(t) \\
+#+END_QUOTE
+Integrating once more we get an equation for the position. We just need a starting position *x_{0}* to solve
+
+** Third Law
+#+BEGIN_QUOTE
+If =Object1= exerts a force *F_{21}* on =Object2=\\
+Then =Object2= always exerts an opposite force *F_{12}* \\
+Such that *F_{12} = -F_{21}*
+#+END_QUOTE
+
+*** Conservation of momentum
+Givens:
+- If you have a system with many particles *\alpha{} = [1,2 ... N]*
+- They extert an influence on each other particle *F_{\alpha{} \beta{}}* 
+- They are under some external force *F^{ext}_{\alpha{}}*
+
+The total force on each particle will be:
+#+BEGIN_QUOTE
+F_{\alpha{}} = \sum{}_{\beta{}\ne{}\alpha{}} F_{\alpha{}\beta{}} + F^{ext}_{\alpha{}}
+#+END_QUOTE
+This will equal the change in momentum for that particle -  *dp_{\alpha{}}/dt* (b/c Force = change in momentum)
+#+BEGIN_QUOTE
+dp_{\alpha{}}/dt = \sum{}_{\beta{}\ne{}\alpha{}} F_{\alpha{}\beta{}} + F^{ext}_{\alpha{}}
+#+END_QUOTE
+The total momentum of the system will be
+#+BEGIN_QUOTE
+P = \sum{}p_{\alpha{}}
+#+END_QUOTE
+The corresponding change in momentum of the system will be
+#+BEGIN_QUOTE
+dP/dt = \sum{}dp_{\alpha{}}/dt
+#+END_QUOTE
+(the derivative of a sum is the sum of derivatives) \\
+And then we just plug in..
+#+BEGIN_QUOTE
+dP/dt = \sum{}_{\alpha{}}\sum{}_{\beta{}\ne{}\alpha{}} F_{\alpha{}\beta{}} + \sum{}_{\alpha{}}F^{ext}_{\alpha{}}
+#+END_QUOTE
+But for every term F_{ab} = -F_{ba}, so all the terms cancel out in the first sum
+#+BEGIN_QUOTE
+dP/dt = 0 + \sum{}_{\alpha{}}F^{ext}_{\alpha{}} \\
+dP/dt = F^{ext}
+#+END_QUOTE
+And the total change in momentum is just the sum all the external forces. The forces internal to the system can't change the momentum of the system as a whole!
+
+*** leveraging cartesian coordinates
+We can also break up forces along coordinates to make our lives easier by using unit vectors ex: /x^{^}/, /y^{^}/
+#+BEGIN_QUOTE
+F = F_{x}x^{^} + F_{y}y^{^}
+#+END_QUOTE
+And these components can be treated separately b/c they differentiate independently
+#+BEGIN_QUOTE
+r = x \cdot{} x^{^} + y \cdot{} y^{^} \\
+dr/dt = dx/dt \cdot{} x^{^} + dy/dt \cdot{} y^{^} \\
+d^{2}r/dt^2 = d^{2}x/dt^2 \cdot{} x^{^} + d^{2}y/dt^2 \cdot{} y^{^}
+#+END_QUOTE
+So our /F=ma/ can be rewritten
+#+BEGIN_QUOTE
+F = F_{x}x^{^} + F_{y}y^{^} = m \cdot{} d^{2}x/dt^2 \cdot{} x^{^} + m \cdot{} d^{2}y/dt^2 \cdot{} y^{^}
+#+END_QUOTE
+And each force can be looked at explicitely
+#+BEGIN_QUOTE
+F_{x} = m \cdot{} d^{2}x/dt^{2} \\
+F_{y} = m \cdot{} d^{2}y/dt^{2}
+#+END_QUOTE
+So if you have a sliding block on a plane.. you set your coordinate system so that /x^{^}/ is along the plane and /y^{^}/ is orthogonal to the plane and then you can look at the forces separately.
+
+In the /y/ direction there is no movement so the normal force cancels out with the force of gravity
+#+BEGIN_QUOTE
+F_{y} = N - mg cos(\theta) = 0 \\
+/so we can solve for the normal force/ N \\
+N = mg cos(\theta{})
+#+END_QUOTE
+In the /x/ direction there is gravity and friction - where friction is a function of the /normal force N/
+#+BEGIN_QUOTE
+f = \mu{}N \\
+f = \mu{}mg cos(\theta{})
+#+END_QUOTE
+And gravity we already know how to calculate
+#+BEGIN_QUOTE
+/gravitation force in the direction of/ x^{^} = mg sin(\theta{})
+#+END_QUOTE
+So the total force in /x^{^}/
+#+BEGIN_QUOTE
+F_{x} = m \cdot{} d^{2}x/dt^{2} = mg sin(\theta{}) + f \\
+m \cdot{} d^{2}x/dt^{2} =  mg sin(\theta{}) + \mu{}mg cos(\theta{})
+#+END_QUOTE
+And we can solve for /d^{2}x/dt^{2}/, /dx/dt/, /x/
+#+BEGIN_QUOTE
+d^{2}x/dt^{2} =  g sin(\theta{}) + \mu{}g cos(\theta{}) \\
+dx/dt =  [g sin(\theta{}) + \mu{}g cos(\theta{})]t \\
+x(t) =  (1/2)[g sin(\theta{}) + \mu{}g cos(\theta{})]t^2
+#+END_QUOTE
+(these assume the initial velocity and position are /0/)
+
+* Projectiles
+
+A class of problems involve projectiles traveling through air. These undergo two forms of drag - quadratic and linear grad - with the former dominating for large object and the latter dominating for small things (like small oil drops and mist)
+
+** Linear Drag
+This kind of drag decreases the speed of an object proportional to the current speed
+
+#+BEGIN_QUOTE
+dv/dt = -kv
+#+END_QUOTE
+When you have a variable that changes as a function of itself then you should think of the exponential /e^{-kt}/. It has the property that its derivative is equal to itself
+
+#+BEGIN_QUOTE
+v = Ae^{-kt}
+#+END_QUOTE
+
+*** Dropping a weight
+#+BEGIN_QUOTE
+F_{falling} = F_{gravity} + F_{drag} \\
+m\cdot{}dv(t)/dt = mg - bv(t)
+#+END_QUOTE
+Solving this is a bit more difficult. You proceed by subsitution.. 
+#+BEGIN_QUOTE
+u=(v(t)-mg/b) \\
+du/dt = dv(t)/dt \\
+\therefore{} \\
+m\cdot{}dv(t)/dt = mg - bv(t) \\
+m (dv(t)/dt) = -b ((v(t)-mg/b) \\
+m du/dt = -b u \\
+#+END_QUOTE
+We have gotten it into the same form as the simpler problem and therefore
+#+BEGIN_QUOTE
+u = Ae^{-tb/m} = (v(t)-mg/b) \\
+\therefore{} \\
+v(t) = Ae^{-tb/m}+mg/b \\
+/and/ \\
+dv(t)/dt = -A(b/m)e^{-tb/m}
+#+END_QUOTE
+/A/ is still a free variable, which we constrain by adding a starting velocity so that at /t=0/ -> /v(0) = v_{0}/
+#+BEGIN_QUOTE
+v_{0} = Ae^{0}+mg/b\\
+A = v_{0} - mg/b
+#+END_QUOTE
+So the final velocity is
+#+BEGIN_QUOTE
+v(t) = (v_{0} - mg/b)e^{-tb/m}+mg/b \\
+#+END_QUOTE
+..\\
+Pluggin back into the original equation to double check
+#+BEGIN_QUOTE
+m\cdot{}dv(t)/dt = mg - bv(t) \\
+-mAe^{-tb/m} = mg - b(Ae^{-tb/m}+mg/b) \\
+\checkmark{}
+#+END_QUOTE
+*Note:* When the net force is zero and acceleration stops (the terminal velocity)
+#+BEGIN_QUOTE
+m\cdot{}dv(t)/dt = mg - bv(t) \\
+0 = mg - bv_{terminal} \\
+v_{terminal} = mg/b
+#+END_QUOTE
+Alternately you can put in /t=\infty{}/ into our equation for /v(t)/
+#+BEGIN_QUOTE
+v(t) = (v_{0} - mg/b)e^{-tb/m}+mg/b \\
+v(\infty{}) = (v_{0} - mg/b)e^{-\infty{}b/m}+mg/b \\
+v(\infty{}) = mg/b
+#+END_QUOTE
+
+
+
+
+
+
+
+
+
+
+# *** .. polar coordinates
+# If we repeat the trick in polar coordinates then things get a bit messier
+# #+BEGIN_QUOTE
+# x = r cos(\phi{}) \\
+# y = r sin(\phi{}) \\
+# \\
+# r = \radic{}[x^{2} + y^{2}] \\
+# \phi{} = arctan(y/x)
+# #+END_QUOTE
+# The main issue is that the unit vectors are a bit strange. Cartesian unit vectors /x^{^}/ and /y^{^}/ are always in the same direction no matter where they are on the x-y plane. By contrast, polar unit vectors rotate - with /r^{^}/ being away from the origin and /\phi{}^{^}/ being orthogonal to /r^{^}/ (the direction the point moves when /r/ is fixed and /\phi{}/ increases)
+
+# In both systems we can break apart things along coordinates
+# #+BEGIN_QUOTE
+# F = F_{r}r^{^} + F_{\phi{}}\phi{}^{^}
+# #+END_QUOTE
+# However if we have some point p(t) and we differentiate, the situation becomes bizarre as the basis vectors move and /dp^{^}/dt/ is not in the direction of /r^{^}/ or /\phi{}^{^}/. the /r{^}/ rotates in the direction of /\phi{}^{^}/ by the amount /dF_{\phi}/dt/ rotates.
+# #+BEGIN_QUOTE
+# dr^{^}/dt =  dF_{\phi}/dt \phi{}^{^}
+# #+END_QUOTE
+# So the derivative of /F_{r}r^{^}/ need to use the product rule and is a function of /F_{\ph{}}/
+# #+BEGIN_QUOTE
+# d[F_{r}r^{^}]/dt = dF_{r}/dt r^{^} + F_{r}/dt dF_{\phi}/dt \phi{}^{^} 
+# #+END_QUOTE
