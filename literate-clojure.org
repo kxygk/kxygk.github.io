@@ -2,6 +2,7 @@
 #+DESCRIPTION:
 
 #+INCLUDE: "../web/config.org"
+#+PROPERTY: header-args :results org :eval never-export :exports both
 
 * Short Intro
 In short this is an example document of a project-less literate Emacs/orgmode page with embedded SVGs that can be directly evaluated and exported to HTML. Everything is contained in one ~.org~ file. There are no additional files needed and no external image files.
@@ -12,9 +13,9 @@ I take a lot of notes using Emacs' [[https://orgmode.org][Orgmode]]. Often I wil
 
 - Projectless :: Clojure is dynamically typed and uses a REPL which can make it feel very interactive. However if you've used something like MATLAB.. well you don't have the same level of seemless integration. B/c the language is general purpose, the language core includes very few features. Unlike Octave/R or similar languages, you typically won't just drop into a REPL and go. You need to set up a project folder, source code directory structure, defined in a ~deps.edn~ configuration file, specify what libraries you want, make some namespaces.. etc etc. I want to short circuit as much of that as possible.
 
-- Embedded SVG :: I also wanted to go a step further and have plots/diagrams directly included in the ~.org~ file itself. It won't work for every situation. You won't want to inline a jpeg .. but for most situations this is sufficient in my use cases. And I want this embedded SVG to be in the exported HTML. SVG and HTML play nice together. I also don't want to limit myself to some hacked together plotting library to imitate MATLAB. With the generic SVG primitives provided by ~thing/geom~ you aren't just limited to plotting. You can do much much more (scroll the bottom of the page for a TLDR) 
+- Embedded SVG :: I also wanted to go a step further and have plots/diagrams directly included in the ~.org~ file itself. It won't work for every situation. You won't want to inline a jpeg .. but for most situations this is sufficient in my use cases. And I want this embedded SVG to be in the exported HTML. SVG and HTML play nice together. I also don't want to limit myself to some hacked together plotting library to imitate MATLAB. With the generic SVG primitives provided by ~thing/geom~ you aren't just limited to plotting. You can do much much more (scroll to the bottom of the page for a TLDR) 
 
-Places of potential improvement are in green *Note* boxes. Feedback welcome
+Places of potential improvement are in green *Note* boxes. Feedback/Suggestions are very welcome :)
 
 * Setup
 You naturally need Clojure installed. Then in Emacs you will need to have ~ob-clojure~ and ~cider~ enabled. Details here: https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-clojure.html
@@ -25,9 +26,9 @@ You naturally need Clojure installed. Then in Emacs you will need to have ~ob-cl
 
 ** add-libs
 
-The trick to getting this to work project-less (ie. without using a ~dep.edn~) is to leverage a experimental tool in Clojure called ~add-libs~ that is in the ~tools.deps.alpha~ library/namespace. This is described in detail by Alex Miller: https://insideclojure.org/2018/05/04/add-lib/ (*note*: since publication the tool was renamed from ~add-lib~ to ~add-libs~)
+The trick to getting this to work project-less (ie. without using a ~dep.edn~) is to leverage an experimental tool in Clojure called ~add-libs~ that is in the ~tools.deps.alpha~ library/namespace. This is described in detail by Alex Miller: https://insideclojure.org/2018/05/04/add-lib/ (*note*: since publication the tool was renamed from ~add-lib~ to ~add-libs~)
 
-At the moment this is experiment and living on a branch. Maybe some day it'll be part of ~core~. We want this library to automatically be included when ~cider~ is launched. I've included the following in ~~/.clojure/deps.edn~ so that it is enable globally. 
+At the moment this is experimental and living on a branch. Maybe some day it'll be part of ~core~ and this step can be skipped. We want this library to be automatically loaded when your projectless ~cider~ session gets launched. I've included the following in ~~/.clojure/deps.edn~ so that it is enable globally. 
 #+BEGIN_SRC clojure :eval no
 {
  :deps { org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha.git"
@@ -37,10 +38,11 @@ At the moment this is experiment and living on a branch. Maybe some day it'll be
 #+BEGIN_QUOTE
 *Note*: Ideally this would /only/ be included in cider sessions that are projectless (are missing a ~deps.edn~). If you know how to make such a conditional switch, please let me know - or post an answer here: https://github.com/clojure-emacs/cider/discussions/3025
 #+END_QUOTE
+
 * Loading libraries
-We then ~cider-jack-in~ a ~cider~ session (preferrably in a directory where there is no Clojure project going on)
+We then ~cider-jack-in~ a ~cider~ session (preferrably in a directory where there with no Clojure project)
 #+BEGIN_QUOTE
-*Note*: ideally orgmode would automatically launch a session somehow in the background..
+*Note*: ideally orgmode would automatically launch a session somehow in a temp folder.. somewhere in the background..
 #+END_QUOTE
 And we can start using ~add-libs~ directly to load libraries dynamically:
 #+BEGIN_SRC clojure :results none
@@ -49,9 +51,9 @@ And we can start using ~add-libs~ directly to load libraries dynamically:
   (use 'thi.ng.geom.viz.core)
   (use 'thi.ng.geom.svg.core)
 #+END_SRC
-This simply: 1) loads the ~add-libs~ namespace, 2) adds an SVG plotting library (fetched from Maven) 3) loads some namespaces from that library
+This simply: 1) loads the ~add-libs~ namespace, 2) adds an SVG plotting library (fetching it from Maven) 3) loads some namespaces from that library
 
-Unfortunately I need to rerun this block twice. The first run always returns a timeout:
+Unfortunately I need to rerun this block twice. The first run always seems to timeout:
 #+BEGIN_SRC org :eval no
 executing Clojure code block...
 nrepl-send-sync-request: Sync nREPL request timed out (ns user op eval code (use 'clojure.tools.deps.alpha.repl)
@@ -90,11 +92,9 @@ Once we have a library loaded and included in the default namespace, we can star
 #+END_EXPORT
 
 
-What's great here is that this plot was immediately inserted (as shown) when I evaluated the source code block. I exported it to HTML and the SVG is there for you to see. I can just grab the ~.html~ and email it to some friends :) \\
+What's great here is that this plot was immediately inserted (as shown) when I evaluated the source code block. I exported it to HTML and the SVG was automatically inlined. There are no ~.svg~ files. (Though we could [[https://clojuredocs.org/clojure.core/spit][~spit~]] one if we want). Now I can just grab this ~.html~ file and email it to some friends :) \\
 
 Some things to note:
-
-The SVG is included in-line in the ~.org~ file and will be inline (as shown) on export to HTML. We don't need any ~.svg~ files. (Though we could [[https://clojuredocs.org/clojure.core/spit][~spit~]] one if we want)
 
 The source code block here required a header argument to specify that result should come out as an HTML block:
 #+BEGIN_SRC org :eval no
@@ -108,7 +108,7 @@ The source code block here required a header argument to specify that result sho
 *Note*: I seem to be abusing ~symbol~, b/c this isn't its intended use - but I don't know of a better alternative. Please let me know if there is something better (that doesn't involve tweaking ~ob-clojure~)
 #+END_QUOTE
 
-If you have multiple evaluations in one source code block (like function definitions) then all their outputs will show up in the ~#+RESULTS~ block. I've separate non-drawing stuff into their own source code block that has the results disabled (note how the last code block is one big threading macro)
+If you have multiple evaluations in one source code block (like function definitions) then /all/ their outputs will show up in the ~#+RESULTS~ block (not just the last form). I've separate non-drawing stuff into their own source code block that has the results disabled (note how the last code block is one big threading macro)
 #+BEGIN_SRC org :eval no
 #+BEGIN_SRC clojure :results none
 #+END_SRC
@@ -122,12 +122,12 @@ By default ~#+RESULTS:~ blocks of evaluated org-mode source code blocks are not 
 
 * Conlusion
 
-And that's it! You can now evaluate code blocks (C-c C-c block-by-block or C-c C-v C-b for the whole buffer) and export to HTML (and everything necessary will be in the ~.html~ file - with no images to drag around)
+And that's it! You can now evaluate code blocks (C-c C-c block-by-block or C-c C-v C-b for the whole buffer) and export to HTML and everything necessary will be in the ~.html~ file - with no images to drag around.
 
-I think the end result is satisfactory. Admittedly it's not quite as concise as writing code block in something purpose-built like Octave, but ultimately the flexibility of Clojure (even if a tad verbose) may be worth it in some situations. Probably with a good suite/library of convenience functions built on top of ~thing/geom~ one could get to much smaller focused domain-specific pieces of code.
+I think the end result is .. satisfactory. Admittedly it's not yet as concise as writing code block in something purpose-built like Octave, but ultimately the flexibility of Clojure (even if a tad verbose) may be worth it in some situations. Probably with a good suite/library of convenience functions built on top of ~thing/geom~ one could get to much smaller focused domain-specific pieces of code.
 
 ** Longer Example
-This is mostly just to show what's possible with ~thing/geom~. The Clojure code is near instantaneous, export is immediate. However, running a *Core M-5Y10c*, the final ~437kb~ SVG string took a few minute to insert into the ~#+RESULTS~ block (I suspect an issue in orgmode itself).
+This is mostly just to show what's possible with ~thing/geom~. The Clojure code is near instantaneous, export is immediate. However, running on a *Core M-5Y10c*, the final ~437kb~ SVG string took a few minute to insert into the ~#+RESULTS~ block (I suspect an issue in orgmode itself).
 
 So this might be pushing the limits of waht you wanna do :)
 

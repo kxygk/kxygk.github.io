@@ -16,37 +16,37 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2e83bd2">Short Intro</a></li>
-<li><a href="#orge84269c">Longer Intro</a></li>
-<li><a href="#org6eede9b">Setup</a>
+<li><a href="#orgfe3018e">Short Intro</a></li>
+<li><a href="#org6c854f3">Longer Intro</a></li>
+<li><a href="#org2fc2a97">Setup</a>
 <ul>
-<li><a href="#org0ceeaf2">add-libs</a></li>
+<li><a href="#orgddcd3bf">add-libs</a></li>
 </ul>
 </li>
-<li><a href="#orgab6a8cc">Loading libraries</a></li>
-<li><a href="#org2f290c6">Embedded SVG</a></li>
-<li><a href="#orgfe589d5">Export</a></li>
-<li><a href="#orgbae6fef">Conlusion</a>
+<li><a href="#org83b37f5">Loading libraries</a></li>
+<li><a href="#org7b72bad">Embedded SVG</a></li>
+<li><a href="#org6e7987b">Export</a></li>
+<li><a href="#orgb42b333">Conlusion</a>
 <ul>
-<li><a href="#org4b32143">Longer Example</a></li>
+<li><a href="#orge490832">Longer Example</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2e83bd2" class="outline-2">
-<h2 id="org2e83bd2">Short Intro</h2>
-<div class="outline-text-2" id="text-org2e83bd2">
+<div id="outline-container-orgfe3018e" class="outline-2">
+<h2 id="orgfe3018e">Short Intro</h2>
+<div class="outline-text-2" id="text-orgfe3018e">
 <p>
 In short this is an example document of a project-less literate Emacs/orgmode page with embedded SVGs that can be directly evaluated and exported to HTML. Everything is contained in one <code>.org</code> file. There are no additional files needed and no external image files.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orge84269c" class="outline-2">
-<h2 id="orge84269c">Longer Intro</h2>
-<div class="outline-text-2" id="text-orge84269c">
+<div id="outline-container-org6c854f3" class="outline-2">
+<h2 id="org6c854f3">Longer Intro</h2>
+<div class="outline-text-2" id="text-org6c854f3">
 <p>
 I take a lot of notes using Emacs' <a href="https://orgmode.org">Orgmode</a>. Often I will have little code snippets to add diagrams or plots. In some languages this is easier than in others. For instance the <code>octave</code> integration in Emacs is excellent and plots can be added pretty easily. However sometimes I want the power of a full programming language, so here I've tried to develop a simplified workflow that will work with Clojure.
 </p>
@@ -54,18 +54,18 @@ I take a lot of notes using Emacs' <a href="https://orgmode.org">Orgmode</a>. Of
 <dl class="org-dl">
 <dt>Projectless</dt><dd>Clojure is dynamically typed and uses a REPL which can make it feel very interactive. However if you've used something like MATLAB.. well you don't have the same level of seemless integration. B/c the language is general purpose, the language core includes very few features. Unlike Octave/R or similar languages, you typically won't just drop into a REPL and go. You need to set up a project folder, source code directory structure, defined in a <code>deps.edn</code> configuration file, specify what libraries you want, make some namespaces.. etc etc. I want to short circuit as much of that as possible.</dd>
 
-<dt>Embedded SVG</dt><dd>I also wanted to go a step further and have plots/diagrams directly included in the <code>.org</code> file itself. It won't work for every situation. You won't want to inline a jpeg .. but for most situations this is sufficient in my use cases. And I want this embedded SVG to be in the exported HTML. SVG and HTML play nice together. I also don't want to limit myself to some hacked together plotting library to imitate MATLAB. With the generic SVG primitives provided by <code>thing/geom</code> you aren't just limited to plotting. You can do much much more (scroll the bottom of the page for a TLDR)</dd>
+<dt>Embedded SVG</dt><dd>I also wanted to go a step further and have plots/diagrams directly included in the <code>.org</code> file itself. It won't work for every situation. You won't want to inline a jpeg .. but for most situations this is sufficient in my use cases. And I want this embedded SVG to be in the exported HTML. SVG and HTML play nice together. I also don't want to limit myself to some hacked together plotting library to imitate MATLAB. With the generic SVG primitives provided by <code>thing/geom</code> you aren't just limited to plotting. You can do much much more (scroll to the bottom of the page for a TLDR)</dd>
 </dl>
 
 <p>
-Places of potential improvement are in green <b>Note</b> boxes. Feedback welcome
+Places of potential improvement are in green <b>Note</b> boxes. Feedback/Suggestions are very welcome :)
 </p>
 </div>
 </div>
 
-<div id="outline-container-org6eede9b" class="outline-2">
-<h2 id="org6eede9b">Setup</h2>
-<div class="outline-text-2" id="text-org6eede9b">
+<div id="outline-container-org2fc2a97" class="outline-2">
+<h2 id="org2fc2a97">Setup</h2>
+<div class="outline-text-2" id="text-org2fc2a97">
 <p>
 You naturally need Clojure installed. Then in Emacs you will need to have <code>ob-clojure</code> and <code>cider</code> enabled. Details here: <a href="https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-clojure.html">https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-clojure.html</a>
 </p>
@@ -77,15 +77,15 @@ You naturally need Clojure installed. Then in Emacs you will need to have <code>
 </blockquote>
 </div>
 
-<div id="outline-container-org0ceeaf2" class="outline-3">
-<h3 id="org0ceeaf2">add-libs</h3>
-<div class="outline-text-3" id="text-org0ceeaf2">
+<div id="outline-container-orgddcd3bf" class="outline-3">
+<h3 id="orgddcd3bf">add-libs</h3>
+<div class="outline-text-3" id="text-orgddcd3bf">
 <p>
-The trick to getting this to work project-less (ie. without using a <code>dep.edn</code>) is to leverage a experimental tool in Clojure called <code>add-libs</code> that is in the <code>tools.deps.alpha</code> library/namespace. This is described in detail by Alex Miller: <a href="https://insideclojure.org/2018/05/04/add-lib/">https://insideclojure.org/2018/05/04/add-lib/</a> (<b>note</b>: since publication the tool was renamed from <code>add-lib</code> to <code>add-libs</code>)
+The trick to getting this to work project-less (ie. without using a <code>dep.edn</code>) is to leverage an experimental tool in Clojure called <code>add-libs</code> that is in the <code>tools.deps.alpha</code> library/namespace. This is described in detail by Alex Miller: <a href="https://insideclojure.org/2018/05/04/add-lib/">https://insideclojure.org/2018/05/04/add-lib/</a> (<b>note</b>: since publication the tool was renamed from <code>add-lib</code> to <code>add-libs</code>)
 </p>
 
 <p>
-At the moment this is experiment and living on a branch. Maybe some day it'll be part of <code>core</code>. We want this library to automatically be included when <code>cider</code> is launched. I've included the following in <code>~/.clojure/deps.edn</code> so that it is enable globally. 
+At the moment this is experimental and living on a branch. Maybe some day it'll be part of <code>core</code> and this step can be skipped. We want this library to be automatically loaded when your projectless <code>cider</code> session gets launched. I've included the following in <code>~/.clojure/deps.edn</code> so that it is enable globally. 
 </p>
 <div class="org-src-container">
 <pre class="src src-clojure">{
@@ -102,15 +102,16 @@ At the moment this is experiment and living on a branch. Maybe some day it'll be
 </div>
 </div>
 </div>
-<div id="outline-container-orgab6a8cc" class="outline-2">
-<h2 id="orgab6a8cc">Loading libraries</h2>
-<div class="outline-text-2" id="text-orgab6a8cc">
+
+<div id="outline-container-org83b37f5" class="outline-2">
+<h2 id="org83b37f5">Loading libraries</h2>
+<div class="outline-text-2" id="text-org83b37f5">
 <p>
-We then <code>cider-jack-in</code> a <code>cider</code> session (preferrably in a directory where there is no Clojure project going on)
+We then <code>cider-jack-in</code> a <code>cider</code> session (preferrably in a directory where there with no Clojure project)
 </p>
 <blockquote>
 <p>
-<b>Note</b>: ideally orgmode would automatically launch a session somehow in the background..
+<b>Note</b>: ideally orgmode would automatically launch a session somehow in a temp folder.. somewhere in the background..
 </p>
 </blockquote>
 <p>
@@ -124,11 +125,11 @@ And we can start using <code>add-libs</code> directly to load libraries dynamica
 </pre>
 </div>
 <p>
-This simply: 1) loads the <code>add-libs</code> namespace, 2) adds an SVG plotting library (fetched from Maven) 3) loads some namespaces from that library
+This simply: 1) loads the <code>add-libs</code> namespace, 2) adds an SVG plotting library (fetching it from Maven) 3) loads some namespaces from that library
 </p>
 
 <p>
-Unfortunately I need to rerun this block twice. The first run always returns a timeout:
+Unfortunately I need to rerun this block twice. The first run always seems to timeout:
 </p>
 <div class="org-src-container">
 <pre class="src src-org">executing Clojure code block...
@@ -143,9 +144,9 @@ nrepl-send-sync-request: Sync nREPL request timed out (ns user op eval code (use
 </div>
 </div>
 
-<div id="outline-container-org2f290c6" class="outline-2">
-<h2 id="org2f290c6">Embedded SVG</h2>
-<div class="outline-text-2" id="text-org2f290c6">
+<div id="outline-container-org7b72bad" class="outline-2">
+<h2 id="org7b72bad">Embedded SVG</h2>
+<div class="outline-text-2" id="text-org7b72bad">
 <p>
 Once we have a library loaded and included in the default namespace, we can start using it directly. To demonstrate including SVG I'm using the fantastic <a href="https://github.com/thi-ng/geom"><code>thi-ng/geom</code></a> library from Karsten Schmidt. The project is a bit intimidating in scope, bit it's actually very modular bare-Clojure with no magic/macros. Each piece is usually easy to read and understand in isolation. The library has some very minimal SVG/Math/Vec cores and then other small practical namespaces built on top of this (it's best to think of it as a collection of interconnecting mini-libraries). Here I'm using the plotting utility from <code>geom-viz</code> to make a very simple stacked interval plot which is then output in SVG hiccup and serialized to SVG XML. This was pulled directly from the examples: <a href="https://github.com/thi-ng/geom/blob/master/geom-viz/src/core.org#stacked-intervals">https://github.com/thi-ng/geom/blob/master/geom-viz/src/core.org#stacked-intervals</a>
 </p>
@@ -176,15 +177,11 @@ Once we have a library loaded and included in the default namespace, we can star
 
 
 <p>
-What's great here is that this plot was immediately inserted (as shown) when I evaluated the source code block. I exported it to HTML and the SVG is there for you to see. I can just grab the <code>.html</code> and email it to some friends :) <br>
+What's great here is that this plot was immediately inserted (as shown) when I evaluated the source code block. I exported it to HTML and the SVG was automatically inlined. There are no <code>.svg</code> files. (Though we could <a href="https://clojuredocs.org/clojure.core/spit"><code>spit</code></a> one if we want). Now I can just grab this <code>.html</code> file and email it to some friends :) <br>
 </p>
 
 <p>
 Some things to note:
-</p>
-
-<p>
-The SVG is included in-line in the <code>.org</code> file and will be inline (as shown) on export to HTML. We don't need any <code>.svg</code> files. (Though we could <a href="https://clojuredocs.org/clojure.core/spit"><code>spit</code></a> one if we want)
 </p>
 
 <p>
@@ -207,7 +204,7 @@ The source code block here required a header argument to specify that result sho
 </blockquote>
 
 <p>
-If you have multiple evaluations in one source code block (like function definitions) then all their outputs will show up in the <code>#+RESULTS</code> block. I've separate non-drawing stuff into their own source code block that has the results disabled (note how the last code block is one big threading macro)
+If you have multiple evaluations in one source code block (like function definitions) then <i>all</i> their outputs will show up in the <code>#+RESULTS</code> block (not just the last form). I've separate non-drawing stuff into their own source code block that has the results disabled (note how the last code block is one big threading macro)
 </p>
 <div class="org-src-container">
 <pre class="src src-org">#+BEGIN_SRC clojure :results none
@@ -216,9 +213,9 @@ If you have multiple evaluations in one source code block (like function definit
 </div>
 </div>
 
-<div id="outline-container-orgfe589d5" class="outline-2">
-<h2 id="orgfe589d5">Export</h2>
-<div class="outline-text-2" id="text-orgfe589d5">
+<div id="outline-container-org6e7987b" class="outline-2">
+<h2 id="org6e7987b">Export</h2>
+<div class="outline-text-2" id="text-org6e7987b">
 <p>
 By default <code>#+RESULTS:</code> blocks of evaluated org-mode source code blocks are not exported to the HTML so you will need to add a orgmode configuration at the top of your org file to enable this:
 </p>
@@ -230,23 +227,23 @@ By default <code>#+RESULTS:</code> blocks of evaluated org-mode source code bloc
 </div>
 </div>
 
-<div id="outline-container-orgbae6fef" class="outline-2">
-<h2 id="orgbae6fef">Conlusion</h2>
-<div class="outline-text-2" id="text-orgbae6fef">
+<div id="outline-container-orgb42b333" class="outline-2">
+<h2 id="orgb42b333">Conlusion</h2>
+<div class="outline-text-2" id="text-orgb42b333">
 <p>
-And that's it! You can now evaluate code blocks (C-c C-c block-by-block or C-c C-v C-b for the whole buffer) and export to HTML (and everything necessary will be in the <code>.html</code> file - with no images to drag around)
+And that's it! You can now evaluate code blocks (C-c C-c block-by-block or C-c C-v C-b for the whole buffer) and export to HTML and everything necessary will be in the <code>.html</code> file - with no images to drag around.
 </p>
 
 <p>
-I think the end result is satisfactory. Admittedly it's not quite as concise as writing code block in something purpose-built like Octave, but ultimately the flexibility of Clojure (even if a tad verbose) may be worth it in some situations. Probably with a good suite/library of convenience functions built on top of <code>thing/geom</code> one could get to much smaller focused domain-specific pieces of code.
+I think the end result is .. satisfactory. Admittedly it's not yet as concise as writing code block in something purpose-built like Octave, but ultimately the flexibility of Clojure (even if a tad verbose) may be worth it in some situations. Probably with a good suite/library of convenience functions built on top of <code>thing/geom</code> one could get to much smaller focused domain-specific pieces of code.
 </p>
 </div>
 
-<div id="outline-container-org4b32143" class="outline-3">
-<h3 id="org4b32143">Longer Example</h3>
-<div class="outline-text-3" id="text-org4b32143">
+<div id="outline-container-orge490832" class="outline-3">
+<h3 id="orge490832">Longer Example</h3>
+<div class="outline-text-3" id="text-orge490832">
 <p>
-This is mostly just to show what's possible with <code>thing/geom</code>. The Clojure code is near instantaneous, export is immediate. However, running a <b>Core M-5Y10c</b>, the final <code>437kb</code> SVG string took a few minute to insert into the <code>#+RESULTS</code> block (I suspect an issue in orgmode itself).
+This is mostly just to show what's possible with <code>thing/geom</code>. The Clojure code is near instantaneous, export is immediate. However, running on a <b>Core M-5Y10c</b>, the final <code>437kb</code> SVG string took a few minute to insert into the <code>#+RESULTS</code> block (I suspect an issue in orgmode itself).
 </p>
 
 <p>
