@@ -96,30 +96,30 @@ line-height: 0;
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org761667f">Intro</a>
+<li><a href="#org3a98333">Intro</a>
 <ul>
-<li><a href="#org975682e">Loading Libraries</a></li>
+<li><a href="#org20db57f">Loading Libraries</a></li>
 </ul>
 </li>
-<li><a href="#org5e4f7e0">Shapefiles</a></li>
-<li><a href="#org03969a5">World Shorelines</a></li>
-<li><a href="#org99d57f6">Conversion</a></li>
+<li><a href="#orge87c605">Shapefiles</a></li>
+<li><a href="#org5a5010e">World Shorelines</a></li>
+<li><a href="#org6519b08">Conversion</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-org761667f" class="outline-2">
-<h2 id="org761667f">Intro</h2>
-<div class="outline-text-2" id="text-org761667f">
+<div id="outline-container-org3a98333" class="outline-2">
+<h2 id="org3a98333">Intro</h2>
+<div class="outline-text-2" id="text-org3a98333">
 <p>
 This is a demo of displaying a simple map using Clojure. It's done in a single-file orgmode document. For setup see: <a href="https://geokon-gh.github.io/literate-clojure.html">https://geokon-gh.github.io/literate-clojure.html</a>
 </p>
 </div>
 
-<div id="outline-container-org975682e" class="outline-3">
-<h3 id="org975682e">Loading Libraries</h3>
-<div class="outline-text-3" id="text-org975682e">
+<div id="outline-container-org20db57f" class="outline-3">
+<h3 id="org20db57f">Loading Libraries</h3>
+<div class="outline-text-3" id="text-org20db57f">
 <p>
 I use the <code>geo</code> library to work with GIS files and then I use <code>thing/geom</code> to display the result as an inline SVG
 </p>
@@ -153,9 +153,9 @@ I use the <code>geo</code> library to work with GIS files and then I use <code>t
 </div>
 
 
-<div id="outline-container-org5e4f7e0" class="outline-2">
-<h2 id="org5e4f7e0">Shapefiles</h2>
-<div class="outline-text-2" id="text-org5e4f7e0">
+<div id="outline-container-orge87c605" class="outline-2">
+<h2 id="orge87c605">Shapefiles</h2>
+<div class="outline-text-2" id="text-orge87c605">
 <p>
 A lot of geographic data is in <b>shapefiles</b>
 </p>
@@ -174,9 +174,9 @@ The <code>geo</code> maintainer explains in this talk how shapefiles are difficu
 </div>
 </div>
 
-<div id="outline-container-org03969a5" class="outline-2">
-<h2 id="org03969a5">World Shorelines</h2>
-<div class="outline-text-2" id="text-org03969a5">
+<div id="outline-container-org5a5010e" class="outline-2">
+<h2 id="org5a5010e">World Shorelines</h2>
+<div class="outline-text-2" id="text-org5a5010e">
 <p>
 For a base layer on which to build, it'd be useful to simply display the world map. To do that we display the global shorlines. Shorelines of the world can be downloaded from <a href="https://www.ngdc.noaa.gov/mgg/shorelines/">https://www.ngdc.noaa.gov/mgg/shorelines/</a>
 Or also from <a href="https://www.soest.hawaii.edu/pwessel/gshhg/">https://www.soest.hawaii.edu/pwessel/gshhg/</a> (I think these two are actually the same)
@@ -192,9 +192,9 @@ The shorelines come at multiple resolutions and are split into different groupin
 </div>
 </div>
 
-<div id="outline-container-org99d57f6" class="outline-2">
-<h2 id="org99d57f6">Conversion</h2>
-<div class="outline-text-2" id="text-org99d57f6">
+<div id="outline-container-org6519b08" class="outline-2">
+<h2 id="org6519b08">Conversion</h2>
+<div class="outline-text-2" id="text-org6519b08">
 <p>
 Now we need to convert the shapefile to a GeoJSON. Unfortunately I'm not sure this can be done within the JVM. However there is a command line tool called <code>ogr2org</code> that will do this automatically for you. It's part of <b>GDAL</b>
 </p>
@@ -213,6 +213,12 @@ The tool docs don't directly mention GeoJSON for some reason, but you can find c
 
 <p>
 For instance, I went into the shoreline subdirectory <code>GSHHS_shp/c</code> and ran 
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">gr2ogr -f GeoJSON shoreline.json GSHHS_c_L1.shp 
+</pre>
+</div>
+<p>
 This gives you a GeoJSON of the shorelines of all the continents (this seem to also include small periheral islands as well). I loaded both in QGIS and at least to my eye they look the same.
 </p>
 
