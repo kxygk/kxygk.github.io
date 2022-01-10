@@ -9,14 +9,31 @@
 #+OPTIONS: num:nil
 #+OPTIONS: html-scripts:nil
 
+=last updated 2022-01-10=
+
 /BA Physics UCSB/ \\
-/BS Computer Science UCSB/
+/BS Computer Science UCSB/ \\
+*** XRF Core software
+#+BEGIN_QUOTE 
+    Wrote a program for the ITRAX XRF Scanner: [[https://geokon-gh.github.io/corascope/][Corascope]]
+        - GUI Program in Clojure (cljfx/JavaFX)
+        - XRF Data manipulation for reassembling sequentialy segments into a stratigraphically correct sequence.
+    The final software was published: https://www.sciencedirect.com/science/article/pii/S0098300421001977 \\
+    And is available online: https://geokon-gh.github.io/corascope/
+#+END_QUOTE
+[[http://web.gl.ntu.edu.tw/ENG/index.php/about-us/faculty/professors/item/54-associate-professor-ludvig-loewemark][Geoscience - NTU]] /Taipei, Taiwan/
+2015-2019
 
-*I'm currently living in Chengdu, China doing freelance C++ work* \\
-/Please feel free to get in touch at - georgek at gmx.us/
-
-I do work almost exclusively in ~C++(11/14/17)~ with an current emphasis on optimizing code bases through tooling and hardware-specific inline assembly. My past experience have touched on radar, simulation, computer vision, statistics and linear algebra and these are topics I love revisiting.
-I'm also available for limited R and MATLAB work.
+*** C++ Optimization + Build Systems
+#+BEGIN_QUOTE 
+    Worked on a large C++ codebase for palm biometrics identification
+        - Using profiling tools to find performance issue (valgrind/perf/gprof)
+        - Optimizing code for performance (cache locality issues, vectorization, etc.)
+        - Rewriting the build tools using Hunter/CMake
+        - Maintaining builds of binaries for virtually all platform (android/ios/arm/windows/macos/linux)
+#+END_QUOTE
+[[https://www.redrockbiometrics.com][RedRock Biometrics]] /Chengdu, Sichuan/
+2015-2019
 
 *** Radar control systems
 #+BEGIN_QUOTE 
@@ -74,4 +91,4 @@ I'm also available for limited R and MATLAB work.
 
 *Fluent* English, French, Russian
 
-*Basic* Spanish, Japanese, Chinese 
+*Basic* Spanish, Chinese 
