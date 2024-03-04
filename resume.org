@@ -9,10 +9,19 @@
 #+OPTIONS: num:nil
 #+OPTIONS: html-scripts:nil
 
-=last updated 2022-01-10=
+=last updated 2024-03-04=
 
 /BA Physics UCSB/ \\
 /BS Computer Science UCSB/ \\
+
+*** PhD Student
+#+BEGIN_QUOTE 
+    - Paleoclimate reconstruction of the Asian monsoon through speleothem records.
+    - Climate index generation from satellite based precipitation maps
+#+END_QUOTE
+[[http://web.gl.ntu.edu.tw/ENG/index.php/about-us/faculty/professors/item/54-associate-professor-ludvig-loewemark][Geoscience - NTU]] /Taipei, Taiwan/
+2022-now
+
 *** XRF Core software
 #+BEGIN_QUOTE 
     Wrote a program for the ITRAX XRF Scanner: [[https://geokon-gh.github.io/corascope/][Corascope]]
@@ -22,13 +31,12 @@
     And is available online: https://geokon-gh.github.io/corascope/
 #+END_QUOTE
 [[http://web.gl.ntu.edu.tw/ENG/index.php/about-us/faculty/professors/item/54-associate-professor-ludvig-loewemark][Geoscience - NTU]] /Taipei, Taiwan/
-2015-2019
+2020-2021
 
 *** C++ Optimization + Build Systems
 #+BEGIN_QUOTE 
     Worked on a large C++ codebase for palm biometrics identification
-        - Using profiling tools to find performance issue (valgrind/perf/gprof)
-        - Optimizing code for performance (cache locality issues, vectorization, etc.)
+        - Optimizing code for performance (cache locality issues, vectorization, etc.) - valgrind/perf/gprof
         - Rewriting the build tools using Hunter/CMake
         - Maintaining builds of binaries for virtually all platform (android/ios/arm/windows/macos/linux)
 #+END_QUOTE
@@ -37,7 +45,7 @@
 
 *** Radar control systems
 #+BEGIN_QUOTE 
-    Worked on a system of decentralized radar coordination for a small employee owned defense contractor - Toyon Research Corporation. The first half year I worked on a contract for a system coordinating shipborn radars for tracking aircraft. The remaining two years was on a system for tracking ballistic missiles through all stages of flight and to assist in anti-ballistic interception. Highlights:
+    Worked on a system of decentralized radar coordination at the Toyon Research Corporation. Worked on a contract for a system coordinating shipborn radars for tracking aircraft and a system for tracking ballistic missiles through all stages of flight and to assist in anti-ballistic interception. Highlights:
 
         - Working on and maintaining a large C++(11) codebase
         - Designing a radar system for both physical accuracy as well as high performance (near real-time)
