@@ -1,0 +1,241 @@
+:docinfo: shared
+:imagesdir: ../fig/
+:!webfonts:
+:stylesheet: ../web/adoc.css
+:table-caption!:
+:reproducible:
+:nofooter:
+
+= Getting started with nanoCH32V203
+
+== Intro
+
+These are just notes on getting started with the `nanoCH32V203` on Ubuntu with an opensource toolchain
+
+https://github.com/wuxx/nanoCH32V203
+
+The notes are extremely verbose and extensive,
+to document the whole process and have a good reference for later.
+
+Note you will likely want to also purchase a `WCHLink` device,
+which can be purchased as a bundle.
+You can program the device purely over USB,
+however to have a full debugging experience, you will need a `WCHLink`.
+I will be using a `WCHLinkE` (note the `E`)
+
+== Programming Environment
+
+I'm working in `Ubuntu 24.04 noble`
+
+
+I will be using `ch32fun` which is a collection of libraries, examples and tools for this family of boards.
+There is a collection of Makfiles and stuff.. But I'm a bit unclear if it's a HAL or note
+
+Follow their "Installation" instructions to get started
+
+For me that was a matter of running
+```
+apt-get install build-essential libnewlib-dev gcc-riscv64-unknown-elf libusb-1.0-0-dev libudev-dev gdb-multiarch
+```
+
+You can then cloning the repro and get started
+
+```
+git clone https://github.com/cnlohr/ch32fun.git
+```
+
+== Blink
+We want to build a basic `blink`.
+The "hello world" of microcontrollers.
+Because the LED can be wired to a different pin on each board,
+you need to tweak the example blink program
+
+Open `/ch32fun/examples_v20x/blink/blink.c`
+
+You will see they're actually blinking 4 different pins for some reason.
+We just need to set one of these to be the LED pins
+
+To find the LED pin look at the diagram: https://github.com/wuxx/nanoCH32V203/blob/master/hardware/nanoCH32V203.pdf
+
+On the right side there is a box with a diagram labeled `LED`.
+it shows the Blue LED wired with a `10K` resistor, `3V3` (3.3 V? I'm not sure what this means) and `PA15`.
+You can fin the same `PA15` on the top left box.
+It goes in to the yellow `CH32V203C8T6` box at the pin with the same name - `PA15`
+
+So you can go to the top of `blink.c` and change the pin definition to match.
+Ex: Changing `#define PIN_1 PA0` to `#define PIN_1 15`.
+
+(Note.. It was a pure guess that the pin number corresponded to its `int` value)
+
+You can save and now build the program
+
+```
+$ cd ch32fun/examples_v20x/blink/
+$ make clean build
+rm -rf blink.elf blink.bin blink.hex blink.lst blink.map blink.hex ../../ch32fun//generated_CH32V203G6U6_.ld || true
+riscv64-unknown-elf-gcc -E -P -x c -DTARGET_MCU=CH32V203G6U6 -DMCU_PACKAGE=2 -DTARGET_MCU_LD=2 -DTARGET_MCU_MEMORY_SPLIT= ../../ch32fun//ch32fun.ld > ../../ch32fun//generated_CH32V203G6U6_.ld
+riscv64-unknown-elf-gcc -o blink.elf ../../ch32fun//ch32fun.c blink.c   -g -Os -flto -ffunction-sections -fdata-sections -fmessage-length=0 -msmall-data-limit=8 -march=rv32imac -mabi=ilp32 -DCH32V20x=1 -static-libgcc -I/usr/include/newlib -I../../ch32fun//../extralibs -I../../ch32fun/ -nostdlib -I. -Wall  -Wl,--print-memory-usage -Wl,-Map=blink.map -lgcc -T ../../ch32fun//generated_CH32V203G6U6_.ld -Wl,--gc-sections
+Memory region         Used Size  Region Size  %age Used
+           FLASH:         880 B        32 KB      2.69%
+             RAM:           0 B        10 KB      0.00%
+riscv64-unknown-elf-objdump -S blink.elf > blink.lst
+riscv64-unknown-elf-objcopy  -O binary blink.elf blink.bin
+riscv64-unknown-elf-objcopy -O ihex blink.elf blink.hex
+
+```
+
+This should build a basic `blink` program
+(Note: if you just call `make` instead of `make clean build` it will automatically try to also program/flash your board)
+
+You will get two files
+`blink.bin` :: the binary that gets flashed to the board (880B)
+`blink.elf` :: a larger file that contains the binary and debug information
+
+Technically the `.bin` can be extracted from the `.elf`,
+but here you get a redundant `.bin` for convenience
+
+== Flashing over USB
+
+First we will flash using the USB port on the board itself.
+This is the most straightforward way and can be usefult to ensure the blink program works
+(ie both your compiled binary as well as the board itself)
+I think either port of the two ports on the board should work..
+
+To flash over USB you need to use a separate tool: https://github.com/ch32-rs/wchisp
+
+Download the latest release and extract the `.tar.gz`
+
+Then you simply run
+
+```
+wchisp flash blink.bin
+```
+
+And the board should be programmed and start blinking
+
+== The `WCHLink`
+
+The alternate way to interact with the microcntroller is with a `WCHLink` device.
+On cheaper and less "educational" hobby boards,
+the "stuff" needed for debugging is not present and you need a helper board for this.
+The advantage is that with this board you'll be able set breakpoints and watches and all that `gdb` stuff.
+This isn't possible using just the USB port.
+
+It seems there are several different types of `WCHLink` device..
+The one sold to me bundled with the board on Taobao is the `WCHLinkE` one
+
+You first want to update the `WCHLinkE`'s firmware.
+It seems you normally would flash it with another `WCHLink` device.
+However, you can also just flash it over USB
+(not sure if there is some downside..?)
+
+The flashing tool is very easy to use: https://github.com/cjacker/wlink-iap
+
+Just following the instructions:
+```
+git clone https://github.com/cjacker/wlink-iap
+cd wlink-iap
+make
+cd src
+./wlink-iap -f ../firmwares/FIRMWARE_CH32V305_v2.15.bin
+```
+
+Note apart from the bundles firmwares in this repo,
+there are more recent firmwares.. https://github.com/21km43/WCH-Link_Firmware
+(I haven't personally tested them).
+
+Now that the firmware has been updated we'll want to connect the `WCHLinkE` to the `nanoCH32V203` board.
+The WCHLinkE seems to have two ways to communicate.
+One is the `U_Rx` `U_Tx` pair of pins.
+The other option are the `SWDIO` and `SWCLK` pins.
+According https://github.com/cnlohr/ch32fun/issues/626#issuecomment-2999344231[to here] we should use the latter option.
+
+To find the equivalent pins on the board,
+consult https://github.com/wuxx/nanoCH32V203/blob/master/hardware/nanoCH32V203.pdf[the previous PDF diagrams].
+In the upper left box you can see `SWDIO` is labeled `PA13` and `SWCLK` is labeled `PA14`.
+In the right hand (middle) box labeled *HEADER* these go to numbered headers..
+it's not very useful.
+One header is `J5` and the other is just called `J6`.
+Note that one has a `3V3` line,
+so we can use this to ID which side of the board is the one with `PA13` and `PA14`.
+It turns out this corresponds to the holes called `A13` and `A14`
+(I guess there wasn't space on the silkscreen for the extra `P`?)
+
+So wire:
+- `SWDIO` -> `A13`
+- `SWCLK` -> `A14`
+- `5V` -> `5V`
+- `GND` -> `GND`
+
+Note that even though the chip is supposed to be 3.3V tolerant..
+The board as a whole can't run off of `3V3` for some reason.
+So you'll need to write up to `5V`
+
+== OpenOCD
+
+To interact with the `WCHLinkE` from our computer we will want to first use `OpenOCD`.
+This is the "official" tool.
+It allows up to flash the board and expose the `WCHLinkE`'s functionality to `gdb`
+(runs a `gdb` server)
+
+The code is available from the manufacturer website: http://www.mounriver.com/download
+
+Download the `MRS_Toolchain_Linux_x64_V210.tar.xz` and extract.
+This also includes a GCC (if the Ubuntu Rep one is causing you issues)
+Inside you will find an OpenOCD folder `OpenOCD/OpenOCD/bin/` with the `openocd` executable.
+OpenOCD is a generic tool,
+so you need to point it at a confirguartion for your tool.
+Fortunately the zip/tar includes a coupe besides the `openocd` binary.
+The one we want is called `wch-riscv.cfg`
+
+To run `openocd` you can either point it to config with
+
+```
+openocd -f wch-riscv.cfg
+```
+or copy it to the default name - which is `openocd.cfg`
+(it just looks for that name in the working directory)
+```
+cp wch-riscv.cfg openocd.cfg
+openocd
+```
+This by default runs a `gdb` server.
+
+You can also directly flash the `.elf` from before
+(Note: Adjust the paths to whatever makes sense for you here)
+
+```
+openocd -s bin -f /path/to/wch-riscv.cfg -c "init; program {path/to/blink.elf} verify reset; exit"
+```
+
+== GDB
+
+For debugging,
+in the previous section you should just run `openocd` or `openocd -f wch-riscv.cfg` and leave the terminal/console window open.
+It's launched a `gdb-server` that's running on localhost:3333
+(ie port 3333 of your own machine)
+We then want to go to a separate terminal to run `gdb` and connect to this "server"
+We will run `gdb-multiarch`
+
+```
+gdb-multiarch blink.elf
+(gdb) set architecture riscv:rv64
+(gdb) target remote :3333
+```
+At this point you can do several things.
+You can hit `load` to flash the board
+(ie. load the binary from the `.elf` to the board)
+You can hit `continue` to have the program simply run.
+You can then `Ctrl+C` while it's running to interrupt the program.
+It will stop at some spot and display the equivalent line of code.
+To see the full code and where you are at you can hit `Ctrl+X` `Ctrl+A`.
+Hit it again to hide this view.
+Hit `n` to step to the next line of code`
+
+A more complex example is to set a breakpoint in the blink loop and continue
+```
+b blink.c:30
+continue
+```
+The program should run till line 30 in `blink.c` and then stop.
+You can then `Ctrl+X` `Ctrl+A` to see the source code and confirm.

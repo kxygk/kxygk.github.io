@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.20">
+<title>Getting started with nanoCH32V203</title>
+<style>
+@import '../web/kxygk.css';
+
+html {
+margin: 0;
+overflow-x: hidden;
+}
+body {
+margin-left: 0px;
+margin-right: 0px;
+margin-left: 5vw;
+margin-right: 5vw;}
+#table-of-contents {display: none} /* disable for now.. till I have a better plan */
+.listingblock,pre.src {
+margin-left:  0vw;
+margin-right: 0vw;
+font-family: monospace;
+font-size: 100%;
+background: #FFFFEE;
+overflow: auto;
+position: static;
+border-top: 1px solid  #e5e5d6;
+border-bottom: 1px solid  #e5e5d6;
+}
+pre.src-org {
+color: red;
+background: #FFFFFF;
+}
+blockquote {
+width: 100%;
+padding-left: 0.5em;
+border-left: solid;
+border-left-width: 4px;
+border-left-color: grey;
+background-color: #eefaf6; /*#f1ffee;*/
+margin: 0;
+.org-center {
+text-align: center;}
+}
+svg { /* newer inline SVGs */
+width: 100vw;
+overflow: hidden;
+height: auto;
+margin-left: -5vw;
+margin-right: 0;
+}
+/*.org-svg {
+width: 100vw;
+display: block;
+margin-left: auto;
+margin-right: auto;
+}*/
+
+img {
+    display:flex;
+max-width: 100%;
+height: 100%;
+max-height: 33vh;
+vertical-align: middle;
+width: auto;
+margin: auto;
+}
+ul {
+list-style-type: circle;
+padding-left: 1.5em;
+border-left: solid;
+border-left-width: 1px;
+border-left-color: grey;}
+h1 {color: #596060;}
+h2 {
+    color: black;
+font-style: italic;
+    padding-top: 0.5em;
+    border-bottom: 4px solid  #aaaaaa;}
+h3 {color: black;
+border-bottom: 2px dotted  #aaaaaa;}
+b, i{
+font-family: serif ;}
+sup { /* fixes line spacing issues due to superscripts */
+font-size: 0.8em;
+line-height: 0;
+position: relative;
+vertical-align: baseline;
+top: -0.5em;
+}
+sub { /* if these are missing then lines with subscripts take up more space */
+font-size: 0.8em;
+line-height: 0;
+}
+.title {
+font-weight: bold;
+}
+dt {
+font-weight: bold;
+}
+td p, dd p, li p{
+    margin: 0;
+}
+ul, p{
+    margin-top: 0;
+}
+.sidebarblock{
+    background:#f3f3f2;
+}
+.float-group::before,.float-group::after{content:" ";display:table}
+.left{float:left!important}
+.right{float:right!important}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+.scrollbox{
+    white-space: nowrap;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+.scrollbox img{
+    height:auto;
+    width:auto;
+    max-width: 70vw;
+    max-height: 60vh;
+    vertical-align: bottom;
+    scroll-snap-align: start;
+}
+video{
+    height:auto;
+    width:auto;
+    max-width: 30vw;
+    max-height: 30vh;
+}
+.content{
+    height: 100%;
+}
+.imageblock{
+    height: 100%;
+}
+.flexbox > .content{
+    display: flex;
+    justify-content: center;
+    height: 33vh;
+}
+
+@media (max-width:60rem) {
+.listingblock,pre.src {
+    margin-left:  -5vw;
+    margin-right: -5vw;
+}}
+@media (min-width:60rem) {
+.sectionbody{
+    column-count:2;
+    hyphens: auto;
+}
+}
+@media (min-width:90rem) {
+.sectionbody{
+    column-count:3;
+}
+}
+@media (min-width:120rem) {
+.sectionbody{
+    column-count:4;
+}
+}
+
+</style>
+</head>
+<body class="article">
+<div id="header">
+<h1>Getting started with nanoCH32V203</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_intro">Intro</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These are just notes on getting started with the <code>nanoCH32V203</code> on Ubuntu with an opensource toolchain</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/wuxx/nanoCH32V203" class="bare">https://github.com/wuxx/nanoCH32V203</a></p>
+</div>
+<div class="paragraph">
+<p>The notes are extremely verbose and extensive,
+to document the whole process and have a good reference for later.</p>
+</div>
+<div class="paragraph">
+<p>Note you will likely want to also purchase a <code>WCHLink</code> device,
+which can be purchased as a bundle.
+You can program the device purely over USB,
+however to have a full debugging experience, you will need a <code>WCHLink</code>.
+I will be using a <code>WCHLinkE</code> (note the <code>E</code>)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_programming_environment">Programming Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;m working in <code>Ubuntu 24.04 noble</code></p>
+</div>
+<div class="paragraph">
+<p>I will be using <code>ch32fun</code> which is a collection of libraries, examples and tools for this family of boards.
+There is a collection of Makfiles and stuff.. But I&#8217;m a bit unclear if it&#8217;s a HAL or note</p>
+</div>
+<div class="paragraph">
+<p>Follow their "Installation" instructions to get started</p>
+</div>
+<div class="paragraph">
+<p>For me that was a matter of running</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>apt-get install build-essential libnewlib-dev gcc-riscv64-unknown-elf libusb-1.0-0-dev libudev-dev gdb-multiarch</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then cloning the repro and get started</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>git clone https://github.com/cnlohr/ch32fun.git</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_blink">Blink</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We want to build a basic <code>blink</code>.
+The "hello world" of microcontrollers.
+Because the LED can be wired to a different pin on each board,
+you need to tweak the example blink program</p>
+</div>
+<div class="paragraph">
+<p>Open <code>/ch32fun/examples_v20x/blink/blink.c</code></p>
+</div>
+<div class="paragraph">
+<p>You will see they&#8217;re actually blinking 4 different pins for some reason.
+We just need to set one of these to be the LED pins</p>
+</div>
+<div class="paragraph">
+<p>To find the LED pin look at the diagram: <a href="https://github.com/wuxx/nanoCH32V203/blob/master/hardware/nanoCH32V203.pdf" class="bare">https://github.com/wuxx/nanoCH32V203/blob/master/hardware/nanoCH32V203.pdf</a></p>
+</div>
+<div class="paragraph">
+<p>On the right side there is a box with a diagram labeled <code>LED</code>.
+it shows the Blue LED wired with a <code>10K</code> resistor, <code>3V3</code> (3.3 V? I&#8217;m not sure what this means) and <code>PA15</code>.
+You can fin the same <code>PA15</code> on the top left box.
+It goes in to the yellow <code>CH32V203C8T6</code> box at the pin with the same name - <code>PA15</code></p>
+</div>
+<div class="paragraph">
+<p>So you can go to the top of <code>blink.c</code> and change the pin definition to match.
+Ex: Changing <code>#define PIN_1 PA0</code> to <code>#define PIN_1 15</code>.</p>
+</div>
+<div class="paragraph">
+<p>(Note.. It was a pure guess that the pin number corresponded to its <code>int</code> value)</p>
+</div>
+<div class="paragraph">
+<p>You can save and now build the program</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ cd ch32fun/examples_v20x/blink/
+$ make clean build
+rm -rf blink.elf blink.bin blink.hex blink.lst blink.map blink.hex ../../ch32fun//generated_CH32V203G6U6_.ld || true
+riscv64-unknown-elf-gcc -E -P -x c -DTARGET_MCU=CH32V203G6U6 -DMCU_PACKAGE=2 -DTARGET_MCU_LD=2 -DTARGET_MCU_MEMORY_SPLIT= ../../ch32fun//ch32fun.ld &gt; ../../ch32fun//generated_CH32V203G6U6_.ld
+riscv64-unknown-elf-gcc -o blink.elf ../../ch32fun//ch32fun.c blink.c   -g -Os -flto -ffunction-sections -fdata-sections -fmessage-length=0 -msmall-data-limit=8 -march=rv32imac -mabi=ilp32 -DCH32V20x=1 -static-libgcc -I/usr/include/newlib -I../../ch32fun//../extralibs -I../../ch32fun/ -nostdlib -I. -Wall  -Wl,--print-memory-usage -Wl,-Map=blink.map -lgcc -T ../../ch32fun//generated_CH32V203G6U6_.ld -Wl,--gc-sections
+Memory region         Used Size  Region Size  %age Used
+           FLASH:         880 B        32 KB      2.69%
+             RAM:           0 B        10 KB      0.00%
+riscv64-unknown-elf-objdump -S blink.elf &gt; blink.lst
+riscv64-unknown-elf-objcopy  -O binary blink.elf blink.bin
+riscv64-unknown-elf-objcopy -O ihex blink.elf blink.hex</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This should build a basic <code>blink</code> program
+(Note: if you just call <code>make</code> instead of <code>make clean build</code> it will automatically try to also program/flash your board)</p>
+</div>
+<div class="paragraph">
+<p>You will get two files
+<code>blink.bin</code> :: the binary that gets flashed to the board (880B)
+<code>blink.elf</code> :: a larger file that contains the binary and debug information</p>
+</div>
+<div class="paragraph">
+<p>Technically the <code>.bin</code> can be extracted from the <code>.elf</code>,
+but here you get a redundant <code>.bin</code> for convenience</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flashing_over_usb">Flashing over USB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First we will flash using the USB port on the board itself.
+This is the most straightforward way and can be usefult to ensure the blink program works
+(ie both your compiled binary as well as the board itself)
+I think either port of the two ports on the board should work..</p>
+</div>
+<div class="paragraph">
+<p>To flash over USB you need to use a separate tool: <a href="https://github.com/ch32-rs/wchisp" class="bare">https://github.com/ch32-rs/wchisp</a></p>
+</div>
+<div class="paragraph">
+<p>Download the latest release and extract the <code>.tar.gz</code></p>
+</div>
+<div class="paragraph">
+<p>Then you simply run</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>wchisp flash blink.bin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the board should be programmed and start blinking</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_wchlink">The <code>WCHLink</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The alternate way to interact with the microcntroller is with a <code>WCHLink</code> device.
+On cheaper and less "educational" hobby boards,
+the "stuff" needed for debugging is not present and you need a helper board for this.
+The advantage is that with this board you&#8217;ll be able set breakpoints and watches and all that <code>gdb</code> stuff.
+This isn&#8217;t possible using just the USB port.</p>
+</div>
+<div class="paragraph">
+<p>It seems there are several different types of <code>WCHLink</code> device..
+The one sold to me bundled with the board on Taobao is the <code>WCHLinkE</code> one</p>
+</div>
+<div class="paragraph">
+<p>You first want to update the <code>WCHLinkE&#8217;s firmware.
+It seems you normally would flash it with another `WCHLink</code> device.
+However, you can also just flash it over USB
+(not sure if there is some downside..?)</p>
+</div>
+<div class="paragraph">
+<p>The flashing tool is very easy to use: <a href="https://github.com/cjacker/wlink-iap" class="bare">https://github.com/cjacker/wlink-iap</a></p>
+</div>
+<div class="paragraph">
+<p>Just following the instructions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>git clone https://github.com/cjacker/wlink-iap
+cd wlink-iap
+make
+cd src
+./wlink-iap -f ../firmwares/FIRMWARE_CH32V305_v2.15.bin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note apart from the bundles firmwares in this repo,
+there are more recent firmwares.. <a href="https://github.com/21km43/WCH-Link_Firmware" class="bare">https://github.com/21km43/WCH-Link_Firmware</a>
+(I haven&#8217;t personally tested them).</p>
+</div>
+<div class="paragraph">
+<p>Now that the firmware has been updated we&#8217;ll want to connect the <code>WCHLinkE</code> to the <code>nanoCH32V203</code> board.
+The WCHLinkE seems to have two ways to communicate.
+One is the <code>U_Rx</code> <code>U_Tx</code> pair of pins.
+The other option are the <code>SWDIO</code> and <code>SWCLK</code> pins.
+According <a href="https://github.com/cnlohr/ch32fun/issues/626#issuecomment-2999344231">to here</a> we should use the latter option.</p>
+</div>
+<div class="paragraph">
+<p>To find the equivalent pins on the board,
+consult <a href="https://github.com/wuxx/nanoCH32V203/blob/master/hardware/nanoCH32V203.pdf">the previous PDF diagrams</a>.
+In the upper left box you can see <code>SWDIO</code> is labeled <code>PA13</code> and <code>SWCLK</code> is labeled <code>PA14</code>.
+In the right hand (middle) box labeled <strong>HEADER</strong> these go to numbered headers..
+it&#8217;s not very useful.
+One header is <code>J5</code> and the other is just called <code>J6</code>.
+Note that one has a <code>3V3</code> line,
+so we can use this to ID which side of the board is the one with <code>PA13</code> and <code>PA14</code>.
+It turns out this corresponds to the holes called <code>A13</code> and <code>A14</code>
+(I guess there wasn&#8217;t space on the silkscreen for the extra <code>P</code>?)</p>
+</div>
+<div class="paragraph">
+<p>So wire:
+- <code>SWDIO</code> &#8594; <code>A13</code>
+- <code>SWCLK</code> &#8594; <code>A14</code>
+- <code>5V</code> &#8594; <code>5V</code>
+- <code>GND</code> &#8594; <code>GND</code></p>
+</div>
+<div class="paragraph">
+<p>Note that even though the chip is supposed to be 3.3V tolerant..
+The board as a whole can&#8217;t run off of <code>3V3</code> for some reason.
+So you&#8217;ll need to write up to <code>5V</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openocd">OpenOCD</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To interact with the <code>WCHLinkE</code> from our computer we will want to first use <code>OpenOCD</code>.
+This is the "official" tool.
+It allows up to flash the board and expose the <code>WCHLinkE&#8217;s functionality to `gdb</code>
+(runs a <code>gdb</code> server)</p>
+</div>
+<div class="paragraph">
+<p>The code is available from the manufacturer website: <a href="http://www.mounriver.com/download" class="bare">http://www.mounriver.com/download</a></p>
+</div>
+<div class="paragraph">
+<p>Download the <code>MRS_Toolchain_Linux_x64_V210.tar.xz</code> and extract.
+This also includes a GCC (if the Ubuntu Rep one is causing you issues)
+Inside you will find an OpenOCD folder <code>OpenOCD/OpenOCD/bin/</code> with the <code>openocd</code> executable.
+OpenOCD is a generic tool,
+so you need to point it at a confirguartion for your tool.
+Fortunately the zip/tar includes a coupe besides the <code>openocd</code> binary.
+The one we want is called <code>wch-riscv.cfg</code></p>
+</div>
+<div class="paragraph">
+<p>To run <code>openocd</code> you can either point it to config with</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>openocd -f wch-riscv.cfg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or copy it to the default name - which is <code>openocd.cfg</code>
+(it just looks for that name in the working directory)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>cp wch-riscv.cfg openocd.cfg
+openocd</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This by default runs a <code>gdb</code> server.</p>
+</div>
+<div class="paragraph">
+<p>You can also directly flash the <code>.elf</code> from before
+(Note: Adjust the paths to whatever makes sense for you here)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>openocd -s bin -f /path/to/wch-riscv.cfg -c "init; program {path/to/blink.elf} verify reset; exit"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gdb">GDB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For debugging,
+in the previous section you should just run <code>openocd</code> or <code>openocd -f wch-riscv.cfg</code> and leave the terminal/console window open.
+It&#8217;s launched a <code>gdb-server</code> that&#8217;s running on localhost:3333
+(ie port 3333 of your own machine)
+We then want to go to a separate terminal to run <code>gdb</code> and connect to this "server"
+We will run <code>gdb-multiarch</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>gdb-multiarch blink.elf
+(gdb) set architecture riscv:rv64
+(gdb) target remote :3333</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point you can do several things.
+You can hit <code>load</code> to flash the board
+(ie. load the binary from the <code>.elf</code> to the board)
+You can hit <code>continue</code> to have the program simply run.
+You can then <code>Ctrl+C</code> while it&#8217;s running to interrupt the program.
+It will stop at some spot and display the equivalent line of code.
+To see the full code and where you are at you can hit <code>Ctrl+X</code> <code>Ctrl+A</code>.
+Hit it again to hide this view.
+Hit <code>n</code> to step to the next line of code`</p>
+</div>
+<div class="paragraph">
+<p>A more complex example is to set a breakpoint in the blink loop and continue</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>b blink.c:30
+continue</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The program should run till line 30 in <code>blink.c</code> and then stop.
+You can then <code>Ctrl+X</code> <code>Ctrl+A</code> to see the source code and confirm.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
